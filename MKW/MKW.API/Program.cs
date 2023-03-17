@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using MKW.API.Dependencies;
+using MKW.Data.Infra;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.StartRegisterServices();
+
+
+var connString = builder.Configuration.GetConnectionString("DefaultConnString");
+builder.Services.AddDbContext<MKWContext>(options =>
+    options.UseSqlServer(connString)
+);
 #endregion
 
 var app = builder.Build();
