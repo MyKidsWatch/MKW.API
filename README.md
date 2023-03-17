@@ -4,7 +4,7 @@
 <h3 align="left">Nossas redes:</h3>
 <p align="left">
 <a href="https://www.youtube.com/channel/UCldZUBsqggBSoKVLLCirChw" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/youtube.svg" alt="mykidswatch" height="30" width="40" /></a>
-<a href="/https://projeto-mkw.blogspot.com/feeds/posts/default" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/rss.svg" alt="https://projeto-mkw.blogspot.com/feeds/posts/default" height="30" width="40" /></a>
+<a href="https://projeto-mkw.blogspot.com/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/rss.svg" alt="https://projeto-mkw.blogspot.com/feeds/posts/default" height="30" width="40" /></a>
 </p>
 
 <h3 align="left">Linguagens e Ferramentas:</h3>
