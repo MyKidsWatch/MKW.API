@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Domain.Interface.Reposi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.0 - Models", "4.0 - Models", "{14AD6D82-D6B0-4D2F-811E-0398107B4905}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Domain.ViewModel", "MKW.Domain.ViewModel\MKW.Domain.ViewModel.csproj", "{D400288A-E74B-4A48-BCB4-C6BE422BF6C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Domain.Dto", "MKW.Domain.ViewModel\MKW.Domain.Dto.csproj", "{D400288A-E74B-4A48-BCB4-C6BE422BF6C7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Services.AppServices", "MKW.Services.AppServices\MKW.Services.AppServices.csproj", "{06CC9640-FF5A-442E-AC43-749F5779021A}"
 EndProject
