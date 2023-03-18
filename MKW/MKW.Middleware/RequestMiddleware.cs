@@ -29,5 +29,17 @@ namespace MKW.Middleware
             context.Response.StatusCode = statusCode;
             await context.Response.WriteAsync(response);
         }
+
+        //private async Task<string> GetBody(HttpContext context)
+        //{
+        //    var request = context.Request;
+
+        //    if(request.Method == "POST" && request.ContentLength > 0)
+        //    {
+
+        //    }
+
+        //    return "";
+        //}
     }
 }
