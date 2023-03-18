@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MKW.API.Dependencies;
 using MKW.Data.Infra;
+using MKW.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,5 +67,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<RequestMiddleware>();
 
 app.Run();

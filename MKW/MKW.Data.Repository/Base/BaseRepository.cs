@@ -16,8 +16,9 @@ namespace MKW.Domain.Interface.Services.Base
         }
 
         public async Task<IEnumerable<TEntity>?> GetAll() => await _dbSet.ToListAsync();
-
+        public async Task<IEnumerable<TEntity>?> GetActive() => await _dbSet.Where(x => x.Active).ToListAsync();
         public async Task<TEntity?> GetById(int id) => await _dbSet.FindAsync(id);
+        public async Task<TEntity?> GetByUUID(Guid uuid) => await _dbSet.FirstOrDefaultAsync(x => x.UUID == uuid);
 
         public async Task<TEntity> Add(TEntity entity)
         {

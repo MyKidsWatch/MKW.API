@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MKW.Domain.Entities\MKW.Domain.Entities.csproj" />
+  </ItemGroup>
+
 </Project>
