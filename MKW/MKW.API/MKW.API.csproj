@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MKW.Data.Infra\MKW.Data.Infra.csproj" />
+    <ProjectReference Include="..\MKW.Data.Infra\MKW.Data.Context.csproj" />
     <ProjectReference Include="..\MKW.IoC\MKW.IoC.csproj" />
   </ItemGroup>
 

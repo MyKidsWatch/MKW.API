@@ -1,38 +1,54 @@
-﻿using MKW.Domain.Entities.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using MKW.Data.Infra;
+using MKW.Domain.Entities.Base;
 using MKW.Domain.Interface.Repository.Base;
 
 namespace MKW.Domain.Interface.Services.Base
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
-        public Task<T> Add(T entity)
+        private readonly MKWContext _context;
+        protected readonly DbSet<TEntity> _dbSet;
+        public BaseRepository(MKWContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _dbSet = _context.Set<TEntity>();
         }
 
-        public Task Delete(T entity)
+        public async Task<IEnumerable<TEntity>?> GetAll() => await _dbSet.ToListAsync();
+
+        public async Task<TEntity?> GetById(int id) => await _dbSet.FindAsync(id);
+
+        public async Task<TEntity> Add(TEntity entity)
         {
-            throw new NotImplementedException();
+            var addedEntity = _dbSet.Add(entity).Entity;
+            await _context.SaveChangesAsync();
+            return addedEntity;
         }
 
-        public Task DeleteById(int id)
+        public async Task<TEntity> Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            var updatedEntity = _dbSet.Update(entity).Entity;
+            await _context.SaveChangesAsync();
+            return updatedEntity;
         }
 
-        public Task<IEnumerable<T>> GetAll()
+        public async Task Delete(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<T> GetById(int id)
+        public async Task DeleteById(int id)
         {
-            throw new NotImplementedException();
+            var entity = _dbSet.Find(id);
+            if (entity != null) _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<T> Update(T entity)
+        protected async Task SaveChanges()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
     }
 }

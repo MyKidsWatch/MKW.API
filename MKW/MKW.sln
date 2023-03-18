@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.API", "MKW.API\MKW.API.csproj", "{38779A9F-F378-4260-98C4-10BA1B2CB6EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.API", "MKW.API\MKW.API.csproj", "{38779A9F-F378-4260-98C4-10BA1B2CB6EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Application", "0 - Application", "{9F71BE6F-7E67-484D-B5F7-6F3873B29E7D}"
 EndProject
@@ -13,31 +13,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Services", "2 - Service
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Domain", "4 - Domain", "{3B23A7D0-2D07-4937-97AA-BB07B902BCCC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Data", "3 - Data", "{C8655287-3721-49A4-AFB1-7125A4CFB963}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra", "3 - Infra", "{C8655287-3721-49A4-AFB1-7125A4CFB963}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Middleware", "MKW.Middleware\MKW.Middleware.csproj", "{1D7988A2-C8DC-4649-95BF-88DCF86A1C8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Middleware", "MKW.Middleware\MKW.Middleware.csproj", "{1D7988A2-C8DC-4649-95BF-88DCF86A1C8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Data.Repository", "MKW.Data.Repository\MKW.Data.Repository.csproj", "{773D52C8-D5E2-4367-B434-4C396E953969}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Data.Repository", "MKW.Data.Repository\MKW.Data.Repository.csproj", "{773D52C8-D5E2-4367-B434-4C396E953969}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Data.Infra", "MKW.Data.Infra\MKW.Data.Infra.csproj", "{C34D8283-D671-43A4-8B6B-7856EA8A9F55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Data.Context", "MKW.Data.Infra\MKW.Data.Context.csproj", "{C34D8283-D671-43A4-8B6B-7856EA8A9F55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Domain.Entities", "MKW.Domain.Entities\MKW.Domain.Entities.csproj", "{F5563A28-4139-4087-B880-57950C9F42D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Domain.Entities", "MKW.Domain.Entities\MKW.Domain.Entities.csproj", "{F5563A28-4139-4087-B880-57950C9F42D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.IoC", "MKW.IoC\MKW.IoC.csproj", "{A3D194D3-62F8-497F-8283-B60270A4664E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.IoC", "MKW.IoC\MKW.IoC.csproj", "{A3D194D3-62F8-497F-8283-B60270A4664E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 - Interface", "4.1 - Interface", "{72A8BE0A-D04E-4603-AC94-D2EB8EAD9221}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Domain.Interface.Services", "MKW.Domain.Interface.Services\MKW.Domain.Interface.Services.csproj", "{9830575D-4F92-4B2C-97C1-8FB41862D857}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Domain.Interface.Services", "MKW.Domain.Interface.Services\MKW.Domain.Interface.Services.csproj", "{9830575D-4F92-4B2C-97C1-8FB41862D857}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Domain.Interface.Repository", "MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj", "{2A395207-3C8B-419B-A39A-4D8732D28F4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Domain.Interface.Repository", "MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj", "{2A395207-3C8B-419B-A39A-4D8732D28F4E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.0 - Models", "4.0 - Models", "{14AD6D82-D6B0-4D2F-811E-0398107B4905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Domain.ViewModel", "MKW.Domain.ViewModel\MKW.Domain.ViewModel.csproj", "{D400288A-E74B-4A48-BCB4-C6BE422BF6C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Domain.ViewModel", "MKW.Domain.ViewModel\MKW.Domain.ViewModel.csproj", "{D400288A-E74B-4A48-BCB4-C6BE422BF6C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Services.AppServices", "MKW.Services.AppServices\MKW.Services.AppServices.csproj", "{06CC9640-FF5A-442E-AC43-749F5779021A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Services.AppServices", "MKW.Services.AppServices\MKW.Services.AppServices.csproj", "{06CC9640-FF5A-442E-AC43-749F5779021A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Services.BaseServices", "MKW.Services.BaseServices\MKW.Services.BaseServices.csproj", "{9F61D1EE-9370-49F7-93B3-A5A5D5C6B447}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Services.BaseServices", "MKW.Services.BaseServices\MKW.Services.BaseServices.csproj", "{9F61D1EE-9370-49F7-93B3-A5A5D5C6B447}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

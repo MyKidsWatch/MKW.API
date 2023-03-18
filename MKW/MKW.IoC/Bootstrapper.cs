@@ -1,15 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using MKW.IoC.Modules;
 
 namespace MKW.IoC
 {
     public static class Bootstrapper
     {
-        public static void RegisterServices(IServiceCollection builder)
+        public static void RegisterServices(IServiceCollection services)
         {
-            MiddlewareModule.InjectDependencies(builder);
-            RepositoryModule.InjectDependencies(builder);
-            ServiceModule.InjectDependencies(builder);
+            MiddlewareModule.InjectDependencies(services);
+            RepositoryModule.InjectDependencies(services);
+            ServiceModule.InjectDependencies(services);
+            services.AddSingleton<IConfiguration>();
         }
     }
 }

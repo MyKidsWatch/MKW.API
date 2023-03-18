@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.StartRegisterServices();
-
+builder.Services.AddHttpContextAccessor();
 
 var connString = builder.Configuration.GetConnectionString("DefaultConnString");
 builder.Services.AddDbContext<MKWContext>(options =>

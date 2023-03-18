@@ -2,13 +2,13 @@
 
 namespace MKW.Domain.Interface.Repository.Base
 {
-    public interface IBaseRepository<T> where T : BaseEntity
+    public interface IBaseRepository<TEntity> where TEntity : BaseEntity
     {
-        Task<IEnumerable<T>> GetAll();
-        Task<T> GetById(int id);
-        Task<T> Add(T entity);
-        Task<T> Update(T entity);
-        Task Delete(T entity);
+        Task<IEnumerable<TEntity>?> GetAll();
+        Task<TEntity?> GetById(int id);
+        Task<TEntity> Add(TEntity entity);
+        Task<TEntity> Update(TEntity entity);
+        Task Delete(TEntity entity);
         Task DeleteById(int id);
     }
 }

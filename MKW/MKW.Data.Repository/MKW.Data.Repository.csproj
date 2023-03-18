@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MKW.Data.Infra\MKW.Data.Context.csproj" />
     <ProjectReference Include="..\MKW.Domain.Entities\MKW.Domain.Entities.csproj" />
     <ProjectReference Include="..\MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj" />
   </ItemGroup>
