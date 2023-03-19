@@ -30,6 +30,10 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
                 .HasColumnName("POST_ID");
 
             modelBuilder.Entity<Comment>()
+                .Property(x => x.ParentComentId)
+                .HasColumnName("PARENT_COMMENT_ID");
+
+            modelBuilder.Entity<Comment>()
                 .Property(x => x.CreateDate)
                 .HasColumnName("CREATE_DATE");
 
@@ -55,6 +59,11 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
                 .HasOne(x => x.Person)
                 .WithMany(x => x.Comments)
                 .HasForeignKey(x => x.PersonId);
+
+            modelBuilder.Entity<Comment>()
+                .HasMany(x => x.Answers)
+                .WithOne(x => x.ParentComment)
+                .HasForeignKey(x => x.ParentComentId);
         }
     }
 }
