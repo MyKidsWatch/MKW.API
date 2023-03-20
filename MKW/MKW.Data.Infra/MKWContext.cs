@@ -22,7 +22,7 @@ namespace MKW.Data.Infra
             PostDetailsMap.Map(modelBuilder);
             PostMap.Map(modelBuilder);
             PremiumPersonMap.Map(modelBuilder);
-            SourceMap.Map(modelBuilder);
+            PlatformMap.Map(modelBuilder);
             TierMap.Map(modelBuilder);
             TierPlanMap.Map(modelBuilder);
             TimespanMap.Map(modelBuilder);

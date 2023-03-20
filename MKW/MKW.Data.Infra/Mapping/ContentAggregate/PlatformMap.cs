@@ -3,48 +3,48 @@ using MKW.Domain.Entities.ContentAggregate;
 
 namespace MKW.Data.Context.Mapping.ContentAggregate
 {
-    public class SourceMap
+    public class PlatformMap
     {
         public static void Map(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Source>()
-                .ToTable("TB_MKW_SOURCE");
+            modelBuilder.Entity<Platform>()
+                .ToTable("TB_MKW_PLATFORM");
 
-            modelBuilder.Entity<Source>()
+            modelBuilder.Entity<Platform>()
                 .HasKey(x => x.Id);
 
-            modelBuilder.Entity<Source>()
+            modelBuilder.Entity<Platform>()
                 .Property(x => x.Id)
                 .HasColumnName("ID");
 
-            modelBuilder.Entity<Source>()
+            modelBuilder.Entity<Platform>()
                 .Property(x => x.UUID)
                 .HasColumnName("UUID");
 
-            modelBuilder.Entity<Source>()
+            modelBuilder.Entity<Platform>()
                 .Property(x => x.Name)
                 .HasColumnName("NAME");
 
-            modelBuilder.Entity<Source>()
+            modelBuilder.Entity<Platform>()
                 .Property(x => x.Url)
                 .HasColumnName("URL");
 
-            modelBuilder.Entity<Source>()
+            modelBuilder.Entity<Platform>()
                 .Property(x => x.CreateDate)
                 .HasColumnName("CREATE_DATE");
 
-            modelBuilder.Entity<Source>()
+            modelBuilder.Entity<Platform>()
                 .Property(x => x.AlterDate)
                 .HasColumnName("ALTER_DATE");
 
-            modelBuilder.Entity<Source>()
+            modelBuilder.Entity<Platform>()
                 .Property(x => x.Active)
                 .HasColumnName("ACTIVE");
 
-            modelBuilder.Entity<Source>()
+            modelBuilder.Entity<Platform>()
                 .HasMany(x => x.ContentCategories)
-                .WithOne(x => x.Source)
-                .HasForeignKey(x => x.SourceId);
+                .WithOne(x => x.Platform)
+                .HasForeignKey(x => x.PlatformId);
         }
     }
 }

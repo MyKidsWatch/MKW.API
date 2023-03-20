@@ -5,8 +5,8 @@ namespace MKW.Domain.Entities.ContentAggregate
     public class ContentCategory : BaseEntity
     {
         public string Name { get; set; }
-        public int SourceId { get; set; }
-        public virtual Source Source { get; set; }
+        public int PlatformId { get; set; }
+        public virtual Platform Platform { get; set; }
         public virtual ICollection<Content> Contents { get; set; }
     }
 }

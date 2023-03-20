@@ -26,7 +26,7 @@ namespace MKW.Data.Context.Mapping.ContentAggregate
                 .HasColumnName("NAME");
 
             modelBuilder.Entity<ContentCategory>()
-                .Property(x => x.SourceId)
+                .Property(x => x.PlatformId)
                 .HasColumnName("SOURCE_ID");
 
             modelBuilder.Entity<ContentCategory>()
@@ -42,9 +42,9 @@ namespace MKW.Data.Context.Mapping.ContentAggregate
                 .HasColumnName("ACTIVE");
 
             modelBuilder.Entity<ContentCategory>()
-                .HasOne(x => x.Source)
+                .HasOne(x => x.Platform)
                 .WithMany(x => x.ContentCategories)
-                .HasForeignKey(x => x.SourceId);
+                .HasForeignKey(x => x.PlatformId);
 
             modelBuilder.Entity<ContentCategory>()
                 .HasMany(x => x.Contents)
