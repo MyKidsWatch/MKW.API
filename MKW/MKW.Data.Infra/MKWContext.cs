@@ -17,12 +17,12 @@ namespace MKW.Data.Infra
         {
             CommentDetailsMap.Map(modelBuilder);
             CommentMap.Map(modelBuilder);
-            ContentCategoryMap.Map(modelBuilder);
             ContentMap.Map(modelBuilder);
+            PlatformCategoryMap.Map(modelBuilder);
+            PlatformMap.Map(modelBuilder);
             PostDetailsMap.Map(modelBuilder);
             PostMap.Map(modelBuilder);
             PremiumPersonMap.Map(modelBuilder);
-            PlatformMap.Map(modelBuilder);
             TierMap.Map(modelBuilder);
             TierPlanMap.Map(modelBuilder);
             TimespanMap.Map(modelBuilder);

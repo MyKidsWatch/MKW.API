@@ -6,8 +6,8 @@ namespace MKW.Domain.Entities.ContentAggregate
     public class Content : BaseEntity
     {
         public string Name { get; set; }
-        public int ContentCategoryId { get; set; }
-        public virtual ContentCategory ContentCategory { get; set; }
+        public int PlatformCategoryId { get; set; }
+        public virtual PlatformCategory PlatformCategory { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
     }
 }

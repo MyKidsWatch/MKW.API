@@ -3,53 +3,53 @@ using MKW.Domain.Entities.ContentAggregate;
 
 namespace MKW.Data.Context.Mapping.ContentAggregate
 {
-    public class ContentCategoryMap
+    public class PlatformCategoryMap
     {
         public static void Map(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ContentCategory>()
-                .ToTable("TB_MKW_CONTENT_CATEGORY");
+            modelBuilder.Entity<PlatformCategory>()
+                .ToTable("TB_MKW_PLATFORM_CATEGORY");
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .HasKey(x => x.Id);
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .Property(x => x.Id)
                 .HasColumnName("ID");
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .Property(x => x.UUID)
                 .HasColumnName("UUID");
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .Property(x => x.Name)
                 .HasColumnName("NAME");
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .Property(x => x.PlatformId)
-                .HasColumnName("SOURCE_ID");
+                .HasColumnName("PLATFORM_ID");
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .Property(x => x.CreateDate)
                 .HasColumnName("CREATE_DATE");
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .Property(x => x.AlterDate)
                 .HasColumnName("ALTER_DATE");
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .Property(x => x.Active)
                 .HasColumnName("ACTIVE");
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .HasOne(x => x.Platform)
-                .WithMany(x => x.ContentCategories)
+                .WithMany(x => x.PlatformCategories)
                 .HasForeignKey(x => x.PlatformId);
 
-            modelBuilder.Entity<ContentCategory>()
+            modelBuilder.Entity<PlatformCategory>()
                 .HasMany(x => x.Contents)
-                .WithOne(x => x.ContentCategory)
-                .HasForeignKey(x => x.ContentCategoryId);
+                .WithOne(x => x.PlatformCategory)
+                .HasForeignKey(x => x.PlatformCategoryId);
         }
     }
 }

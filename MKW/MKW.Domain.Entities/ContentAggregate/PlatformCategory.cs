@@ -2,7 +2,7 @@
 
 namespace MKW.Domain.Entities.ContentAggregate
 {
-    public class ContentCategory : BaseEntity
+    public class PlatformCategory : BaseEntity
     {
         public string Name { get; set; }
         public int PlatformId { get; set; }

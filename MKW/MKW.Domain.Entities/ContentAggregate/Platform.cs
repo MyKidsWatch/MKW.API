@@ -6,6 +6,6 @@ namespace MKW.Domain.Entities.ContentAggregate
     {
         public string Name { get; set; }
         public string Url { get; set; }
-        public virtual ICollection<ContentCategory> ContentCategories { get; set; }
+        public virtual ICollection<PlatformCategory> PlatformCategories { get; set; }
     }
 }

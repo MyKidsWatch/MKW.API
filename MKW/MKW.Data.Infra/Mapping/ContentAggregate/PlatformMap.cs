@@ -42,7 +42,7 @@ namespace MKW.Data.Context.Mapping.ContentAggregate
                 .HasColumnName("ACTIVE");
 
             modelBuilder.Entity<Platform>()
-                .HasMany(x => x.ContentCategories)
+                .HasMany(x => x.PlatformCategories)
                 .WithOne(x => x.Platform)
                 .HasForeignKey(x => x.PlatformId);
         }
