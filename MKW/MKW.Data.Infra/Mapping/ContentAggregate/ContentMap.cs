@@ -50,6 +50,11 @@ namespace MKW.Data.Context.Mapping.ContentAggregate
                 .HasMany(x => x.Posts)
                 .WithOne(x => x.Content)
                 .HasForeignKey(x => x.ContentId);
+
+            modelBuilder.Entity<Content>()
+                .HasMany(x => x.ContentGenre)
+                .WithOne(x => x.Content)
+                .HasForeignKey(x => x.ContentId);
         }
     }
 }

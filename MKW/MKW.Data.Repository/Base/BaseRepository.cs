@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MKW.Data.Infra;
+using MKW.Data.Context;
 using MKW.Domain.Entities.Base;
 using MKW.Domain.Interface.Repository.Base;
 
-namespace MKW.Domain.Interface.Services.Base
+namespace MKW.Data.Repository.Base
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {

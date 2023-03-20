@@ -4,7 +4,7 @@ using MKW.Data.Context.Mapping.ContentAggregate;
 using MKW.Data.Context.Mapping.PremiumAggregate;
 using MKW.Data.Context.Mapping.ReviewAggregate;
 
-namespace MKW.Data.Infra
+namespace MKW.Data.Context
 {
     public class MKWContext : DbContext
     {
@@ -17,7 +17,9 @@ namespace MKW.Data.Infra
         {
             CommentDetailsMap.Map(modelBuilder);
             CommentMap.Map(modelBuilder);
+            ContentGenreMap.Map(modelBuilder);
             ContentMap.Map(modelBuilder);
+            GenreMap.Map(modelBuilder);
             PlatformCategoryMap.Map(modelBuilder);
             PlatformMap.Map(modelBuilder);
             PostDetailsMap.Map(modelBuilder);

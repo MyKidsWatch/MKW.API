@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MKW.API.Dependencies;
-using MKW.Data.Infra;
+using MKW.Data.Context;
 using MKW.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
