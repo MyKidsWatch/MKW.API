@@ -1,13 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MKW.Domain.Entities.ContentAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.Data.Context.Mapping.ContentAggregate
 {
+    /// <summary>
+    /// Mapeia a entidade ContentGenre em relação à tabela da Base de Dados
+    /// </summary>
     public class ContentGenreMap
     {
         public static void Map(ModelBuilder modelBuilder)

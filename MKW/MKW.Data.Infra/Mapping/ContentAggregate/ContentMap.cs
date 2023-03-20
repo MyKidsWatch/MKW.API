@@ -3,6 +3,9 @@ using MKW.Domain.Entities.ContentAggregate;
 
 namespace MKW.Data.Context.Mapping.ContentAggregate
 {
+    /// <summary>
+    /// Mapeia a entidade Content em relação à tabela da Base de Dados
+    /// </summary>
     public class ContentMap
     {
         public static void Map(ModelBuilder modelBuilder)

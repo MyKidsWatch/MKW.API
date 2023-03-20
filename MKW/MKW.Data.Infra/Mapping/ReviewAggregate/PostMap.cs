@@ -3,6 +3,9 @@ using MKW.Domain.Entities.ReviewAggregate;
 
 namespace MKW.Data.Context.Mapping.ReviewAggregate
 {
+    /// <summary>
+    /// Mapeia a entidade Post em relação à tabela da Base de Dados
+    /// </summary>
     public class PostMap
     {
         public static void Map(ModelBuilder modelBuilder)

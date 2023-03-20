@@ -3,6 +3,9 @@ using MKW.Domain.Entities.UserAggregate;
 
 namespace MKW.Data.Context.Mapping.UserAggregate
 {
+    /// <summary>
+    /// Mapeia a entidade Person em relação à tabela da Base de Dados
+    /// </summary>
     public class PersonMap
     {
         public static void Map(ModelBuilder modelBuilder)

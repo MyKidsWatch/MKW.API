@@ -3,6 +3,9 @@ using MKW.Domain.Entities.PremiumAggregate;
 
 namespace MKW.Data.Context.Mapping.PremiumAggregate
 {
+    /// <summary>
+    /// Mapeia a entidade PremiumPerson em relação à tabela da Base de Dados
+    /// </summary>
     public class PremiumPersonMap
     {
         public static void Map(ModelBuilder modelBuilder)

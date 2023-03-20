@@ -5,6 +5,11 @@ using MKW.Domain.Interface.Repository.Base;
 
 namespace MKW.Data.Repository.Base
 {
+    /// <summary>
+    /// Repositório de Base que adiciona operações de CRUD para a TEntity informada.
+    /// Disponibiliza também a propriedade _dbSet para acesso à Tabela equivalente à TEntity na Base de Dados.
+    /// </summary>
+    /// <typeparam name="TEntity">Entidade que herda da BaseEntity</typeparam>
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly MKWContext _context;
@@ -22,6 +27,8 @@ namespace MKW.Data.Repository.Base
 
         public async Task<TEntity> Add(TEntity entity)
         {
+            entity.CreateDate = DateTime.Now;
+            entity.AlterDate = DateTime.Now;
             var addedEntity = _dbSet.Add(entity).Entity;
             await _context.SaveChangesAsync();
             return addedEntity;
@@ -29,6 +36,7 @@ namespace MKW.Data.Repository.Base
 
         public async Task<TEntity> Update(TEntity entity)
         {
+            entity.AlterDate = DateTime.Now;
             var updatedEntity = _dbSet.Update(entity).Entity;
             await _context.SaveChangesAsync();
             return updatedEntity;
@@ -36,15 +44,33 @@ namespace MKW.Data.Repository.Base
 
         public async Task Delete(TEntity entity)
         {
-            _dbSet.Remove(entity);
+            entity.Active = false;
+            _dbSet.Update(entity);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteById(int id)
         {
             var entity = _dbSet.Find(id);
-            if (entity != null) _dbSet.Remove(entity);
-            await _context.SaveChangesAsync();
+
+            if (entity != null)
+            {
+                entity.Active = false;
+                _dbSet.Update(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteByUUID(Guid uuid)
+        {
+            var entity = _dbSet.FirstOrDefault(x => x.UUID == uuid);
+
+            if (entity != null)
+            {
+                entity.Active = false;
+                _dbSet.Update(entity);
+                await _context.SaveChangesAsync();
+            }
         }
 
         protected async Task SaveChanges()
