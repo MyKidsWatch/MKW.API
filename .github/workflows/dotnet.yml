@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore **/**.csproj
+      run: dotnet restore MKW/MKW.sln
     - name: Build
-      run: dotnet build  **/**.csproj --no-restore
+      run: dotnet build  MKW/MKW.sln --no-restore
     - name: Test
-      run: dotnet test **/**.csproj --no-build --verbosity normal
+      run: dotnet test MKW/MKW.sln --no-build --verbosity normal
