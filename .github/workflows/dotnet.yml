@@ -3,6 +3,9 @@
 
 name: .NET
 
+env:
+  SLN_PATH: MKW/MKW.sln
+
 on:
   push:
     branches: [ "master" ]
@@ -21,8 +24,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore MKW/MKW.sln
+      run: dotnet restore $SLN_PATH
     - name: Build
-      run: dotnet build  MKW/MKW.sln --no-restore
+      run: dotnet build $SLN_PATH --no-restore
     - name: Test
-      run: dotnet test MKW/MKW.sln --no-build --verbosity normal
+      run: dotnet test $SLN_PATH --no-build --verbosity normal
