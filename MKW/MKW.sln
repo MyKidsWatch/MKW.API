@@ -39,6 +39,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Services.AppServices", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Services.BaseServices", "MKW.Services.BaseServices\MKW.Services.BaseServices.csproj", "{9F61D1EE-9370-49F7-93B3-A5A5D5C6B447}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Testes", "5 - Testes", "{41F74524-BD03-45A5-9A3D-7C14DF35A118}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Tests", "MKW.Tests\MKW.Tests.csproj", "{49BC3030-700B-48D7-8BB8-83A6B3FCD64D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +93,10 @@ Global
 		{9F61D1EE-9370-49F7-93B3-A5A5D5C6B447}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F61D1EE-9370-49F7-93B3-A5A5D5C6B447}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F61D1EE-9370-49F7-93B3-A5A5D5C6B447}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49BC3030-700B-48D7-8BB8-83A6B3FCD64D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49BC3030-700B-48D7-8BB8-83A6B3FCD64D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49BC3030-700B-48D7-8BB8-83A6B3FCD64D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49BC3030-700B-48D7-8BB8-83A6B3FCD64D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +115,7 @@ Global
 		{D400288A-E74B-4A48-BCB4-C6BE422BF6C7} = {14AD6D82-D6B0-4D2F-811E-0398107B4905}
 		{06CC9640-FF5A-442E-AC43-749F5779021A} = {167F39A6-4245-4F92-98E4-80ED5B3F20AF}
 		{9F61D1EE-9370-49F7-93B3-A5A5D5C6B447} = {167F39A6-4245-4F92-98E4-80ED5B3F20AF}
+		{49BC3030-700B-48D7-8BB8-83A6B3FCD64D} = {41F74524-BD03-45A5-9A3D-7C14DF35A118}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C8BCFC0-739A-415E-95DC-86E2A8CCCE7D}
