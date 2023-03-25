@@ -11,8 +11,4 @@
     <ProjectReference Include="..\MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="AppServices\" />
-  </ItemGroup>
-
 </Project>

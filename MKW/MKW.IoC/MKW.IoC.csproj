@@ -17,6 +17,7 @@
     <ProjectReference Include="..\MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj" />
     <ProjectReference Include="..\MKW.Domain.Interface.Services\MKW.Domain.Interface.Services.csproj" />
     <ProjectReference Include="..\MKW.Middleware\MKW.Middleware.csproj" />
+    <ProjectReference Include="..\MKW.Services.AppServices\MKW.Services.AppServices.csproj" />
     <ProjectReference Include="..\MKW.Services.BaseServices\MKW.Services.BaseServices.csproj" />
   </ItemGroup>
 
