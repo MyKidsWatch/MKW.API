@@ -2,8 +2,6 @@
 using MKW.API.Controllers.Base;
 using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Interface.Services.AppServices;
-using MKW.Domain.Interface.Services.BaseServices;
-using MKW.Services.BaseServices;
 
 namespace MKW.API.Controllers
 {

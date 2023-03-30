@@ -1,11 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MKW.Domain.Interface.Services.BaseServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.Services.BaseServices
 {
