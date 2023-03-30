@@ -52,6 +52,8 @@ builder.Services.AddDbContext<MKWContext>(options =>
 #region IoC
 builder.Services.StartRegisterServices();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddHttpClient();
 #endregion
 
 var app = builder.Build();

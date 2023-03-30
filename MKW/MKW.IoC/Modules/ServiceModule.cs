@@ -15,6 +15,7 @@ namespace MKW.IoC.Modules
             #endregion
             #region BaseServices
             builder.AddTransient<IEmailService, EmailService>();
+            builder.AddTransient<ITmdbService,TmdbService>();
             #endregion
         }
     }

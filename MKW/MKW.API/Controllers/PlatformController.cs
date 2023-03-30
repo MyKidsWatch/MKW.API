@@ -2,6 +2,8 @@
 using MKW.API.Controllers.Base;
 using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Interface.Services.AppServices;
+using MKW.Domain.Interface.Services.BaseServices;
+using MKW.Services.BaseServices;
 
 namespace MKW.API.Controllers
 {
@@ -16,6 +18,6 @@ namespace MKW.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Platform>?> GetAll() => await _platformService.GetAll();
+        public async Task<ActionResult<IEnumerable<Platform>?>> GetAll() => Ok(await _platformService.GetAll());
     }
 }
