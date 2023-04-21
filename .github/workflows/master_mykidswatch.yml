@@ -5,6 +5,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - mykidswatch
 
 env:
   SLN_PATH: MKW/MKW.sln
+  API_PATH: MKW/MKW.API/MKW.API.csproj
 
 on:
   push:
@@ -26,10 +27,10 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build $SLN_PATH --configuration Release
+        run: dotnet build $API_PATH --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish $SLN_PATH -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish $API_PATH -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
