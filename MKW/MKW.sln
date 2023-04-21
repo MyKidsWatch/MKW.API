@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Services.AppServices", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Services.BaseServices", "MKW.Services.BaseServices\MKW.Services.BaseServices.csproj", "{9F61D1EE-9370-49F7-93B3-A5A5D5C6B447}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Testes", "5 - Testes", "{41F74524-BD03-45A5-9A3D-7C14DF35A118}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Tests", "5 - Tests", "{41F74524-BD03-45A5-9A3D-7C14DF35A118}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Tests", "MKW.Tests\MKW.Tests.csproj", "{49BC3030-700B-48D7-8BB8-83A6B3FCD64D}"
 EndProject

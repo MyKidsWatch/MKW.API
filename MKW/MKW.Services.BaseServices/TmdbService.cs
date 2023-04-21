@@ -15,12 +15,11 @@ namespace MKW.Services.BaseServices
             _client = client;
             _apiKey = configuration["API:TMDB:key"]!;
             _baseUrl = configuration["API:TMDB:url"]!;
-
         }
 
         public async Task<object> GetMovie(int movieId)
         {
-            return await _client.GetFromJsonAsync<object>($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}");
+            return (await _client.GetFromJsonAsync<object>($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}"))!;
         }
     }
 }
