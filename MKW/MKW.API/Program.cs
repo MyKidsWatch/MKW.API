@@ -43,7 +43,7 @@ builder.Services.AddSwaggerGen(swagger =>
 var connString = builder.Configuration.GetConnectionString("DefaultConnString");
 builder.Services.AddDbContext<MKWContext>(options =>
 {
-    //options.UseSqlServer(connString);
+    options.UseSqlServer(connString);
     options.UseLazyLoadingProxies();
 }
 );
