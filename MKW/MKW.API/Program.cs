@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using MKW.API.Dependencies;
 using MKW.Data.Context;
 using MKW.Middleware;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +57,12 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHttpClient();
 #endregion
 
+Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs/MKW.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
 var app = builder.Build();
 
 //if (app.Environment.IsDevelopment())
@@ -74,5 +81,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseMiddleware<RequestMiddleware>();
+
+Log.Debug("{Data}","App started");
 
 app.Run();
