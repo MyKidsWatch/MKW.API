@@ -2,11 +2,11 @@
 
 namespace MKW.Domain.Entities.ReviewAggregate
 {
-    public class PostDetails : BaseEntity
+    public class ReviewDetails : BaseEntity
     {
-        public int PostId { get; set; }
+        public int ReviewId { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
-        public virtual Post Post { get; set; }
+        public virtual Review Review { get; set; }
     }
 }

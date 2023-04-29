@@ -28,16 +28,20 @@ namespace MKW.IoC.Modules
             builder.AddTransient<ITimespanRepository, TimespanRepository>();
             #endregion
             #region Review Aggregate
+            builder.AddTransient<IAwardPersonRepository, AwardPersonRepository>();
+            builder.AddTransient<IAwardRepository, AwardRepository>();
             builder.AddTransient<ICommentDetailsRepository, CommentDetailsRepository>();
             builder.AddTransient<ICommentRepository, CommentRepository>();
-            builder.AddTransient<IPostDetailsRepository, PostDetailsRepository>();
-            builder.AddTransient<IPostRepository, PostRepository>();
+            builder.AddTransient<IReviewDetailsRepository, ReviewDetailsRepository>();
+            builder.AddTransient<IReviewRepository, ReviewRepository>();
             #endregion
             #region User Aggregate
             builder.AddTransient<IAgeRangeRepository, AgeRangeRepository>();
+            builder.AddTransient<IBalanceRepository, BalanceRepository>();
             builder.AddTransient<IGenderRepository, GenderRepository>();
             builder.AddTransient<IPersonRepository, PersonRepository>();
             builder.AddTransient<IPersonChildRepository, PersonChildRepository>();
+            builder.AddTransient<ITransactionRepository, TransactionRepository>();
             #endregion
 
         }

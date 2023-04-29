@@ -8,7 +8,7 @@ namespace MKW.Domain.Entities.ContentAggregate
         public string Name { get; set; }
         public int PlatformCategoryId { get; set; }
         public virtual PlatformCategory PlatformCategory { get; set; }
-        public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<ContentGenre> ContentGenre { get; set; }
     }
 }

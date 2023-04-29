@@ -92,12 +92,22 @@ namespace MKW.Data.Context.Mapping.UserAggregate
                 .HasForeignKey(x => x.PersonId);
 
             modelBuilder.Entity<Person>()
-                .HasMany(x => x.Posts)
+                .HasMany(x => x.Reviews)
                 .WithOne(x => x.Person)
                 .HasForeignKey(x => x.PersonId);
 
             modelBuilder.Entity<Person>()
                 .HasMany(x => x.Comments)
+                .WithOne(x => x.Person)
+                .HasForeignKey(x => x.PersonId);
+
+            modelBuilder.Entity<Person>()
+                .HasOne(x => x.Balance)
+                .WithOne(x => x.Person)
+                .HasForeignKey<Balance>(x => x.PersonId);
+
+            modelBuilder.Entity<Person>()
+                .HasMany(x => x.AwardsGiven)
                 .WithOne(x => x.Person)
                 .HasForeignKey(x => x.PersonId);
         }

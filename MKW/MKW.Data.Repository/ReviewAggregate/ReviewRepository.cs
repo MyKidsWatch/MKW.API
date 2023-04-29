@@ -6,11 +6,11 @@ using MKW.Domain.Interface.Repository.ReviewAggregate;
 namespace MKW.Data.Repository.ReviewAggregate
 {
     /// <summary>
-    /// Repositório para a entidade PostDetails. Disponibiliza métodos de CRUD da Entidade.
+    /// Repositório para a entidade Post. Disponibiliza métodos de CRUD da Entidade.
     /// </summary>
-    public class PostDetailsRepository : BaseRepository<PostDetails>, IPostDetailsRepository
+    public class ReviewRepository : BaseRepository<Review>, IReviewRepository
     {
-        public PostDetailsRepository(MKWContext context) : base(context)
+        public ReviewRepository(MKWContext context) : base(context)
         {
         }
     }
