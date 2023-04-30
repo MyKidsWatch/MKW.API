@@ -26,4 +26,8 @@
     <ProjectReference Include="..\MKW.Domain.Entities\MKW.Domain.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

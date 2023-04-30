@@ -16,6 +16,6 @@ namespace MKW.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Platform>?>> GetAll() => Ok(await _platformService.GetAll());
+        public async Task<ActionResult<IEnumerable<Platform>?>> GetAll() => Ok(await _platformService.Get());
     }
 }
