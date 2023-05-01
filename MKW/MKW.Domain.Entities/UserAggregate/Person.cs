@@ -7,10 +7,10 @@ namespace MKW.Domain.Entities.UserAggregate
 {
     public class Person : BaseEntity
     {
-        public DateOnly BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
         public int GenderId { get; set; }
+        public virtual User User { get; set; }
         public virtual Gender Gender { get; set; }
         public virtual Balance Balance { get; set; }
         public virtual ICollection<PersonChild> Children { get; set; }
