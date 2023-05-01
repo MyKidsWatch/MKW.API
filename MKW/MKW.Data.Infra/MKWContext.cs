@@ -17,7 +17,7 @@ namespace MKW.Data.Context
     /// <summary>
     /// Contexto da Base de Dados do MyKidsWatch. Contém propriedades de acesso às Tabelas relacionadas às Entidades do Sistema.
     /// </summary>
-    public class MKWContext : IdentityDbContext<User,IdentityRole<int>, int> 
+    public class MKWContext : IdentityDbContext<User, IdentityRole<int>, int, IdentityUserClaim<int>, IdentityUserRole<int>, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public MKWContext(DbContextOptions<MKWContext> options) : base(options)
         {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MKW.Data.Context.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentityContext : Migration
+    public partial class UpdateIdentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,7 @@ namespace MKW.Data.Context.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -347,8 +348,8 @@ namespace MKW.Data.Context.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BIRTHDATE = table.Column<DateTime>(type: "date", nullable: false),
                     USER_ID = table.Column<int>(type: "int", nullable: false),
+                    BIRTHDATE = table.Column<DateTime>(type: "date", nullable: false),
                     GENDER_ID = table.Column<int>(type: "int", nullable: false),
                     UUID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CREATE_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
