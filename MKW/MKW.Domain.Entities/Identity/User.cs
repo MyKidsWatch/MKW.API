@@ -13,5 +13,8 @@ namespace MKW.Domain.Entities.Identity
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ImageURL { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime? AlterDate { get; set; }
+        public bool Active { get; set; }
     }
 }
