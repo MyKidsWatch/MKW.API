@@ -19,8 +19,8 @@ namespace MKW.Domain.Interface.Repository.IdentityAggregate
         Task<IEnumerable<TIdentity>> GetAllUsersAsync();
         Task<IEnumerable<TIdentity>> GetAllUsersByClaimAsync(Claim claim);
         Task<IEnumerable<TIdentity>> GetAllUsersByRoleAsync(string roleName);
-        Task<(IdentityResult, TIdentity)> AddUserAsync(TIdentity user, string password);
-        Task<(IdentityResult, TIdentity)> UpdateUserAsync(TIdentity user);
+        Task<(IdentityResult result, TIdentity user)> AddUserAsync(TIdentity user, string password);
+        Task<(IdentityResult result, TIdentity user)> UpdateUserAsync(TIdentity user);
         Task<IdentityResult> DeleteUserAsync(TIdentity user);
         Task<IdentityResult> DeleteUserByIdAsync(int id);
         Task<IdentityResult> DeleteUserByUserNameAsync(string userName);
