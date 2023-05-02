@@ -36,14 +36,15 @@ namespace MKW.Data.Repository.IdentityAggregate
             user.CreateDate = DateTime.Now;
             user.AlterDate = DateTime.Now;
             var createResult = await _userManager.CreateAsync(user, password);
-            return (createResult, createdUser: user);
+            var userResult = await _userManager.FindByNameAsync(user.UserName);
+            return (createResult, userResult);
         }
 
         public async Task<(IdentityResult, User)> UpdateUserAsync(User user)
         {
             user.AlterDate = DateTime.Now;
             var updateResult = await _userManager.UpdateAsync(user);
-            return (updateResult, updatedUser: user);
+            return (updateResult, user);
         }
 
         public async Task<IdentityResult> DeleteUserAsync(User user)
@@ -53,6 +54,7 @@ namespace MKW.Data.Repository.IdentityAggregate
 
             if (userDatabase != null)
             {
+                user.AlterDate = DateTime.Now;
                 userDatabase.Active = false;
                 await _userManager.SetLockoutEnabledAsync(userDatabase, true);
                 return await _userManager.UpdateAsync(userDatabase);
