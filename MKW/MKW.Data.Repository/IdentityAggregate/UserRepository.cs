@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MKW.Data.Context;
-using MKW.Domain.Entities.Identity;
+using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
 using System;
 using System.Collections.Generic;
@@ -15,24 +15,24 @@ namespace MKW.Data.Repository.IdentityAggregate
     public class UserRepository : IUserRepository
     {
         private readonly MKWContext _context;
-        protected readonly DbSet<User> _dbSet;
-        protected readonly UserManager<User> _userManager;
-        public UserRepository(MKWContext context, UserManager<User> userManager)
+        protected readonly DbSet<ApplicationUser> _dbSet;
+        protected readonly UserManager<ApplicationUser> _userManager;
+        public UserRepository(MKWContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
-            _dbSet = _context.Set<User>();
+            _dbSet = _context.Set<ApplicationUser>();
             _userManager = userManager;
         }
 
-        public async Task<User?> GetUserByIdAsync(int id) => await _dbSet.FindAsync(id);
-        public async Task<User?> GetUserByUserNameAsync(string userName) => await _userManager.FindByNameAsync(userName);
-        public async Task<IEnumerable<User>> GetActiveUsersAsync() => await _dbSet.Where(x => x.Active).ToListAsync();
-        public async Task<IEnumerable<User>?> GetAllUsersAsync() 
+        public async Task<ApplicationUser?> GetUserByIdAsync(int id) => await _dbSet.FindAsync(id);
+        public async Task<ApplicationUser?> GetUserByUserNameAsync(string userName) => await _userManager.FindByNameAsync(userName);
+        public async Task<IEnumerable<ApplicationUser>> GetActiveUsersAsync() => await _dbSet.Where(x => x.Active).ToListAsync();
+        public async Task<IEnumerable<ApplicationUser>?> GetAllUsersAsync() 
             => await _dbSet.ToListAsync(); 
-        public async Task<IEnumerable<User>> GetAllUsersByClaimAsync(Claim claim) => await _userManager.GetUsersForClaimAsync(claim);
-        public async Task<IEnumerable<User>> GetAllUsersByRoleAsync(string roleName) => await _userManager.GetUsersInRoleAsync(roleName);
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersByClaimAsync(Claim claim) => await _userManager.GetUsersForClaimAsync(claim);
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersByRoleAsync(string roleName) => await _userManager.GetUsersInRoleAsync(roleName);
 
-        public async Task<(IdentityResult, User)> AddUserAsync(User user, string password)
+        public async Task<(IdentityResult, ApplicationUser)> AddUserAsync(ApplicationUser user, string password)
         {
             user.CreateDate = DateTime.Now;
             user.AlterDate = DateTime.Now;
@@ -41,14 +41,14 @@ namespace MKW.Data.Repository.IdentityAggregate
             return (createResult, userResult);
         }
 
-        public async Task<(IdentityResult, User)> UpdateUserAsync(User user)
+        public async Task<(IdentityResult, ApplicationUser)> UpdateUserAsync(ApplicationUser user)
         {
             user.AlterDate = DateTime.Now;
             var updateResult = await _userManager.UpdateAsync(user);
             return (updateResult, user);
         }
 
-        public async Task<IdentityResult> DeleteUserAsync(User user)
+        public async Task<IdentityResult> DeleteUserAsync(ApplicationUser user)
         {
             //TODO: rever chamada dupla no banco quando ById ou ByUserName
             var userDatabase = await _dbSet.FindAsync(user);

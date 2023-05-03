@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using MKW.Domain.Dto.Identity;
-using MKW.Domain.Entities.Identity;
+﻿using MKW.Domain.Dto.Identity;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -16,7 +14,7 @@ namespace MKW.Domain.Interface.Services.AppServices.Identity
 {
     public interface IAccountService
     {
-        Task<IEnumerable<ReadUserDTO>> GetAllAccounts();
+        Task<IEnumerable<ReadUserDTO>?> GetAllAccounts();
         Task<ReadUserDTO?> GetAccountByUserId(int id);
         Task<ReadUserDTO?> GetAccountByUserName(string userName);
         Task<IEnumerable<ReadUserDTO>> GetAllAccountsByClaim(Claim claim);

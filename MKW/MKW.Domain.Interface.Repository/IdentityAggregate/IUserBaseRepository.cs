@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MKW.Domain.Entities.ContentAggregate;
-using MKW.Domain.Entities.Identity;
+using MKW.Domain.Entities.IdentityAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +11,8 @@ namespace MKW.Domain.Interface.Repository.IdentityAggregate
 {
     public interface IUserBaseRepository<TIdentity> where TIdentity : IdentityUser<int>
     {
-        Task<User?> GetUserByIdAsync(int id);
-        Task<User?> GetUserByUserNameAsync(string userName);
+        Task<ApplicationUser?> GetUserByIdAsync(int id);
+        Task<ApplicationUser?> GetUserByUserNameAsync(string userName);
         Task<IEnumerable<TIdentity>> GetActiveUsersAsync();
         Task<IEnumerable<TIdentity>> GetAllUsersAsync();
         Task<IEnumerable<TIdentity>> GetAllUsersByClaimAsync(Claim claim);
