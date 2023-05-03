@@ -7,7 +7,7 @@ using MKW.Data.Context.Mapping.PremiumAggregate;
 using MKW.Data.Context.Mapping.ReviewAggregate;
 using MKW.Data.Context.Mapping.UserAggregate;
 using MKW.Domain.Entities.ContentAggregate;
-using MKW.Domain.Entities.Identity;
+using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.PremiumAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
@@ -17,7 +17,7 @@ namespace MKW.Data.Context
     /// <summary>
     /// Contexto da Base de Dados do MyKidsWatch. Contém propriedades de acesso às Tabelas relacionadas às Entidades do Sistema.
     /// </summary>
-    public class MKWContext : IdentityDbContext<User, IdentityRole<int>, int>
+    public class MKWContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
         public MKWContext(DbContextOptions<MKWContext> options) : base(options)
         {

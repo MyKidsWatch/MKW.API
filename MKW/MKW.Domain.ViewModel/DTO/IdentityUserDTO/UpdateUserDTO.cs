@@ -1,5 +1,4 @@
-﻿using MKW.Domain.Dto.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MKW.Domain.Dto.Identity
 {
-    public class UpdateUserDTO : BaseDTO
+    public class UpdateUserDTO
     {
         [Required(ErrorMessage = "The field {0} is required")]
         public int Id { get; set; }
@@ -24,9 +23,6 @@ namespace MKW.Domain.Dto.Identity
         [MaxLength(50, ErrorMessage = "Max length 50")]
         [MinLength(3, ErrorMessage = "Min length 3")]
         public string? LastName { get; set; }
-
-        [Url(ErrorMessage = "The field {0} is invalid")]
-        public string? ImageURL { get; set; }
 
         [EmailAddress(ErrorMessage = "The field {0} is invalid")]
         public string? Email { get; set; }

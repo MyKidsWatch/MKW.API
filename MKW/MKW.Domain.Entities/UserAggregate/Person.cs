@@ -1,5 +1,5 @@
 ﻿using MKW.Domain.Entities.Base;
-using MKW.Domain.Entities.Identity;
+using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.PremiumAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 
@@ -7,11 +7,11 @@ namespace MKW.Domain.Entities.UserAggregate
 {
     public class Person : BaseEntity
     {
-        public string ImageURL { get; set; }
+        public string? ImageURL { get; set; }
         public DateTime BirthDate { get; set; }
         public int UserId { get; set; }
         public int GenderId { get; set; }
-        public virtual User User { get; set; }
+        public virtual ApplicationUser User { get; set; }
         public virtual Gender Gender { get; set; }
         public virtual Balance Balance { get; set; }
         public virtual ICollection<PersonChild> Children { get; set; }

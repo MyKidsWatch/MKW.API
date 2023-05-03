@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MKW.Domain.Entities.Identity
+namespace MKW.Domain.Entities.IdentityAggregate
 {
     //TODO: Alterar para GUID ou UUID
-    public class User : IdentityUser<int>
+    public class ApplicationUser : IdentityUser<int>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
