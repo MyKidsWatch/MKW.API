@@ -7,6 +7,7 @@ namespace MKW.Domain.Entities.UserAggregate
 {
     public class Person : BaseEntity
     {
+        public string ImageURL { get; set; }
         public DateTime BirthDate { get; set; }
         public int UserId { get; set; }
         public int GenderId { get; set; }

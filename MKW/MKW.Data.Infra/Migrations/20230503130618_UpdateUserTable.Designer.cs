@@ -4,6 +4,7 @@ using MKW.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKW.Data.Context.Migrations
 {
     [DbContext(typeof(MKWContext))]
-    partial class MKWContextModelSnapshot : ModelSnapshot
+    [Migration("20230503130618_UpdateUserTable")]
+    partial class UpdateUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,6 +259,10 @@ namespace MKW.Data.Context.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -900,11 +907,6 @@ namespace MKW.Data.Context.Migrations
                     b.Property<int>("GenderId")
                         .HasColumnType("int")
                         .HasColumnName("GENDER_ID");
-
-                    b.Property<string>("ImageURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("IMAGE_URL");
 
                     b.Property<Guid?>("UUID")
                         .HasColumnType("uniqueidentifier")

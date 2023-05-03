@@ -34,6 +34,10 @@ namespace MKW.Data.Context.Mapping.UserAggregate
                 .HasColumnName("GENDER_ID");
 
             modelBuilder.Entity<Person>()
+                .Property(x => x.ImageURL)
+                .HasColumnName("IMAGE_URL");
+
+            modelBuilder.Entity<Person>()
                 .Property(x => x.BirthDate)
                 .HasColumnName("BIRTHDATE")
                 .HasColumnType("date");
