@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MKW.Data.Repository.IdentityAggregate
 {
-    public class UserRepository : IUserRepository<User>
+    public class UserRepository : IUserRepository
     {
         private readonly MKWContext _context;
         protected readonly DbSet<User> _dbSet;
@@ -27,7 +27,8 @@ namespace MKW.Data.Repository.IdentityAggregate
         public async Task<User?> GetUserByIdAsync(int id) => await _dbSet.FindAsync(id);
         public async Task<User?> GetUserByUserNameAsync(string userName) => await _userManager.FindByNameAsync(userName);
         public async Task<IEnumerable<User>> GetActiveUsersAsync() => await _dbSet.Where(x => x.Active).ToListAsync();
-        public async Task<IEnumerable<User>> GetAllUsersAsync() => await _dbSet.ToListAsync(); 
+        public async Task<IEnumerable<User>?> GetAllUsersAsync() 
+            => await _dbSet.ToListAsync(); 
         public async Task<IEnumerable<User>> GetAllUsersByClaimAsync(Claim claim) => await _userManager.GetUsersForClaimAsync(claim);
         public async Task<IEnumerable<User>> GetAllUsersByRoleAsync(string roleName) => await _userManager.GetUsersInRoleAsync(roleName);
 
