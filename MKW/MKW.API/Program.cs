@@ -6,7 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MKW.API.Dependencies;
 using MKW.Data.Context;
-using MKW.Domain.Entities.Identity;
+using MKW.Domain.Entities.IdentityAggregate;
+using MKW.IoC.Modules;
 using MKW.Middleware;
 using Serilog;
 using System.Data;
@@ -65,44 +66,8 @@ builder.Services.AddDbContext<MKWContext>(options =>
 );
 #endregion
 
-#region Identity
-
-builder.Services.AddIdentityCore<User>()
-    .AddRoles<IdentityRole<int>>()
-    .AddEntityFrameworkStores<MKWContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication
-(
-    auth =>
-    {
-        auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }
-).AddJwtBearer
-(
-    token =>
-    {
-        token.RequireHttpsMetadata = false;
-        token.SaveToken = true;
-        token.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey =
-            new SymmetricSecurityKey
-            (
-                Encoding.UTF8.GetBytes("eunaosoucachorronaopravivertaodesprezado")
-            ),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ClockSkew = TimeSpan.Zero
-        };
-    }
-);
-#endregion
-
 #region IoC
-builder.Services.StartRegisterServices();
+builder.Services.StartRegisterServices(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHttpClient();
@@ -132,13 +97,12 @@ app.UseHttpsRedirection();
 app.UseCors(options =>
     options.AllowAnyHeader().AllowAnyOrigin());
 
-app.UseAuthorization();
-
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
-//app.UseMiddleware<RequestMiddleware>();
+app.UseMiddleware<RequestMiddleware>();
 
 Log.Debug("{Data}", "App started");
 
