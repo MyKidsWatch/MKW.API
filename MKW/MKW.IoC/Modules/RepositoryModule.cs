@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MKW.Data.Repository.ContentAggregate;
+using MKW.Data.Repository.IdentityAggregate;
 using MKW.Data.Repository.PremiumAggregate;
 using MKW.Data.Repository.ReviewAggregate;
 using MKW.Data.Repository.UserAggregate;
 using MKW.Domain.Interface.Repository.ContentAggregate;
+using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Repository.PremiumAggregate;
 using MKW.Domain.Interface.Repository.ReviewAggregate;
 using MKW.Domain.Interface.Repository.UserAggregate;
@@ -42,6 +44,9 @@ namespace MKW.IoC.Modules
             builder.AddTransient<IPersonRepository, PersonRepository>();
             builder.AddTransient<IPersonChildRepository, PersonChildRepository>();
             builder.AddTransient<ITransactionRepository, TransactionRepository>();
+            #endregion
+            #region Identity Aggregate
+            builder.AddTransient<IUserRepository, UserRepository>();
             #endregion
 
         }
