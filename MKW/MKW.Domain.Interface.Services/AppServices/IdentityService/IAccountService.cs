@@ -1,4 +1,4 @@
-﻿using MKW.Domain.Dto.Identity;
+﻿using MKW.Domain.Dto.IdentityDTO;
 using FluentResults;
 using System;
 using System.Collections.Generic;

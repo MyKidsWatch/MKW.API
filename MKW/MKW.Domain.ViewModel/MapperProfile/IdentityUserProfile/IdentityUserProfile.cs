@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MKW.Domain.Dto.Identity;
+using MKW.Domain.Dto.IdentityDTO;
 using MKW.Domain.Entities.IdentityAggregate;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,6 @@ namespace MKW.Domain.Dto.MapperProfile.IdentityUserProfile
         {
             CreateMap<CreateUserDTO, ApplicationUser>();
             CreateMap<ApplicationUser, ReadUserDTO>();
-            CreateMap<IEnumerable<ApplicationUser>, IEnumerable<ReadUserDTO>>();
             CreateMap<UpdateUserDTO, ApplicationUser>();
             CreateMap<DeleteUserDTO, ApplicationUser>();
         }

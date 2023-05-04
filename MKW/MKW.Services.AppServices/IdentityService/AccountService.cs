@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Microsoft.AspNetCore.Identity;
-using MKW.Domain.Dto.Identity;
+using MKW.Domain.Dto.IdentityDTO;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
@@ -22,14 +22,12 @@ namespace MKW.Services.AppServices.IdentityService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserRepository _repository;
-        private readonly IPersonService _personService;
         private readonly IMapper _mapper;
 
-        public AccountService(UserManager<ApplicationUser> userManager, IUserRepository repository, IPersonService personService, IMapper mapper)
+        public AccountService(UserManager<ApplicationUser> userManager, IUserRepository repository, IMapper mapper)
         {
             _userManager = userManager;
             _repository = repository;
-            _personService = personService;
             _mapper = mapper;
         }
 
@@ -48,10 +46,9 @@ namespace MKW.Services.AppServices.IdentityService
         
         public async Task<(IResultBase, ReadUserDTO?)> RegisterAccount(CreateUserDTO userDTO)
         {
-            try
             var userEntity = _mapper.Map<ApplicationUser>(userDTO);
             var createUser = await _repository.AddUserAsync(userEntity, userDTO.Password);
-            
+
             if (createUser.result.Succeeded)
             {
                 //TODO: Add Roles
@@ -68,8 +65,9 @@ namespace MKW.Services.AppServices.IdentityService
                 var readUser = _mapper.Map<ReadUserDTO>(createUser.user);
                 return (Result.Ok().WithSuccess(encodedConfirmEmailToken), readUser);
             }
-
+    
             var errorList = new List<string>();
+
             foreach(IdentityError error in createUser.result.Errors)
             {
                 errorList.Add(error.Code);

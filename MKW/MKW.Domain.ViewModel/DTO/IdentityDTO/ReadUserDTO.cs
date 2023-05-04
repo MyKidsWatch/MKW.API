@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MKW.Domain.Dto.Identity
+namespace MKW.Domain.Dto.IdentityDTO
 {
     public class ReadUserDTO
     {
