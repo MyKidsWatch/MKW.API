@@ -21,8 +21,7 @@ namespace MKW.Domain.Interface.Services.AppServices.Identity
         Task<IEnumerable<ReadUserDTO>> GetAllAccountsByRole(string roleName);
         Task<IEnumerable<ReadUserDTO>> GetActiveAccounts();
         Task<(IResultBase result, ReadUserDTO? user)> RegisterAccount(CreateUserDTO userDTO);
-        Task<(IResultBase result, ReadUserDTO user)> UpdateAccount(UpdateUserDTO userDTO);
-        Task<IResultBase> DeleteAccount(DeleteUserDTO userDTO);
+        Task<(IResultBase result, ReadUserDTO user)> UpdateAccount(int id, UpdateUserDTO userDTO);
         Task<IResultBase> DeleteAccountById(int id);
         Task<IResultBase> DeleteAccountByUserName(string userName);
     }
