@@ -22,5 +22,6 @@ namespace MKW.Domain.Dto.IdentityDTO
         public DateTime CreateDate { get; set; }
         public DateTime? AlterDate { get; set; }
         public bool Active { get; set; }
+        public  string confirmEmailToken { get; set; }
     }
 }
