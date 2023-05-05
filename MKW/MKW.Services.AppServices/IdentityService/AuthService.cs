@@ -48,6 +48,13 @@ namespace MKW.Services.AppServices.IdentityService
 
         }
 
+        public async Task<IResultBase> LogoutUserAsync()
+        {
+            var logoutResult =  _signInManager.SignOutAsync();
+            if (logoutResult.IsCompletedSuccessfully) return Result.Ok("logout completed Successfully");
+            return Result.Fail("Failed to completed logout");
+        }
+
         private async Task<(IResultBase, LoginResponseDTO)> LoginAsync(ApplicationUser applicationUser, string password)
         {
 
