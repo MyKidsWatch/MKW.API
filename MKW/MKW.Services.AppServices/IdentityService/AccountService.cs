@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Microsoft.AspNetCore.Identity;
-using MKW.Domain.Dto.IdentityDTO;
+using MKW.Domain.Dto.DTO.IdentityDTO.Account;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.AppServices.Identity;
+using MKW.Domain.Interface.Services.BaseServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,29 +24,37 @@ namespace MKW.Services.AppServices.IdentityService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserRepository _repository;
+        private readonly IPersonService _personRepository;
+        private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
 
-        public AccountService(UserManager<ApplicationUser> userManager, IUserRepository repository, IMapper mapper)
+        public AccountService(UserManager<ApplicationUser> userManager,
+            IUserRepository repository,
+            IPersonService person,
+            IEmailService emailService,
+            IMapper mapper)
         {
             _userManager = userManager;
             _repository = repository;
+            _personRepository = person;
+            _emailService = emailService;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ReadUserDTO>?> GetAllAccounts() => 
+        public async Task<IEnumerable<ReadUserDTO>?> GetAllAccountsAsync() => 
             _mapper.Map<IEnumerable<ReadUserDTO>>(await _repository.GetAllUsersAsync());
-        public async Task<IEnumerable<ReadUserDTO>> GetActiveAccounts() =>
+        public async Task<IEnumerable<ReadUserDTO>> GetActiveAccountsAsync() =>
             _mapper.Map<IEnumerable<ReadUserDTO>>(await _repository.GetActiveUsersAsync());
-        public async Task<ReadUserDTO?> GetAccountByUserId(int id) => 
+        public async Task<ReadUserDTO?> GetAccountByUserIdAsync(int id) => 
             _mapper.Map<ReadUserDTO>(await _repository.GetUserByIdAsync(id));
-        public async Task<ReadUserDTO?> GetAccountByUserName(string userName) =>
+        public async Task<ReadUserDTO?> GetAccountByUserNameAsync(string userName) =>
             _mapper.Map<ReadUserDTO>(await _repository.GetUserByUserNameAsync(userName));
-        public async Task<IEnumerable<ReadUserDTO>> GetAllAccountsByRole(string roleName) => 
+        public async Task<IEnumerable<ReadUserDTO>> GetAllAccountsByRoleAsync(string roleName) => 
             _mapper.Map<IEnumerable<ReadUserDTO>>(await _repository.GetAllUsersByRoleAsync(roleName));
-        public async Task<IEnumerable<ReadUserDTO>> GetAllAccountsByClaim(Claim claim) => 
+        public async Task<IEnumerable<ReadUserDTO>> GetAllAccountsByClaimAsync(Claim claim) => 
             _mapper.Map<IEnumerable<ReadUserDTO>>(await _repository.GetAllUsersByClaimAsync(claim));
         
-        public async Task<(IResultBase, ReadUserDTO?)> RegisterAccount(CreateUserDTO userDTO)
+        public async Task<(IResultBase, ReadUserDTO?)> RegisterAccountAsync(CreateUserDTO userDTO)
         {
             var userEntity = _mapper.Map<ApplicationUser>(userDTO);
             var createUser = await _repository.AddUserAsync(userEntity, userDTO.Password);
@@ -54,33 +63,40 @@ namespace MKW.Services.AppServices.IdentityService
             {
                 //TODO: Add Roles to user
                 var confirmEmailToken = _userManager.GenerateEmailConfirmationTokenAsync(createUser.user);
-                if (confirmEmailToken.IsCompleted)
+                if (confirmEmailToken.IsCompletedSuccessfully)
                 {
                     string encodedConfirmEmailToken = HttpUtility.UrlEncode(confirmEmailToken.Result);
                     //TODO: send token by email
                     var userResponse = _mapper.Map<ReadUserDTO>(createUser.user);
-                    userResponse.confirmEmailToken = encodedConfirmEmailToken;
+                    userResponse.confirmEmailToken = confirmEmailToken.Result;
+
+                    _emailService.sendEmail(new[] { createUser.user.Email }, "Link de Ativacão", createUser.user.Id, encodedConfirmEmailToken);
+
+                    //var personDetails = _mapper.Map<Person>(userDTO.PersonDetails);
+                    //personDetails.UserId = createUser.user.Id;
+                    //personDetails.Active = false;
+
+                    //_personRepository.Add(personDetails);
 
                     return (Result.Ok(), userResponse);
                 }
 
-                //var personDetails = _mapper.Map<Person>(userDTO.PersonDetails);
-                //personDetails.UserId = createUser.user.Id;
-                //personDetails.Active = false;
                 return (Result.Ok(), _mapper.Map<ReadUserDTO>(createUser.user));
             }
 
-            var errorList = new List<string>();
-
-            foreach(IdentityError error in createUser.result.Errors)
-            {
-                errorList.Add($"{error.Code}: {error.Description}");
-            }
-
-            return (Result.Fail("Failed to register user").WithErrors(errorList), null);
+            return (Result.Fail("Failed to register user").WithErrors(getIdentityErros(createUser.result.Errors)), null);
         }
 
-        public async Task<(IResultBase, ReadUserDTO)> UpdateAccount(int id, UpdateUserDTO userDTO)
+        public async Task<IResultBase> ConfirmAccountEmailAsync (ConfirmAccountEmailDTO ActivationRequest)
+        {
+            var user = await _userManager.FindByIdAsync(ActivationRequest.UserId.ToString());
+            var IdentitResult = await _userManager.ConfirmEmailAsync(user, ActivationRequest.ActivationToken);
+            if (IdentitResult.Succeeded) return Result.Ok();
+            return Result.Fail("Failed to active e-mail").WithErrors(getIdentityErros(IdentitResult.Errors));
+        }
+        
+
+        public async Task<(IResultBase, ReadUserDTO)> UpdateAccountAsync (int id, UpdateUserDTO userDTO)
         {
             var userEntity = _mapper.Map<ApplicationUser>(userDTO);
             var updateUser = await _repository.UpdateUserAsync(id, userEntity);
@@ -92,18 +108,30 @@ namespace MKW.Services.AppServices.IdentityService
             return (Result.Fail("Failed to update user"), null);
         }
 
-        public async Task<IResultBase> DeleteAccountById(int id)
+        public async Task<IResultBase> DeleteAccountByIdAsync (int id)
         {
             var deleteUser = await _repository.DeleteUserByIdAsync(id);
             if (deleteUser.Succeeded) return Result.Ok();
             return Result.Fail($"Failed to delete user by id: {id}");
         }
 
-        public async Task<IResultBase> DeleteAccountByUserName(string userName)
+        public async Task<IResultBase> DeleteAccountByUserNameAsync (string userName)
         {
             var deleteUser = await _repository.DeleteUserByUserNameAsync(userName);
             if (deleteUser.Succeeded) return Result.Ok();
             return Result.Fail($"Failed to delete user by userName: {userName}");
+        }
+
+        private IEnumerable<string> getIdentityErros (IEnumerable<IdentityError> identityErrorList)
+        {
+            var errorList = new List<string>();
+
+            foreach (IdentityError error in identityErrorList)
+            {
+                errorList.Add($"{error.Code}: {error.Description}");
+            }
+
+            return errorList;
         }
     }
 }

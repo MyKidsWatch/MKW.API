@@ -2,5 +2,6 @@
 {
     public interface IEmailService
     {
+        public void sendEmail(string[] To, string subject, int userId, string token);
     }
 }
