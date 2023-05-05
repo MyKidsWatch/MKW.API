@@ -15,6 +15,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MKW.Services.AppServices.IdentityService
 {
@@ -51,36 +52,38 @@ namespace MKW.Services.AppServices.IdentityService
 
             if (createUser.result.Succeeded)
             {
-                //TODO: Add Roles
-                //var confirmEmailToken = _userManager.GenerateEmailConfirmationTokenAsync(createUser.user);
-                //TODO: encode token
-                string encodedConfirmEmailToken = "";
-                //TODO: send token by email
+                //TODO: Add Roles to user
+                var confirmEmailToken = _userManager.GenerateEmailConfirmationTokenAsync(createUser.user);
+                if (confirmEmailToken.IsCompleted)
+                {
+                    string encodedConfirmEmailToken = HttpUtility.UrlEncode(confirmEmailToken.Result);
+                    //TODO: send token by email
+                    var userResponse = _mapper.Map<ReadUserDTO>(createUser.user);
+                    userResponse.confirmEmailToken = encodedConfirmEmailToken;
 
-                var personDetails = _mapper.Map<Person>(userDTO.PersonDetails);
-                personDetails.UserId = createUser.user.Id;
-                personDetails.Active = false;
-                //var test = _personService.Add(personDetails);
+                    return (Result.Ok(), userResponse);
+                }
 
-                var readUser = _mapper.Map<ReadUserDTO>(createUser.user);
-                return (Result.Ok().WithSuccess(encodedConfirmEmailToken), readUser);
+                //var personDetails = _mapper.Map<Person>(userDTO.PersonDetails);
+                //personDetails.UserId = createUser.user.Id;
+                //personDetails.Active = false;
+                return (Result.Ok(), _mapper.Map<ReadUserDTO>(createUser.user));
             }
-    
+
             var errorList = new List<string>();
 
             foreach(IdentityError error in createUser.result.Errors)
             {
-                errorList.Add(error.Code);
-                errorList.Add(error.Description);
+                errorList.Add($"{error.Code}: {error.Description}");
             }
 
             return (Result.Fail("Failed to register user").WithErrors(errorList), null);
         }
 
-        public async Task<(IResultBase, ReadUserDTO)> UpdateAccount(UpdateUserDTO userDTO)
+        public async Task<(IResultBase, ReadUserDTO)> UpdateAccount(int id, UpdateUserDTO userDTO)
         {
             var userEntity = _mapper.Map<ApplicationUser>(userDTO);
-            var updateUser = await _repository.UpdateUserAsync(userEntity);
+            var updateUser = await _repository.UpdateUserAsync(id, userEntity);
             if (updateUser.result.Succeeded)
             {
                 var readUser= _mapper.Map<ReadUserDTO>(updateUser.user);
@@ -89,26 +92,18 @@ namespace MKW.Services.AppServices.IdentityService
             return (Result.Fail("Failed to update user"), null);
         }
 
-        public async Task<IResultBase> DeleteAccount(DeleteUserDTO userDTO)
-        {
-            var userEntity = _mapper.Map<ApplicationUser>(userDTO);
-            var deleteUser = await _repository.DeleteUserAsync(userEntity);
-            if (deleteUser.Succeeded) return Result.Ok();
-            return Result.Fail("Failed to delete user");
-        }
-
         public async Task<IResultBase> DeleteAccountById(int id)
         {
             var deleteUser = await _repository.DeleteUserByIdAsync(id);
             if (deleteUser.Succeeded) return Result.Ok();
-            return Result.Fail("Failed to delete user");
+            return Result.Fail($"Failed to delete user by id: {id}");
         }
 
         public async Task<IResultBase> DeleteAccountByUserName(string userName)
         {
             var deleteUser = await _repository.DeleteUserByUserNameAsync(userName);
             if (deleteUser.Succeeded) return Result.Ok();
-            return Result.Fail("Failed to delete user");
+            return Result.Fail($"Failed to delete user by userName: {userName}");
         }
     }
 }
