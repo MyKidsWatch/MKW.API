@@ -47,6 +47,8 @@ namespace MKW.IoC.Modules
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 8;
+
+                options.User.RequireUniqueEmail = true;
             });
 
             var tokenValidationParameter = new TokenValidationParameters
