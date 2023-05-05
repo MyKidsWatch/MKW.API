@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MKW.Domain.Entities.Base;
-using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Interface.Services.AppServices.Base;
 
 namespace MKW.API.Controllers.Base
