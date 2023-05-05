@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MKW.Domain.Dto.IdentityDTO
+namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
 {
     public class ReadUserDTO
     {
@@ -17,11 +17,11 @@ namespace MKW.Domain.Dto.IdentityDTO
         public bool EmailConfirmed { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public bool TwoFactorEnabled { get; set; }
-        public  bool LockoutEnabled { get; set; }
-        public  bool LockoutEnd { get; set; }
+        public bool LockoutEnabled { get; set; }
+        public bool LockoutEnd { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? AlterDate { get; set; }
         public bool Active { get; set; }
-        public  string confirmEmailToken { get; set; }
+        public string confirmEmailToken { get; set; }
     }
 }

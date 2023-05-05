@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MKW.Domain.Dto.IdentityDTO
+namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
 {
     public class CreateUserDTO
     {
@@ -23,7 +23,7 @@ namespace MKW.Domain.Dto.IdentityDTO
         [Compare("Password")]
         public string RePassword { get; set; }
 
-        [Required(ErrorMessage ="The field {0} is required")]
+        [Required(ErrorMessage = "The field {0} is required")]
         [MaxLength(50, ErrorMessage = "Max length 50")]
         [MinLength(3, ErrorMessage = "Min length 3")]
         public string FirstName { get; set; }
