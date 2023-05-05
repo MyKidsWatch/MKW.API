@@ -24,7 +24,7 @@ namespace MKW.Data.Repository.IdentityAggregate
             _userManager = userManager;
         }
 
-        public async Task<ApplicationUser?> GetUserByIdAsync(int id) => await _dbSet.FindAsync(id);
+        public async Task<ApplicationUser?> GetUserByIdAsync(int id) => await _userManager.FindByIdAsync(id.ToString());
         public async Task<ApplicationUser?> GetUserByUserNameAsync(string userName) => await _userManager.FindByNameAsync(userName);
         public async Task<IEnumerable<ApplicationUser>> GetActiveUsersAsync() => await _dbSet.Where(x => x.Active).ToListAsync();
         public async Task<IEnumerable<ApplicationUser>?> GetAllUsersAsync() 
@@ -41,31 +41,18 @@ namespace MKW.Data.Repository.IdentityAggregate
             return (createResult, userResult);
         }
 
-        public async Task<(IdentityResult, ApplicationUser)> UpdateUserAsync(ApplicationUser user)
+        public async Task<(IdentityResult, ApplicationUser)> UpdateUserAsync(int id, ApplicationUser user)
         {
+            var userDataBase = _userManager.FindByIdAsync(id.ToString());
+
             user.AlterDate = DateTime.Now;
             var updateResult = await _userManager.UpdateAsync(user);
             return (updateResult, user);
         }
 
-        public async Task<IdentityResult> DeleteUserAsync(ApplicationUser user)
-        {
-            //TODO: rever chamada dupla no banco quando ById ou ByUserName
-            var userDatabase = await _dbSet.FindAsync(user);
-
-            if (userDatabase != null)
-            {
-                user.AlterDate = DateTime.Now;
-                userDatabase.Active = false;
-                await _userManager.SetLockoutEnabledAsync(userDatabase, true);
-                return await _userManager.UpdateAsync(userDatabase);
-            }
-            return IdentityResult.Failed();
-        }
-
         public async Task<IdentityResult> DeleteUserByIdAsync(int id)
         {
-            var userDatabase = await _dbSet.FindAsync(id);
+            var userDatabase = await _userManager.FindByIdAsync(id.ToString());
             return userDatabase != null ? await DeleteUserAsync(userDatabase) : IdentityResult.Failed();
         }
 
@@ -75,9 +62,16 @@ namespace MKW.Data.Repository.IdentityAggregate
             return userDatabase != null ? await DeleteUserAsync(userDatabase) : IdentityResult.Failed();
         }
 
-        protected async Task SaveChanges()
+        private async Task<IdentityResult> DeleteUserAsync(ApplicationUser user)
         {
-            await _context.SaveChangesAsync();
+            if (user != null)
+            {
+                user.AlterDate = DateTime.Now;
+                user.Active = false;
+                await _userManager.SetLockoutEnabledAsync(user, true);
+                return await _userManager.UpdateAsync(user);
+            }
+            return IdentityResult.Failed();
         }
     }
 }
