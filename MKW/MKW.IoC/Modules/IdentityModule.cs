@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MKW.Data.Context;
 using MKW.Domain.Entities.IdentityAggregate;
+using MKW.Domain.Interface.Services.AppServices.Identity;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using MKW.Services.AppServices.IdentityService;
 using System;
@@ -21,11 +23,13 @@ namespace MKW.IoC.Modules
         {
             builder.AddIdentityCore<ApplicationUser>()
                 .AddRoles<IdentityRole<int>>()
+                .AddSignInManager<SignInManager<ApplicationUser>>()
                 .AddEntityFrameworkStores<MKWContext>()
                 .AddDefaultTokenProviders();
 
-            var jwtOptionsSettings = configuration.GetSection("JwtOptions");
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JwtOptions:SecurityKey").Value));
+
+            var jwtOptionsSettings = configuration.GetSection(nameof(ApplicationJwtOptions));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("ApplicationJwtOptions:SecurityKey").Value));
 
             builder.Configure<ApplicationJwtOptions>(options =>
             {
@@ -69,6 +73,8 @@ namespace MKW.IoC.Modules
             });
 
             builder.AddTransient<ITokenService, TokenService>();
+            builder.AddTransient<IAccountService, AccountService>();
+            builder.AddTransient<IAuthService, AuthService>();
         }
     } 
 }

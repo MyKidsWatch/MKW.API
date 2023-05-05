@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FluentResults;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using System;
@@ -16,24 +19,37 @@ namespace MKW.Services.AppServices.IdentityService
 {
     public class TokenService : ITokenService
     {
-        public async Task<ApplicationToken> GetToken(IdentityUser<int> user, IList<Claim> claims, IList<string> roles)
+        private readonly ApplicationJwtOptions _jwtOptions;
+
+        public TokenService(IOptions<ApplicationJwtOptions> JwtOptions)
         {
-            var _JwtOptions = new ApplicationJwtOptions();
-            var userClaimsRights = await getUserClaims(user, claims, roles);
-            var expirationDate = DateTime.Now.AddSeconds(_JwtOptions.Expiration);
+            _jwtOptions = JwtOptions.Value;
+        }
+        public async Task<Result<ApplicationToken>> GetToken(IdentityUser<int> user, IList<Claim> claims, IList<string> roles)
+        {
+            //TODO: ARRUMAR TRY-CATCH
+            try
+            {
+                var userClaimsRights = await getUserClaims(user, claims, roles);
+                var expirationDate = DateTime.Now.AddSeconds(_jwtOptions.Expiration);
 
-            var token = new JwtSecurityToken(
-                issuer: _JwtOptions.Issuer,
-                audience: _JwtOptions.Audience,
-                claims: userClaimsRights,
-                notBefore: DateTime.Now,
-                expires: expirationDate,
-                signingCredentials: _JwtOptions.SigningCredentials
-            );
+                var token = new JwtSecurityToken(
+                    issuer: _jwtOptions.Issuer,
+                    audience: _jwtOptions.Audience,
+                    claims: userClaimsRights,
+                    notBefore: DateTime.Now,
+                    expires: expirationDate,
+                    signingCredentials: _jwtOptions.SigningCredentials
+                );
 
-            var generatedToken = new JwtSecurityTokenHandler().WriteToken(token);
+                var generatedToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return new ApplicationToken(generatedToken, expirationDate);
+                return Result.Ok<ApplicationToken>(new ApplicationToken(generatedToken, expirationDate));
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<ApplicationToken>($"{ex.Message}");
+            }
         }
 
         private async Task<IEnumerable<Claim>> getUserClaims(IdentityUser<int> user, IList<Claim> claims, IList<string> roles)

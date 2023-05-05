@@ -10,10 +10,10 @@ namespace MKW.Domain.Entities.IdentityAggregate
     {
         public ApplicationToken(string value, DateTime expirationDate)
         {
-            Value = value;
+            Token = value;
             ExpirationDate = expirationDate;
         }
-        public string Value { get; }
+        public string Token { get; }
         public DateTime ExpirationDate { get; }
     }
 }

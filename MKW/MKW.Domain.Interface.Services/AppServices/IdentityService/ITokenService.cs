@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
+﻿using FluentResults;
+using Microsoft.AspNetCore.Identity;
 using MKW.Domain.Entities.IdentityAggregate;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,6 @@ namespace MKW.Domain.Interface.Services.AppServices.IdentityService
 {
     public interface ITokenService
     {
-        Task<ApplicationToken> GetToken(IdentityUser<int> user, IList<Claim> claims, IList<string> roles);        
+        Task<Result<ApplicationToken>> GetToken(IdentityUser<int> user, IList<Claim> claims, IList<string> roles);        
     }
 }
