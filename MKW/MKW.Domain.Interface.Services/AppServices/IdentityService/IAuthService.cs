@@ -13,5 +13,6 @@ namespace MKW.Domain.Interface.Services.AppServices.Identity
     {
         Task<(IResultBase result, LoginResponseDTO loginResponse)> LoginByUserNameAsync(LoginRequestByUserNameDTO loginRequest);
         Task<(IResultBase result, LoginResponseDTO loginResponse)> LoginByEmailAsync(LoginRequestByEmailDTO loginRequest);
+        Task<IResultBase> LogoutUserAsync();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MKW.Domain.Dto.DTO.IdentityDTO.Auth;
-using MKW.Domain.Dto.IdentityDTO;
 using MKW.Domain.Entities.IdentityAggregate;
 using System;
 using System.Collections.Generic;

@@ -49,6 +49,9 @@ namespace MKW.IoC.Modules
                 options.Password.RequiredLength = 8;
 
                 options.User.RequireUniqueEmail = true;
+
+                options.SignIn.RequireConfirmedEmail = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
             });
 
             var tokenValidationParameter = new TokenValidationParameters
