@@ -38,7 +38,7 @@ namespace MKW.Services.BaseServices
 
             var users = await _personRepository.GetActive();
 
-            similarUsers = users?.Where(x => x.Id !=  user.Id).OrderBy(x => GetChildrenSimilarity(user, x)).ToList();
+            similarUsers = users?.OrderBy(x => GetChildrenSimilarity(user, x)).ToList();
 
             return similarUsers!;
         }
