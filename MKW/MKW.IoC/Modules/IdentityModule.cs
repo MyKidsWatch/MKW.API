@@ -73,9 +73,11 @@ namespace MKW.IoC.Modules
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
-            {
+                {
                 options.TokenValidationParameters = tokenValidationParameter;
             });
+
+            builder.AddAuthentication();
 
             builder.AddTransient<ITokenService, TokenService>();
             builder.AddTransient<IAccountService, AccountService>();

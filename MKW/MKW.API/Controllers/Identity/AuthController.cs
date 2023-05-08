@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MKW.Domain.Dto.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Auth;
 using MKW.Domain.Interface.Services.AppServices.Identity;
 
@@ -16,21 +18,22 @@ namespace MKW.API.Controllers.Identity
         }
 
         [HttpPost("username")]
-        public async Task<ActionResult<LoginResponseDTO>> LoginByUserName([FromBody] LoginRequestByUserNameDTO loginRequestDTO)
+        public async Task<ActionResult<BaseResponseDTO<TokenDTO>>> LoginByUserName([FromBody] LoginRequestByUserNameDTO loginRequestDTO)
         {
             var loginResult = await _service.LoginByUserNameAsync(loginRequestDTO);
-            return loginResult.result.IsSuccess? Ok(loginResult.loginResponse): Unauthorized(loginResult.loginResponse);
+            return loginResult.IsSuccess? Ok(loginResult) : Unauthorized(loginResult);
         }
 
         [HttpPost("email")]
-        public async Task<ActionResult<LoginResponseDTO>> LoginByEmail([FromBody] LoginRequestByEmailDTO loginRequestDTO)
+        public async Task<ActionResult<BaseResponseDTO<TokenDTO>>> LoginByEmail([FromBody] LoginRequestByEmailDTO loginRequestDTO)
         {
             var loginResult = await _service.LoginByEmailAsync(loginRequestDTO);
-            return loginResult.result.IsSuccess ? Ok(loginResult.loginResponse) : Unauthorized(loginResult.loginResponse);
+            return loginResult.IsSuccess ? Ok(loginResult) : Unauthorized(loginResult);
         }
 
+        [Authorize]
         [HttpPost("logout")]
-        public async Task<ActionResult> Logout() => _service.LogoutUserAsync().IsCompletedSuccessfully ? Ok() : Unauthorized();
+        public async Task<ActionResult<BaseResponseDTO<Object>>> Logout() => _service.LogoutUserAsync().IsCompletedSuccessfully ? Ok() : Unauthorized();
         
     }
 }
