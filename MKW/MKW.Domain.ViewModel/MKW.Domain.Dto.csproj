@@ -15,4 +15,8 @@
     <ProjectReference Include="..\MKW.Domain.Entities\MKW.Domain.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\IdentityDTO\Token\" />
+  </ItemGroup>
+
 </Project>

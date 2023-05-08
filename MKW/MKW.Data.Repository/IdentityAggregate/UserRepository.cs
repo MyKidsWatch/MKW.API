@@ -67,8 +67,8 @@ namespace MKW.Data.Repository.IdentityAggregate
             {
                 user.AlterDate = DateTime.Now;
                 user.Active = false;
-                await _userManager.SetLockoutEnabledAsync(user, true);
-                return await _userManager.UpdateAsync(user);
+                await _userManager.UpdateAsync(user);
+                return await _userManager.SetLockoutEndDateAsync(user,  DateTimeOffset.MaxValue);
             }
             return IdentityResult.Failed();
         }
