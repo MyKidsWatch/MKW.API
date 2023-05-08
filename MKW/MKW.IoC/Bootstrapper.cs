@@ -13,6 +13,7 @@ namespace MKW.IoC
             RepositoryModule.InjectDependencies(services);
             ServiceModule.InjectDependencies(services);
             IdentityModule.AddAuthentication(services, configuration);
+            EmailModule.AddEmailConfiguration(services, configuration);
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
     }

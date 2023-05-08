@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using MKW.Domain.Dto.DTO.EmailDTO;
 using MKW.Domain.Interface.Services.BaseServices;
@@ -8,11 +9,11 @@ namespace MKW.Services.BaseServices
 {
     public class EmailService : IEmailService
     {
-        private readonly IConfiguration _configuration;
+        private readonly EmailOptions _emailOptions;
 
-        public EmailService(IConfiguration configuration)
+        public EmailService( IOptions<EmailOptions> emailOptions)
         {
-            _configuration = configuration;
+            _emailOptions = emailOptions.Value;
         }
 
         public void sendEmail(string[] To, string subject, int userId, string token)
@@ -25,10 +26,10 @@ namespace MKW.Services.BaseServices
         private MimeMessage createMessageBody(EmailMessageDTO message)
         {
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress("sentoTo", _configuration.GetSection("EmailSettings:From").Value));
+            emailMessage.From.Add(new MailboxAddress("MyKidsWatch", _emailOptions.From));
             emailMessage.To.AddRange(message.SendTo);
             emailMessage.Subject = message.Subject;
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text)
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
                 Text = message.Content
             };
@@ -42,11 +43,11 @@ namespace MKW.Services.BaseServices
             {
                 try
                 {
-                    client.Connect(_configuration.GetSection("EmailSettings:SmtpServer").Value, int.Parse(_configuration.GetSection("EmailSettings:Port").Value), true);
+                    client.Connect(_emailOptions.SmtpServer, _emailOptions.Port, true);
 
                     client.AuthenticationMechanisms.Remove("XOUATH2");
 
-                    client.Authenticate(_configuration.GetSection("EmailSettings:From").Value, _configuration.GetSection("EmailSettings:Password").Value);
+                    client.Authenticate(_emailOptions.From, _emailOptions.Password);
 
                     client.Send(emailMessage);
                 }
