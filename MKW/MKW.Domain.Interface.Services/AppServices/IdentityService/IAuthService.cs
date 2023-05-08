@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using MKW.Domain.Dto.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Auth;
 using MKW.Domain.Entities.IdentityAggregate;
 using System;
@@ -11,8 +12,8 @@ namespace MKW.Domain.Interface.Services.AppServices.Identity
 {
     public interface IAuthService
     {
-        Task<(IResultBase result, LoginResponseDTO loginResponse)> LoginByUserNameAsync(LoginRequestByUserNameDTO loginRequest);
-        Task<(IResultBase result, LoginResponseDTO loginResponse)> LoginByEmailAsync(LoginRequestByEmailDTO loginRequest);
-        Task<IResultBase> LogoutUserAsync();
+        Task<BaseResponseDTO<TokenDTO>> LoginByUserNameAsync(LoginRequestByUserNameDTO loginRequest);
+        Task<BaseResponseDTO<TokenDTO>> LoginByEmailAsync(LoginRequestByEmailDTO loginRequest);
+        Task<BaseResponseDTO<Object>> LogoutUserAsync();
     }
 }

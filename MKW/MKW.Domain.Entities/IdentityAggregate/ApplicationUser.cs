@@ -14,6 +14,6 @@ namespace MKW.Domain.Entities.IdentityAggregate
         public string LastName { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? AlterDate { get; set; }
-        public bool Active { get; set; }
+        public bool Active { get; set; } = true;
     }
 }

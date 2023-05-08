@@ -7,6 +7,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
+using MKW.Domain.Dto.Base;
 
 namespace MKW.Domain.Interface.Services.AppServices.Identity
 {
@@ -18,10 +19,10 @@ namespace MKW.Domain.Interface.Services.AppServices.Identity
         Task<IEnumerable<ReadUserDTO>> GetAllAccountsByClaimAsync(Claim claim);
         Task<IEnumerable<ReadUserDTO>> GetAllAccountsByRoleAsync(string roleName);
         Task<IEnumerable<ReadUserDTO>> GetActiveAccountsAsync();
-        Task<(IResultBase result, ReadUserDTO? user)> RegisterAccountAsync(CreateUserDTO userDTO);
+        Task<BaseResponseDTO<ReadUserDTO>> RegisterAccountAsync(CreateUserDTO userDTO);
         Task<IResultBase> ConfirmAccountEmailAsync(ConfirmAccountEmailDTO ActivationRequest);
         Task<(IResultBase result, ReadUserDTO user)> UpdateAccountAsync(int id, UpdateUserDTO userDTO);
         Task<IResultBase> DeleteAccountByIdAsync(int id);
-        Task<IResultBase> DeleteAccountByUserNameAsync(string userName);
+        Task<BaseResponseDTO<ReadUserDTO>> DeleteAccountByUserNameAsync(string userName);
     }
 }

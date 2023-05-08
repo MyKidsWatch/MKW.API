@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
@@ -18,10 +19,11 @@ namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
         public bool PhoneNumberConfirmed { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public bool LockoutEnabled { get; set; }
-        public bool LockoutEnd { get; set; }
+        public DateTimeOffset LockoutEnd { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? AlterDate { get; set; }
         public bool Active { get; set; }
-        public string confirmEmailToken { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool isConfirmEmailTokenSent { get; set; }
     }
 }

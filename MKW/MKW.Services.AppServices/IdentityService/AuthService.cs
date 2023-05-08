@@ -14,6 +14,8 @@ using FluentResults;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using Newtonsoft.Json;
 using Microsoft.IdentityModel.Tokens;
+using MKW.Domain.Dto.Base;
+using System.Net.Http.Headers;
 
 namespace MKW.Services.AppServices.IdentityService
 {
@@ -31,35 +33,31 @@ namespace MKW.Services.AppServices.IdentityService
             _mapper = mapper;
         }
 
-        public async Task<(IResultBase, LoginResponseDTO)> LoginByUserNameAsync(LoginRequestByUserNameDTO loginRequest)
+        public async Task<BaseResponseDTO<TokenDTO>> LoginByUserNameAsync(LoginRequestByUserNameDTO loginRequest)
         {
             var applicationUser = await _signInManager.UserManager.FindByNameAsync(loginRequest.UserName);
-            if (applicationUser is null) return (Result.Fail("Failed to signIn user"), GetLoginErros());
+            if (applicationUser is null) return new BaseResponseDTO<TokenDTO>().addErrors(GetErros());
 
             return await LoginAsync(applicationUser, loginRequest.Password);
         }
 
-        public async Task<(IResultBase, LoginResponseDTO)> LoginByEmailAsync(LoginRequestByEmailDTO loginRequest)
+        public async Task<BaseResponseDTO<TokenDTO>> LoginByEmailAsync(LoginRequestByEmailDTO loginRequest)
         {
             var applicationUser = await _signInManager.UserManager.FindByEmailAsync(loginRequest.Email);
-            if (applicationUser is null) return (Result.Fail("Failed to signIn user"), GetLoginErros());
+            if (applicationUser is null) return new BaseResponseDTO<TokenDTO>().addErrors(GetErros());
 
             return await LoginAsync(applicationUser, loginRequest.Password);
 
         }
 
-        public async Task<IResultBase> LogoutUserAsync()
-        {
-            var logoutResult =  _signInManager.SignOutAsync();
-            if (logoutResult.IsCompletedSuccessfully) return Result.Ok("logout completed Successfully");
-            return Result.Fail("Failed to completed logout");
-        }
+        public async Task<BaseResponseDTO<Object>> LogoutUserAsync() => new BaseResponseDTO<Object>(_signInManager.SignOutAsync().IsCompletedSuccessfully);
 
-        private async Task<(IResultBase, LoginResponseDTO)> LoginAsync(ApplicationUser applicationUser, string password)
+
+        private async Task<BaseResponseDTO<TokenDTO>> LoginAsync(ApplicationUser applicationUser, string password)
         {
 
             var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(applicationUser, password, false);
-
+  
             if (checkPasswordResult.Succeeded)
             {
                 var userRoles = await _signInManager.UserManager.GetRolesAsync(applicationUser);
@@ -68,32 +66,29 @@ namespace MKW.Services.AppServices.IdentityService
                 var token = await _tokenService.GetToken(applicationUser, userClaims, userRoles);
   
                 var tokenResponseDTO = _mapper.Map<TokenDTO>(token.Value);
-                var LoginResponseWithSuccess = new LoginResponseDTO(token.IsSuccess, tokenResponseDTO);
-                return (Result.Ok(), LoginResponseWithSuccess);
+                var LoginResponseDTO = new BaseResponseDTO<TokenDTO>(checkPasswordResult.Succeeded, tokenResponseDTO);
+   
+                return LoginResponseDTO;
             }
 
-            var LoginResponseWithErros = GetLoginErros(
-                checkPasswordResult);
-                
-            return (Result.Fail("Failed to signIn user"), LoginResponseWithErros); 
-
+            return new BaseResponseDTO<TokenDTO>().addErrors(GetErros(checkPasswordResult)) ; 
         }
 
-        private LoginResponseDTO GetLoginErros(SignInResult? result = null)
+        private IEnumerable<string> GetErros(SignInResult? result = null)
         {
-            var responseDTO = new LoginResponseDTO(false);
+            var errorList = new List<string>();
 
             if(result is not null)
             {
-                if (result.IsLockedOut)  responseDTO.addError("LockedOut");
-                if (result.IsNotAllowed) responseDTO.addError("NotAllowed");
-                if (result.RequiresTwoFactor) responseDTO.addError("RequiresTwoFactor");
+                if (result.IsLockedOut) errorList.Add("LockedOut");
+                if (result.IsNotAllowed) errorList.Add("NotAllowed");
+                if (result.RequiresTwoFactor) errorList.Add("RequiresTwoFactor");
             }
 
-            if(responseDTO.Errors.IsNullOrEmpty<string>())
-                responseDTO.addError("User or password are incorrect");
+            if(errorList.IsNullOrEmpty<string>())
+                errorList.Add("User or password are incorrect");
 
-            return responseDTO;
+            return errorList;
         }
     }
 }
