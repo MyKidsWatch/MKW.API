@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Castle.Core.Internal;
+using FluentResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MKW.Data.Context;
 using MKW.Domain.Entities.IdentityAggregate;
@@ -7,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,8 +27,16 @@ namespace MKW.Data.Repository.IdentityAggregate
             _userManager = userManager;
         }
 
-        public async Task<ApplicationUser?> GetUserByIdAsync(int id) => await _userManager.FindByIdAsync(id.ToString());
-        public async Task<ApplicationUser?> GetUserByUserNameAsync(string userName) => await _userManager.FindByNameAsync(userName);
+        public async Task<(Result, ApplicationUser?)> GetUserByIdAsync(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            return user is null ? (Result.Fail("user not found").WithError("User not found"), null) : (Result.Ok(), user);
+        }
+        public async Task<(Result, ApplicationUser?)> GetUserByUserNameAsync(string userName) 
+        { 
+            var user = await _userManager.FindByNameAsync(userName);
+            return user is null ? (Result.Fail("user not found").WithError("User not found"), null) : (Result.Ok(), user);
+        }
         public async Task<IEnumerable<ApplicationUser>> GetActiveUsersAsync() => await _dbSet.Where(x => x.Active).ToListAsync();
         public async Task<IEnumerable<ApplicationUser>?> GetAllUsersAsync() => await _dbSet.ToListAsync(); 
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersByClaimAsync(Claim claim) => await _userManager.GetUsersForClaimAsync(claim);
@@ -55,10 +66,44 @@ namespace MKW.Data.Repository.IdentityAggregate
             return userDatabase != null ? await DeleteUserAsync(userDatabase) : IdentityResult.Failed();
         }
 
-        public async Task<IdentityResult> DeleteUserByUserNameAsync(string userName)
+        public async Task<IdentityResult> DeleteUserByUserNameAsync(string username)
         {
-            var userDatabase = await _userManager.FindByNameAsync(userName);
+            var userDatabase = await _userManager.FindByNameAsync(username);
             return userDatabase != null ? await DeleteUserAsync(userDatabase) : IdentityResult.Failed();
+        }
+
+        public async Task<Result> ConfirmAccountEmailAsync(int userId, string  activationToken)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user is not null)
+            {
+                var confirmEmail = await _userManager.ConfirmEmailAsync(user, activationToken);
+                return confirmEmail.Succeeded ? Result.Ok() : Result.Fail("Failed to confirm email");
+            }
+            return Result.Fail("user not found");
+        }
+
+        public async Task<(Result, string?)> GenerateEmailConfirmationTokenAsync(ApplicationUser user)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            return token is null? (Result.Fail("Failed to generate confirmation token"), null) : (Result.Ok(), token);
+        }
+
+        public async Task<Result> SetUserLockoutEndDateAsync(ApplicationUser user, DateTimeOffset dateTimeOffset)
+        {
+            var BlockResult =  await _userManager.SetLockoutEndDateAsync(user, dateTimeOffset);
+            return BlockResult.Succeeded ? Result.Ok() : Result.Fail("Failed to lockout user");
+        }
+
+        public async Task<(Result, string?)> RecoveryPasswordAsync(string email)
+        {
+            var user = _userManager.FindByEmailAsync(email);
+            if(user.IsCompletedSuccessfully)
+            {
+                var recoveryToken = _userManager.GeneratePasswordResetTokenAsync(user.Result);
+                return (Result.Ok(), recoveryToken.Result);
+            }
+            return (Result.Fail("email not registered"), null);
         }
 
         private async Task<IdentityResult> DeleteUserAsync(ApplicationUser user)

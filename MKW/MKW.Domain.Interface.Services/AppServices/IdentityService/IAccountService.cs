@@ -13,16 +13,18 @@ namespace MKW.Domain.Interface.Services.AppServices.Identity
 {
     public interface IAccountService
     {
-        Task<IEnumerable<ReadUserDTO>?> GetAllAccountsAsync();
-        Task<ReadUserDTO?> GetAccountByUserIdAsync(int id);
-        Task<ReadUserDTO?> GetAccountByUserNameAsync(string userName);
-        Task<IEnumerable<ReadUserDTO>> GetAllAccountsByClaimAsync(Claim claim);
-        Task<IEnumerable<ReadUserDTO>> GetAllAccountsByRoleAsync(string roleName);
-        Task<IEnumerable<ReadUserDTO>> GetActiveAccountsAsync();
+        Task<BaseResponseDTO<ReadUserDTO>> GetAllAccountsAsync();
+        Task<BaseResponseDTO<ReadUserDTO>?> GetAccountByUserIdAsync(int id);
+        Task<BaseResponseDTO<ReadUserDTO>?> GetAccountByUserNameAsync(string userName);
+        Task<BaseResponseDTO<ReadUserDTO>> GetAllAccountsByClaimAsync(Claim claim);
+        Task<BaseResponseDTO<ReadUserDTO>> GetAllAccountsByRoleAsync(string roleName);
+        Task<BaseResponseDTO<ReadUserDTO>> GetActiveAccountsAsync();
         Task<BaseResponseDTO<ReadUserDTO>> RegisterAccountAsync(CreateUserDTO userDTO);
-        Task<IResultBase> ConfirmAccountEmailAsync(ConfirmAccountEmailDTO ActivationRequest);
-        Task<(IResultBase result, ReadUserDTO user)> UpdateAccountAsync(int id, UpdateUserDTO userDTO);
-        Task<IResultBase> DeleteAccountByIdAsync(int id);
-        Task<BaseResponseDTO<ReadUserDTO>> DeleteAccountByUserNameAsync(string userName);
+        Task<BaseResponseDTO<ReadUserDTO>> UpdateAccountAsync(int id, UpdateUserDTO userDTO);
+        Task<BaseResponseDTO<object>> DeleteAccountByIdAsync(int id);
+        Task<BaseResponseDTO<object>> DeleteAccountByUserNameAsync(string userName);
+        Task<BaseResponseDTO<object>> CheckUserNameAsync(string username);
+        Task<BaseResponseDTO<object>> CheckEmailAsync(string username);
+        Task<BaseResponseDTO<Object>> ConfirmAccountEmailAsync(ConfirmAccountEmailDTO ActivationRequest);
     }
 }

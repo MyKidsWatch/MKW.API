@@ -35,43 +35,70 @@ namespace MKW.Services.AppServices.IdentityService
 
         public async Task<BaseResponseDTO<TokenDTO>> LoginByUserNameAsync(LoginRequestByUserNameDTO loginRequest)
         {
-            var applicationUser = await _signInManager.UserManager.FindByNameAsync(loginRequest.UserName);
-            if (applicationUser is null) return new BaseResponseDTO<TokenDTO>().addErrors(GetErros());
+            try
+            {
+                var applicationUser = await _signInManager.UserManager.FindByNameAsync(loginRequest.UserName);
+                if (applicationUser is null) return new BaseResponseDTO<TokenDTO>().WithErrors(GetErros());
 
-            return await LoginAsync(applicationUser, loginRequest.Password);
+                return await LoginAsync(applicationUser, loginRequest.Password);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<BaseResponseDTO<TokenDTO>> LoginByEmailAsync(LoginRequestByEmailDTO loginRequest)
         {
-            var applicationUser = await _signInManager.UserManager.FindByEmailAsync(loginRequest.Email);
-            if (applicationUser is null) return new BaseResponseDTO<TokenDTO>().addErrors(GetErros());
+            try
+            {
+                var applicationUser = await _signInManager.UserManager.FindByEmailAsync(loginRequest.Email);
+                if (applicationUser is null) return new BaseResponseDTO<TokenDTO>().WithErrors(GetErros());
 
-            return await LoginAsync(applicationUser, loginRequest.Password);
-
+                return await LoginAsync(applicationUser, loginRequest.Password);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<BaseResponseDTO<Object>> LogoutUserAsync() => new BaseResponseDTO<Object>(_signInManager.SignOutAsync().IsCompletedSuccessfully);
+        public async Task<BaseResponseDTO<Object>> LogoutUserAsync() 
+        {
+            var responseDTO = new BaseResponseDTO<Object>();
+            var logoutResult = _signInManager.SignOutAsync();
+            return logoutResult.IsCompletedSuccessfully ? 
+                responseDTO.WithSuccess(new {userId = logoutResult.GetAwaiter()}) :
+                responseDTO.WithErrors(responseDTO.Errors);
+        } 
+            
 
 
         private async Task<BaseResponseDTO<TokenDTO>> LoginAsync(ApplicationUser applicationUser, string password)
         {
-
-            var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(applicationUser, password, false);
-  
-            if (checkPasswordResult.Succeeded)
+            try
             {
-                var userRoles = await _signInManager.UserManager.GetRolesAsync(applicationUser);
-                var userClaims = await _signInManager.UserManager.GetClaimsAsync(applicationUser);
-
-                var token = await _tokenService.GetToken(applicationUser, userClaims, userRoles);
+                var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(applicationUser, password, false);
   
-                var tokenResponseDTO = _mapper.Map<TokenDTO>(token.Value);
-                var LoginResponseDTO = new BaseResponseDTO<TokenDTO>(checkPasswordResult.Succeeded, tokenResponseDTO);
-   
-                return LoginResponseDTO;
-            }
+                if (checkPasswordResult.Succeeded)
+                {
+                    var userRoles = await _signInManager.UserManager.GetRolesAsync(applicationUser);
+                    var userClaims = await _signInManager.UserManager.GetClaimsAsync(applicationUser);
 
-            return new BaseResponseDTO<TokenDTO>().addErrors(GetErros(checkPasswordResult)) ; 
+                    var token = await _tokenService.GetToken(applicationUser, userClaims, userRoles);
+  
+                    var tokenResponseDTO = _mapper.Map<TokenDTO>(token.Value);
+                    var LoginResponseDTO = new BaseResponseDTO<TokenDTO>().WithSuccess(tokenResponseDTO);
+   
+                    return LoginResponseDTO;
+                }
+
+                return new BaseResponseDTO<TokenDTO>().WithErrors(GetErros(checkPasswordResult)) ; 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private IEnumerable<string> GetErros(SignInResult? result = null)
