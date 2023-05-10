@@ -1,5 +1,6 @@
 ﻿using MKW.Domain.Dto.DTO.IdentityDTO.Auth;
 using MKW.Domain.Entities.ContentAggregate;
+using MKW.Domain.Interface.Repository.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,44 +12,36 @@ namespace MKW.Domain.Dto.Base
 {
     public class BaseResponseDTO<T> where T : class
     {
-        public bool IsSuccess { get; private set; }
+        public bool IsSuccess { get; private set; } = true;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public List<T>? ContentList { get; private set; }
+        public IEnumerable<T>? ContentList { get; private set; } = null;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public T? Content { get; private set; }
+        public T? Content { get; private set; } = null;
 
-        public List<string> Errors { get; private set; }
+        public List<string> Errors { get; private set; } = null;
 
-        public BaseResponseDTO(bool isSuccess, T content)
+        public BaseResponseDTO<T> WithSuccess(T content, bool isSuccess = true)
         {
-            Errors = new List<string>();
             IsSuccess = isSuccess;
             Content = content;
-            ContentList = null;
+            return this;
         }
 
-        public BaseResponseDTO(bool isSuccess, List<T> content)
+        public BaseResponseDTO<T> WithSuccesses(IEnumerable<T> content, bool isSuccess = true)
         {
-            Errors = new List<string>();
             IsSuccess = isSuccess;
-            Content = null;
             ContentList = content;
+            return this;
         }
 
-        public BaseResponseDTO(bool isSuccess = false)
+        public BaseResponseDTO<T> WithErrors(IEnumerable<string> errors, bool isSuccess = false) 
         {
             Errors = new List<string>();
             IsSuccess = isSuccess;
-            Content = null;
-            ContentList = null;
-        }
-
-        public BaseResponseDTO<T> addErrors(IEnumerable<string> errors) 
-        {
             Errors.AddRange(errors);
             return this;
-        } 
+        }
     }
 }
