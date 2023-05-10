@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using MKW.Data.Context.Mapping.ContentAggregate;
+using MKW.Data.Context.Mapping.IdentityAggregate;
 using MKW.Data.Context.Mapping.PremiumAggregate;
 using MKW.Data.Context.Mapping.ReviewAggregate;
 using MKW.Data.Context.Mapping.UserAggregate;
@@ -41,6 +42,7 @@ namespace MKW.Data.Context
         public DbSet<TierPlan> TierPlan { get; set; }
         public DbSet<Timespan> Timespan { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,6 +67,7 @@ namespace MKW.Data.Context
             TierPlanMap.Map(modelBuilder);
             TimespanMap.Map(modelBuilder);
             TransactionMap.Map(modelBuilder);
+            UserTokenMap.Map(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
         }
