@@ -9,9 +9,6 @@ namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
 {
     public class UpdateUserDTO
     {
-        [Required(ErrorMessage = "The field {0} is required")]
-        public int Id { get; set; }
-
         [MaxLength(12, ErrorMessage = "Max length 12")]
         [MinLength(3, ErrorMessage = "Min length 2")]
         public string? userName { get; set; }
