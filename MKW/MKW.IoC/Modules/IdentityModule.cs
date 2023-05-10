@@ -50,14 +50,14 @@ namespace MKW.IoC.Modules
 
                 options.User.RequireUniqueEmail = true;
 
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
                 options.Lockout.MaxFailedAccessAttempts = 5;
             });
 
             var tokenValidationParameter = new TokenValidationParameters
             {
                 ValidateIssuer = false,
-                ValidateAudience = true,
+                ValidateAudience = false,
 
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = securityKey,
