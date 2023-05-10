@@ -31,9 +31,13 @@ namespace MKW.API.Controllers.Identity
             return loginResult.IsSuccess ? Ok(loginResult) : Unauthorized(loginResult);
         }
 
-        [Authorize]
+        
         [HttpPost("logout")]
-        public async Task<ActionResult<BaseResponseDTO<Object>>> Logout() => _service.LogoutUserAsync().IsCompletedSuccessfully ? Ok() : Unauthorized();
+        public async Task<ActionResult<BaseResponseDTO<Object>>> Logout()
+        {
+            var logoutResult = await _service.LogoutUserAsync();
+               return logoutResult.IsSuccess ? Ok(logoutResult) : Unauthorized(logoutResult);
+        }
         
     }
 }
