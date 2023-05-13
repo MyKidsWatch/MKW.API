@@ -9,10 +9,10 @@ namespace MKW.API.Controllers.Identity
 {
     [Route("v1/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthenticationController : ControllerBase
     {
         private readonly IAuthService _service;
-        public AuthController(IAuthService service)
+        public AuthenticationController(IAuthService service)
         {
             _service = service;
         }

@@ -19,14 +19,14 @@ using System.Net.Http.Headers;
 
 namespace MKW.Services.AppServices.IdentityService
 {
-    public class AuthService : IAuthService
+    public class AuthenticationService : IAuthService
     {
 
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public AuthService( SignInManager<ApplicationUser> signInManager,  ITokenService tokenService, IMapper mapper)
+        public AuthenticationService( SignInManager<ApplicationUser> signInManager,  ITokenService tokenService, IMapper mapper)
         {
             _signInManager = signInManager;
             _tokenService = tokenService;

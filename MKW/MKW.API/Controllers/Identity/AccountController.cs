@@ -25,27 +25,33 @@ namespace MKW.API.Controllers.Identity
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAllAccounts() => Ok(await _service.GetAllAccountsAsync());
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAllAccounts() 
+            => Ok(await _service.GetAllAccountsAsync());
 
         [HttpGet("active")]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetActiveAccounts() => Ok(await _service.GetActiveAccountsAsync());
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetActiveAccounts() 
+            => Ok(await _service.GetActiveAccountsAsync());
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAccountByUserId([FromRoute] int id) => Ok(await _service.GetAccountByUserIdAsync(id));
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAccountByUserId([FromRoute] int id) 
+            => Ok(await _service.GetAccountByUserIdAsync(id));
 
         [HttpGet("username/{userName}")]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAccountByUserName([FromRoute] string userName) => Ok(await _service.GetAccountByUserNameAsync(userName));
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAccountByUserName([FromRoute] string userName) 
+            => Ok(await _service.GetAccountByUserNameAsync(userName));
 
         [HttpGet("role/{role}")]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAllAccountsByRole([FromRoute] string role) => Ok(await _service.GetAllAccountsByRoleAsync(role));
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAllAccountsByRole([FromRoute] string role) 
+            => Ok(await _service.GetAllAccountsByRoleAsync(role));
 
         [HttpGet("claim/{claim}")]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAllAccountsByClaim([FromRoute] Claim claim) => Ok(await _service.GetAllAccountsByClaimAsync(claim));
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAllAccountsByClaim([FromRoute] Claim claim) 
+            => Ok(await _service.GetAllAccountsByClaimAsync(claim));
 
         [HttpPost("register")]
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RegisterAccount([FromBody] CreateUserDTO createUserRequest)
@@ -54,20 +60,36 @@ namespace MKW.API.Controllers.Identity
             return register.IsSuccess ? CreatedAtAction(nameof(GetAccountByUserId), new { Id = register.Content.Id } , register) : BadRequest(register);
         }
 
-        [HttpGet("confirmEmail")]
+        [HttpPost("password/keycode")]
+        public async Task<ActionResult<BaseResponseDTO<object>>> RequestPasswordKeycode([FromBody] RequestPasswordKeycodeDTO keycodeRequest)
+        {
+            var result = await _service.RequestPasswordKeycodeAsync(keycodeRequest);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPatch("confirmEmail")]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDTO<object>>> ConfirmAccountEmail([FromBody] ConfirmAccountEmailDTO confirmEmailRequest)
         {
             var result = await _service.ConfirmAccountEmailAsync(confirmEmailRequest);
             return result.IsSuccess? Ok(result) : BadRequest(result);
+        } 
+        
+        [HttpPatch("password/reset")]
+        public async Task<ActionResult<BaseResponseDTO<object>>> RecoveryPassword([FromBody] ResetPasswordDTO resetRequest)
+        {
+            var result = await _service.ResetPasswordAsync(resetRequest);
+            return result.IsSuccess? Ok(result) : BadRequest(result);
         }
-
 
         [HttpDelete("username/{userName}")]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<object>>> DeleteAccountByUserName([FromRoute] string userName) => Ok(await _service.DeleteAccountByUserNameAsync(userName));
+        public async Task<ActionResult<BaseResponseDTO<object>>> DeleteAccountByUserName([FromRoute] string userName) 
+            => Ok(await _service.DeleteAccountByUserNameAsync(userName));
 
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<object>>> DeleteAccountById([FromRoute] int id) => Ok(await _service.DeleteAccountByIdAsync(id));
+        public async Task<ActionResult<BaseResponseDTO<object>>> DeleteAccountById([FromRoute] int id) 
+            => Ok(await _service.DeleteAccountByIdAsync(id));
     }
 }
