@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
 {
-    public class RecoveryPasswordDTO
+    public class RequestPasswordKeycodeDTO
     {
         [Required]
         [EmailAddress]
-        public string email { get; set; }
+        public string Email { get; set; }
     }
 }

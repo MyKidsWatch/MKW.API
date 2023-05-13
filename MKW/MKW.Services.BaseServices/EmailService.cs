@@ -25,7 +25,7 @@ namespace MKW.Services.BaseServices
 
         public void sendRecoveryPasswordEmail(string[] To, string subject, string keycode)
         {
-            var message = new MessageConfirmEmailDTO(To, subject, keycode);
+            var message = new MessageRecoveryPasswordDTO(To, subject, keycode);
             var emailMessage = createMessageBody(message);
             sendEmailMessage(emailMessage);
         }
