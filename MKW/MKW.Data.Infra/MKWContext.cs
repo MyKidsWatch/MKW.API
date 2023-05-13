@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Options;
 using MKW.Data.Context.Mapping.ContentAggregate;
 using MKW.Data.Context.Mapping.IdentityAggregate;
 using MKW.Data.Context.Mapping.PremiumAggregate;
@@ -20,9 +21,11 @@ namespace MKW.Data.Context
     /// </summary>
     public class MKWContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
-        public MKWContext(DbContextOptions<MKWContext> options) : base(options)
-        {
+        private readonly ApplicationIdentityOptions _applicationIdentityOptions;
 
+        public MKWContext(DbContextOptions<MKWContext> options, IOptions<ApplicationIdentityOptions> applicationIdentityOptions) : base(options)
+        {
+            _applicationIdentityOptions = applicationIdentityOptions.Value;
         }
 
         public DbSet<Award> Award { get; set; }
@@ -68,6 +71,7 @@ namespace MKW.Data.Context
             TimespanMap.Map(modelBuilder);
             TransactionMap.Map(modelBuilder);
             UserTokenMap.Map(modelBuilder);
+            InitializeIdentityMap.Map(modelBuilder, _applicationIdentityOptions);
 
             base.OnModelCreating(modelBuilder);
         }
