@@ -48,6 +48,7 @@ namespace MKW.IoC.Modules
             #region Identity Aggregate
             builder.AddTransient<IUserRepository, UserRepository>();
             builder.AddTransient<IUserTokenRepository, UserTokenRepository>();
+            builder.AddTransient<IRoleRepository, RoleRepository>();
             #endregion
 
         }
