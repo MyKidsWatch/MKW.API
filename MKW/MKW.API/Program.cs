@@ -11,11 +11,16 @@ using MKW.IoC.Modules;
 using MKW.Middleware;
 using Serilog;
 using System.Data;
+using System.Reflection;
 using System.Text;
 #endregion
 
 #region Builder
 var builder = WebApplication.CreateBuilder(args);
+#endregion
+
+#region secrets
+builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 #endregion
 
 #region Controllers & Endpoints
