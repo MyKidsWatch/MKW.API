@@ -14,6 +14,7 @@ namespace MKW.Domain.Interface.Repository.IdentityAggregate
     {
         Task<(Result result, TIdentity? user)> GetUserByIdAsync(int id);
         Task<(Result result, TIdentity? user)> GetUserByUserNameAsync(string userName);
+        Task<(Result result, TIdentity? user)> GetUserByEmailAsync(string email);
         Task<IEnumerable<TIdentity>> GetActiveUsersAsync();
         Task<IEnumerable<TIdentity>> GetAllUsersAsync();
         Task<IEnumerable<TIdentity>> GetAllUsersByClaimAsync(Claim claim);
@@ -22,9 +23,11 @@ namespace MKW.Domain.Interface.Repository.IdentityAggregate
         Task<(IdentityResult result, TIdentity user)> UpdateUserAsync(int id, TIdentity user);
         Task<IdentityResult> DeleteUserByIdAsync(int id);
         Task<IdentityResult> DeleteUserByUserNameAsync(string userName);
-        Task<Result> ConfirmAccountEmailAsync(int userId, string activationToken);
         Task<Result> SetUserLockoutEndDateAsync(ApplicationUser user, DateTimeOffset dateTimeOffset);
         Task<(Result result, string? token)> GenerateEmailConfirmationTokenAsync(TIdentity user);
-        Task<(Result result, string? token)> RecoveryPasswordAsync(string email);
+        Task<Result> ConfirmAccountEmailAsync(int userId, string activationToken);
+        Task<(Result result, string? token)> RequestPasswordKeycodeAsync(string email);
+        Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword);
+
     }
 }

@@ -25,6 +25,8 @@ namespace MKW.Domain.Interface.Services.AppServices.Identity
         Task<BaseResponseDTO<object>> DeleteAccountByUserNameAsync(string userName);
         Task<BaseResponseDTO<object>> CheckUserNameAsync(string username);
         Task<BaseResponseDTO<object>> CheckEmailAsync(string username);
-        Task<BaseResponseDTO<Object>> ConfirmAccountEmailAsync(ConfirmAccountEmailDTO ActivationRequest);
+        Task<BaseResponseDTO<object>> ConfirmAccountEmailAsync(ConfirmAccountEmailDTO ActivationRequest);
+        Task<BaseResponseDTO<object>> ResetPasswordAsync(ResetPasswordDTO request);
+        Task<BaseResponseDTO<object>> RequestPasswordKeycodeAsync(RequestPasswordKeycodeDTO request);
     }
 }

@@ -37,6 +37,12 @@ namespace MKW.Data.Repository.IdentityAggregate
             var user = await _userManager.FindByNameAsync(userName);
             return user is null ? (Result.Fail("user not found").WithError("User not found"), null) : (Result.Ok(), user);
         }
+        public async Task<(Result result, ApplicationUser? user)> GetUserByEmailAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user is null ? (Result.Fail("user not found").WithError("User not found"), null) : (Result.Ok(), user);
+        }
+    
         public async Task<IEnumerable<ApplicationUser>> GetActiveUsersAsync() => await _dbSet.Where(x => x.Active).ToListAsync();
         public async Task<IEnumerable<ApplicationUser>?> GetAllUsersAsync() => await _dbSet.ToListAsync(); 
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersByClaimAsync(Claim claim) => await _userManager.GetUsersForClaimAsync(claim);
@@ -95,12 +101,17 @@ namespace MKW.Data.Repository.IdentityAggregate
             return BlockResult.Succeeded ? Result.Ok() : Result.Fail("Failed to lockout user");
         }
 
-        public async Task<(Result, string?)> RecoveryPasswordAsync(string email)
+        public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword)
         {
-            var user = _userManager.FindByEmailAsync(email);
-            if(user.IsCompletedSuccessfully)
+            return await _userManager.ResetPasswordAsync(user, token, newPassword);
+        }
+
+        public async Task<(Result, string?)> RequestPasswordKeycodeAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is not null)
             {
-                var recoveryToken = _userManager.GeneratePasswordResetTokenAsync(user.Result);
+                var recoveryToken = _userManager.GeneratePasswordResetTokenAsync(user);
                 return (Result.Ok(), recoveryToken.Result);
             }
             return (Result.Fail("email not registered"), null);
