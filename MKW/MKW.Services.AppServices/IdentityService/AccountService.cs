@@ -9,6 +9,7 @@ using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.AppServices.Identity;
+using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using MKW.Domain.Interface.Services.BaseServices;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace MKW.Services.AppServices.IdentityService
         private readonly IUserTokenRepository _userTokenRepository;
         private readonly IPersonService _personRepository;
         private readonly IEmailService _emailService;
+        private readonly IRoleService _roleService;
         private readonly IMapper _mapper;
 
         public AccountService
@@ -35,6 +37,7 @@ namespace MKW.Services.AppServices.IdentityService
             IUserTokenRepository userTokenRepository,
             IPersonService person,
             IEmailService emailService,
+            IRoleService roleService,
             IMapper mapper
             )
         {
@@ -43,6 +46,7 @@ namespace MKW.Services.AppServices.IdentityService
             _personRepository = person;
             _emailService = emailService;
             _mapper = mapper;
+            _roleService = roleService;
         }
 
         public async Task<BaseResponseDTO<ReadUserDTO>> GetAllAccountsAsync()
@@ -134,6 +138,7 @@ namespace MKW.Services.AppServices.IdentityService
 
                 if (createUser.result.Succeeded)
                 {
+                    await _roleService.AddUserToRoleAsync("standard", createUser.user);
                     var userResponse = _mapper.Map<ReadUserDTO>(createUser.user);
                     var confirmEmailToken = await _repository.GenerateEmailConfirmationTokenAsync(createUser.user);
                     if (confirmEmailToken.result.IsSuccess)
@@ -281,13 +286,68 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-
-        public async Task<BaseResponseDTO<object>> RecoveryPasswordAsync(RecoveryPasswordDTO request)
+        public async Task<BaseResponseDTO<object>> RequestPasswordKeycodeAsync(RequestPasswordKeycodeDTO request)
         {
-            var recoveryResult = await _repository.RecoveryPasswordAsync(request.email);
-            return recoveryResult.result.IsSuccess ?
-                new BaseResponseDTO<Object>().WithSuccess(new {  }) :
-                new BaseResponseDTO<Object>().WithErrors(getErros(recoveryResult.result.Reasons)); ;
+            try
+            {
+                var responseDTO = new BaseResponseDTO<Object>();
+
+                var recoveryResult = await _repository.RequestPasswordKeycodeAsync(request.Email);
+                if (recoveryResult.result.IsSuccess)
+                {
+                    var getUser = await _repository.GetUserByEmailAsync(request.Email);
+                    if (getUser.result.IsSuccess)
+                    {
+                        var generateKeycode = await _userTokenRepository.AddUserTokenAsync(getUser.user.Id, recoveryResult.token);
+                        if (generateKeycode.result.IsSuccess)
+                        {
+                            var keycode = generateKeycode.keycode;
+                            _emailService.sendRecoveryPasswordEmail(new[] { request.Email }, "Recuperacao de Senha", keycode.ToString());
+                            return responseDTO.WithSuccess(new { isKeycodeSend = true });
+                        }
+                        return responseDTO.WithErrors(getErros(generateKeycode.result.Reasons));
+                    }
+                    return responseDTO.WithErrors(getErros(getUser.result.Reasons));
+                }
+                return responseDTO.WithErrors(getErros(recoveryResult.result.Reasons));
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public async Task<BaseResponseDTO<object>> ResetPasswordAsync(ResetPasswordDTO request)
+        {
+            try
+            {
+                var responseDTO = new BaseResponseDTO<Object>();
+
+                var getUser = await _repository.GetUserByEmailAsync(request.Email);
+                if (getUser.result.IsSuccess)
+                {
+                    var getToken = await _userTokenRepository.GetUserTokenAsync(getUser.user.Id, request.KeyCode);
+                    if (getToken.result.IsSuccess)
+                    {
+                        var resetPassword = await _repository.ResetPasswordAsync(getUser.user, getToken.userToken.Token, request.Password);
+                        if (resetPassword.Succeeded)
+                        {
+                            _userTokenRepository.DeleteUserTokenAsync(getUser.user.Id, request.KeyCode);
+                            return responseDTO.WithSuccess(new { isPasswordReseted = true });
+                        } 
+                        return responseDTO.WithErrors(getErros(resetPassword.Errors));
+                    }
+                    return responseDTO.WithErrors(getErros(getToken.result.Reasons));
+                }
+                return responseDTO.WithErrors(getErros(getUser.result.Reasons));
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         private IEnumerable<string> getErros (IEnumerable<IdentityError> ErrorList)
