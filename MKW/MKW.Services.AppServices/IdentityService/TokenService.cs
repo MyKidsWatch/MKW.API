@@ -30,21 +30,13 @@ namespace MKW.Services.AppServices.IdentityService
             //TODO: ARRUMAR TRY-CATCH
             try
             {
-                var userClaimsRights = await getUserClaims(user, claims, roles);
-                var expirationDate = DateTime.Now.AddSeconds(_jwtOptions.Expiration);
+                var userClaimsRights = getUserClaims(user, claims, roles);
+                var tokens = GenerateSecurityToken(userClaimsRights.accessClaims, userClaimsRights.refreshClaims);
 
-                var token = new JwtSecurityToken(
-                    issuer: _jwtOptions.Issuer,
-                    audience: _jwtOptions.Audience,
-                    claims: userClaimsRights,
-                    notBefore: DateTime.Now,
-                    expires: expirationDate,
-                    signingCredentials: _jwtOptions.SigningCredentials
-                );
+                var generatedAccessToken = new JwtSecurityTokenHandler().WriteToken(tokens.accessToken);
+                var generatedRefreshToken = new JwtSecurityTokenHandler().WriteToken(tokens.refreshToken);
 
-                var generatedToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-                return Result.Ok<ApplicationToken>(new ApplicationToken(generatedToken, expirationDate));
+                return Result.Ok<ApplicationToken>(new ApplicationToken(generatedAccessToken, generatedRefreshToken));
             }
             catch (Exception ex)
             {
@@ -52,20 +44,55 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        private async Task<IEnumerable<Claim>> getUserClaims(IdentityUser<int> user, IList<Claim> claims, IList<string> roles)
+        private (IEnumerable<Claim> accessClaims, IEnumerable<Claim> refreshClaims) getUserClaims(IdentityUser<int> user, IList<Claim> userClaims, IList<string> roles)
         {
-            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); //Json Token Identifier
-            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, DateTime.Now.ToString())); //Not Before
-            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString())); //Issued at
+            var accessClaims = new List<Claim>();
+
+            accessClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()));
+            accessClaims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+            accessClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); //Json Token Identifier
+            accessClaims.Add(new Claim(JwtRegisteredClaimNames.Nbf, DateTime.Now.ToString())); //Not Before
+            accessClaims.Add(new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString())); //Issued at
+
+            var refreshClaims = new List<Claim>(accessClaims);
+
+            foreach (var userClaim in userClaims)
+            {
+                accessClaims.Add(userClaim);
+            }
 
             foreach (var role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                accessClaims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            return claims;
+            return (accessClaims , refreshClaims);
+        }
+
+        private (JwtSecurityToken accessToken, JwtSecurityToken refreshToken) GenerateSecurityToken(IEnumerable<Claim> accessClaims, IEnumerable<Claim> refreshClaims)
+        {
+            var accessTokenExpiration = DateTime.Now.AddSeconds(_jwtOptions.AccessTokenExpiration);
+            var refreshTokenExpiration = DateTime.Now.AddSeconds(_jwtOptions.RefreshTokenExpiration);
+
+            var accessToken = new JwtSecurityToken(
+                issuer: _jwtOptions.Issuer,
+                audience: _jwtOptions.Audience,
+                claims: accessClaims,
+                notBefore: DateTime.Now,
+                expires: accessTokenExpiration,
+                signingCredentials: _jwtOptions.SigningCredentials
+            );
+
+            var refreshToken = new JwtSecurityToken(
+                issuer: _jwtOptions.Issuer,
+                audience: _jwtOptions.Audience,
+                claims: refreshClaims,
+                notBefore: DateTime.Now,
+                expires: refreshTokenExpiration,
+                signingCredentials: _jwtOptions.SigningCredentials
+            );
+
+            return (accessToken, refreshToken);
         }
     }
 }

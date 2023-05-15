@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MKW.Domain.Dto.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Auth;
 using MKW.Domain.Interface.Services.AppServices.Identity;
+using System.Security.Claims;
 
 namespace MKW.API.Controllers.Identity
 {
@@ -31,13 +32,12 @@ namespace MKW.API.Controllers.Identity
             return loginResult.IsSuccess ? Ok(loginResult) : Unauthorized(loginResult);
         }
 
-        
-        [HttpPost("logout")]
-        public async Task<ActionResult<BaseResponseDTO<Object>>> Logout()
+        [HttpPost("refresh")]
+        [Authorize]
+        public async Task<ActionResult<BaseResponseDTO<TokenDTO>>> RefreshLogin()
         {
-            var logoutResult = await _service.LogoutUserAsync();
-               return logoutResult.IsSuccess ? Ok(logoutResult) : Unauthorized(logoutResult);
+            var refreshResult = await _service.RefreshLoginAsync(HttpContext);
+            return refreshResult.IsSuccess ? Ok(refreshResult) : Unauthorized(refreshResult);
         }
-        
     }
 }

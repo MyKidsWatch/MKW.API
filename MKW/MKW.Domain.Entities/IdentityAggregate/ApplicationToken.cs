@@ -8,12 +8,12 @@ namespace MKW.Domain.Entities.IdentityAggregate
 {
     public class ApplicationToken
     {
-        public ApplicationToken(string value, DateTime expirationDate)
+        public ApplicationToken(string accessTokenValue, string refreshTokenValue)
         {
-            Token = value;
-            ExpirationDate = expirationDate;
+            AccessToken = accessTokenValue;
+            RefreshToken = refreshTokenValue;
         }
-        public string Token { get; }
-        public DateTime ExpirationDate { get; }
+        public string AccessToken { get; }
+        public string RefreshToken { get; }
     }
 }

@@ -16,6 +16,8 @@ using Newtonsoft.Json;
 using Microsoft.IdentityModel.Tokens;
 using MKW.Domain.Dto.Base;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace MKW.Services.AppServices.IdentityService
 {
@@ -63,42 +65,56 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        public async Task<BaseResponseDTO<Object>> LogoutUserAsync() 
-        {
-            var responseDTO = new BaseResponseDTO<Object>();
-            var logoutResult = _signInManager.SignOutAsync();
-            return logoutResult.IsCompletedSuccessfully ? 
-                responseDTO.WithSuccess(new {userId = logoutResult.GetAwaiter()}) :
-                responseDTO.WithErrors(responseDTO.Errors);
-        } 
-            
-
-
-        private async Task<BaseResponseDTO<TokenDTO>> LoginAsync(ApplicationUser applicationUser, string password)
+        public async Task<BaseResponseDTO<TokenDTO>> RefreshLoginAsync(HttpContext request)
         {
             try
             {
-                var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(applicationUser, password, false);
-  
-                if (checkPasswordResult.Succeeded)
-                {
-                    var userRoles = await _signInManager.UserManager.GetRolesAsync(applicationUser);
-                    var userClaims = await _signInManager.UserManager.GetClaimsAsync(applicationUser);
+                var responseDTO = new BaseResponseDTO<TokenDTO>();
+                var claims = request.User.Identity as ClaimsIdentity;
+                var userId = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+                var user = await _signInManager.UserManager.FindByIdAsync(userId);
+                if (user is null) return new BaseResponseDTO<TokenDTO>().WithErrors(GetErros());
 
-                    var token = await _tokenService.GetToken(applicationUser, userClaims, userRoles);
-  
-                    var tokenResponseDTO = _mapper.Map<TokenDTO>(token.Value);
-                    var LoginResponseDTO = new BaseResponseDTO<TokenDTO>().WithSuccess(tokenResponseDTO);
-   
-                    return LoginResponseDTO;
+                if (await _signInManager.UserManager.IsLockedOutAsync(user))
+                {
+                    return new BaseResponseDTO<TokenDTO>().WithErrors(GetErros());
                 }
 
-                return new BaseResponseDTO<TokenDTO>().WithErrors(GetErros(checkPasswordResult)) ; 
+                return responseDTO.WithSuccess(await generateToken(user));
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+        }
+
+        private async Task<BaseResponseDTO<TokenDTO>> LoginAsync(ApplicationUser applicationUser, string password)
+        {
+            try
+            {
+                var LoginResponseDTO = new BaseResponseDTO<TokenDTO>();
+                var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(applicationUser, password, false);
+  
+                if (checkPasswordResult.Succeeded)
+                {
+                    return LoginResponseDTO.WithSuccess(await generateToken(applicationUser));
+                }
+
+                return LoginResponseDTO.WithErrors(GetErros(checkPasswordResult)); 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private async Task<TokenDTO> generateToken(ApplicationUser applicationUser)
+        {
+            var userRoles = await _signInManager.UserManager.GetRolesAsync(applicationUser);
+            var userClaims = await _signInManager.UserManager.GetClaimsAsync(applicationUser);
+            var token = await _tokenService.GetToken(applicationUser, userClaims, userRoles);
+            var tokenResponseDTO = _mapper.Map<TokenDTO>(token.Value);
+            return tokenResponseDTO;
         }
 
         private IEnumerable<string> GetErros(SignInResult? result = null)
