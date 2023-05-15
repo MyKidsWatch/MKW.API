@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using MKW.Domain.Dto.Base;
+using MKW.Domain.Dto.DTO.IdentityDTO.Authorization;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
@@ -16,10 +17,12 @@ namespace MKW.Services.AppServices.IdentityService
     public class RoleService : IRoleService
     {
         private readonly IRoleRepository _repository;
+        private readonly IUserRepository _userRepository;
 
-        public RoleService(IRoleRepository repository)
+        public RoleService(IRoleRepository repository, IUserRepository userRepository)
         {
             _repository = repository;
+            _userRepository = userRepository;
         }
         public async Task<BaseResponseDTO<object>> AddRoleAsync(string role)
         {
@@ -29,12 +32,16 @@ namespace MKW.Services.AppServices.IdentityService
                 new BaseResponseDTO<object>().WithErrors(getErros(result.Errors));
         }
 
-        public async Task<BaseResponseDTO<object>> AddUserToRoleAsync(string roleName, ApplicationUser user)
+        public async Task<BaseResponseDTO<object>> AddUserToRoleAsync(string roleName, string userName)
         {
-            var result = await _repository.AddUserToRoleAsync(roleName, user);
-            return result.Succeeded ?
-                new BaseResponseDTO<object>() :
-                new BaseResponseDTO<object>().WithErrors(getErros(result.Errors));
+            var response = new BaseResponseDTO<object>();
+            var getUser = await _userRepository.GetUserByUserNameAsync(userName);
+            if (getUser.result.IsSuccess)
+            {
+                var result = await _repository.AddUserToRoleAsync(roleName, getUser.user);
+                return result.Succeeded ? response : response.WithErrors(getErros(result.Errors));
+            }
+            return response.WithErrors(new List<string>() { "user not found"});
         }
 
         public Task<BaseResponseDTO<object>> DeleteRoleAsync(string roleName)
@@ -47,9 +54,9 @@ namespace MKW.Services.AppServices.IdentityService
             throw new NotImplementedException();
         }
 
-        public Task<BaseResponseDTO<object>> GetRolesAsync()
+        public async Task<BaseResponseDTO<object>> GetRolesAsync()
         {
-            throw new NotImplementedException();
+            return new BaseResponseDTO<object>().WithSuccesses(await _repository.GetRolesAsync());
         }
 
         public Task<BaseResponseDTO<object>> UpdateRoleAsync(string oldRoleName, string newRoleName)

@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using MKW.Domain.Dto.Base;
+using MKW.Domain.Dto.DTO.IdentityDTO.Authorization;
 using MKW.Domain.Entities.IdentityAggregate;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace MKW.Domain.Interface.Services.AppServices.IdentityService
     {
         Task<BaseResponseDTO<object>> GetRolesAsync();
         Task<BaseResponseDTO<object>> AddRoleAsync(string role);
-        Task<BaseResponseDTO<object>> AddUserToRoleAsync(string roleName, ApplicationUser user);
+        Task<BaseResponseDTO<object>> AddUserToRoleAsync(string roleName, string userName);
         Task<BaseResponseDTO<object>> DeleteRoleAsync(string roleName);
         Task<BaseResponseDTO<object>> UpdateRoleAsync(string oldRoleName, string newRoleName);
         Task<BaseResponseDTO<object>> DeleteUserFromRoleAsync(string roleName, ApplicationUser user);

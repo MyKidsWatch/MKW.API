@@ -138,7 +138,7 @@ namespace MKW.Services.AppServices.IdentityService
 
                 if (createUser.result.Succeeded)
                 {
-                    await _roleService.AddUserToRoleAsync("standard", createUser.user);
+                    await _roleService.AddUserToRoleAsync("standard", createUser.user.UserName);
                     var userResponse = _mapper.Map<ReadUserDTO>(createUser.user);
                     var confirmEmailToken = await _repository.GenerateEmailConfirmationTokenAsync(createUser.user);
                     if (confirmEmailToken.result.IsSuccess)

@@ -38,7 +38,8 @@ namespace MKW.IoC.Modules
                 options.Issuer = jwtOptionsSettings[nameof(ApplicationJwtOptions.Issuer)];
                 options.Audience = jwtOptionsSettings[nameof(ApplicationJwtOptions.Audience)];
                 options.SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
-                options.Expiration = int.Parse(jwtOptionsSettings[nameof(ApplicationJwtOptions.Expiration)] ?? "0");
+                options.AccessTokenExpiration = int.Parse(jwtOptionsSettings[nameof(ApplicationJwtOptions.AccessTokenExpiration)] ?? "0");
+                options.RefreshTokenExpiration = int.Parse(jwtOptionsSettings[nameof(ApplicationJwtOptions.RefreshTokenExpiration)] ?? "0");
             });
 
             builder.Configure<IdentityOptions>(options =>
