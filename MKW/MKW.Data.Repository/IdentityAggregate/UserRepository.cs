@@ -30,17 +30,17 @@ namespace MKW.Data.Repository.IdentityAggregate
         public async Task<(Result, ApplicationUser?)> GetUserByIdAsync(int id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
-            return user is null ? (Result.Fail("user not found").WithError("User not found"), null) : (Result.Ok(), user);
+            return user is null ? (Result.Fail("user not found"), null) : (Result.Ok(), user);
         }
         public async Task<(Result, ApplicationUser?)> GetUserByUserNameAsync(string userName) 
         { 
             var user = await _userManager.FindByNameAsync(userName);
-            return user is null ? (Result.Fail("user not found").WithError("User not found"), null) : (Result.Ok(), user);
+            return user is null ? (Result.Fail("user not found"), null) : (Result.Ok(), user);
         }
         public async Task<(Result result, ApplicationUser? user)> GetUserByEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return user is null ? (Result.Fail("user not found").WithError("User not found"), null) : (Result.Ok(), user);
+            return user is null ? (Result.Fail("user not found"), null) : (Result.Ok(), user);
         }
     
         public async Task<IEnumerable<ApplicationUser>> GetActiveUsersAsync() => await _dbSet.Where(x => x.Active).ToListAsync();
@@ -59,8 +59,6 @@ namespace MKW.Data.Repository.IdentityAggregate
 
         public async Task<(IdentityResult, ApplicationUser)> UpdateUserAsync(int id, ApplicationUser user)
         {
-            var userDataBase = _userManager.FindByIdAsync(id.ToString());
-
             user.AlterDate = DateTime.Now;
             var updateResult = await _userManager.UpdateAsync(user);
             return (updateResult, user);
@@ -97,8 +95,9 @@ namespace MKW.Data.Repository.IdentityAggregate
 
         public async Task<Result> SetUserLockoutEndDateAsync(ApplicationUser user, DateTimeOffset dateTimeOffset)
         {
+            string message = dateTimeOffset > DateTimeOffset.Now ? "block" : "unblock";
             var BlockResult =  await _userManager.SetLockoutEndDateAsync(user, dateTimeOffset);
-            return BlockResult.Succeeded ? Result.Ok() : Result.Fail("Failed to lockout user");
+            return BlockResult.Succeeded ? Result.Ok().WithSuccess($"lockouEnd: {message}") : Result.Fail("Failed to set lockoutEnd date");
         }
 
         public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword)

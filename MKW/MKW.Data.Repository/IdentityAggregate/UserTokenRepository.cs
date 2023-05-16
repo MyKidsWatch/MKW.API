@@ -45,6 +45,9 @@ namespace MKW.Data.Repository.IdentityAggregate
                 Token = token
             };
 
+            var tokensDb = _dbSet.Where(t => t.UserId == userID).ToList();
+            _dbSet.RemoveRange(tokensDb);
+
             var addResult = _dbSet.Add(userToken).Entity;
             if(addResult is not null)
             {
@@ -54,18 +57,18 @@ namespace MKW.Data.Repository.IdentityAggregate
             return (Result.Ok(), null);
         }
 
-        public async Task<(Result, UserToken?)> DeleteUserTokenAsync(int userID, int keycode)
+        public async Task<Result> DeleteUserTokenAsync(int userID, int keycode)
         {
             var userToken = _dbSet.Where(userToken => userToken.UserId == userID && userToken.KeyCode == keycode).FirstOrDefault();
             if (userToken is not null)
             {
                 var deleteToken = _dbSet.Remove(userToken);
                 var result = await _context.SaveChangesAsync();
-                return (Result.Ok(), userToken);
+                return Result.Ok();
             }
             else
             {
-                return (Result.Fail("invalid key"), null);
+                return Result.Fail("invalid key");
             }
         }
 
