@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
 {
-    public class RequestPasswordKeycodeDTO
+    public class RequestCheckEmailDTO
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "The field {0} is required")]
+        [EmailAddress(ErrorMessage = "The field {0} is invalid")]
         public string Email { get; set; }
     }
 }

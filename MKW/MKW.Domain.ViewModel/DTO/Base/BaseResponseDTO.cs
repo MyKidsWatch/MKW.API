@@ -14,33 +14,47 @@ namespace MKW.Domain.Dto.Base
     {
         public bool IsSuccess { get; private set; } = true;
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IEnumerable<T>? ContentList { get; private set; } = null;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public T? Content { get; private set; } = null;
+        public List<T>? Content { get; private set; } = null;
 
-        public List<string> Errors { get; private set; } = null;
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public List<string>? Errors { get; private set; } = null;
 
-        public BaseResponseDTO<T> WithSuccess(T content, bool isSuccess = true)
+        public BaseResponseDTO() { }
+        public BaseResponseDTO(bool isSuccess)
         {
             IsSuccess = isSuccess;
-            Content = content;
-            return this;
         }
 
         public BaseResponseDTO<T> WithSuccesses(IEnumerable<T> content, bool isSuccess = true)
         {
+            if (Content is null) Content = new List<T>();
+            Content.AddRange(content);
             IsSuccess = isSuccess;
-            ContentList = content;
+            return this;
+        }
+        public BaseResponseDTO<T> WithErrors(IEnumerable<string> errors, bool isSuccess = false) 
+        {
+            if (Errors is null) Errors = new List<string>();
+            Errors.AddRange(errors);
+            IsSuccess = isSuccess;
             return this;
         }
 
-        public BaseResponseDTO<T> WithErrors(IEnumerable<string> errors, bool isSuccess = false) 
+        public BaseResponseDTO<T> AddContent(T content, bool isSuccess = true)
         {
-            Errors = new List<string>();
+            if (Content is null) Content = new List<T>();
+            Content.Add(content);
             IsSuccess = isSuccess;
-            Errors.AddRange(errors);
+            return this;
+        }
+
+        public BaseResponseDTO<T> AddError(string error, bool isSuccess = false)
+        {
+            if(Errors is null) Errors = new List<string>();
+            Errors.Add(error);
+            IsSuccess = isSuccess;
             return this;
         }
     }

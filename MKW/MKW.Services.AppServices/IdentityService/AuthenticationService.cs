@@ -80,7 +80,7 @@ namespace MKW.Services.AppServices.IdentityService
                     return new BaseResponseDTO<TokenDTO>().WithErrors(GetErros());
                 }
 
-                return responseDTO.WithSuccess(await generateToken(user));
+                return responseDTO.AddContent(await generateToken(user));
             }
             catch (Exception ex)
             {
@@ -97,7 +97,7 @@ namespace MKW.Services.AppServices.IdentityService
   
                 if (checkPasswordResult.Succeeded)
                 {
-                    return LoginResponseDTO.WithSuccess(await generateToken(applicationUser));
+                    return LoginResponseDTO.AddContent(await generateToken(applicationUser));
                 }
 
                 return LoginResponseDTO.WithErrors(GetErros(checkPasswordResult)); 

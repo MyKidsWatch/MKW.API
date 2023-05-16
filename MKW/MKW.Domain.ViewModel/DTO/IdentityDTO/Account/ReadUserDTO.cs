@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MKW.Domain.Dto.DTO.PersonDTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,5 +26,6 @@ namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
         public bool Active { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool isConfirmEmailTokenSent { get; set; }
+        public ReadPersonDTO AssociatedWithPerson{ get; set; }
     }
 }

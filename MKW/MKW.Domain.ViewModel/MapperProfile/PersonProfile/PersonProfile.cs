@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MKW.Domain.Dto.DTO.PersonDTO;
 
 namespace MKW.Domain.Dto.MapperProfile.PersonProfile
 {
@@ -14,6 +15,7 @@ namespace MKW.Domain.Dto.MapperProfile.PersonProfile
         public PersonProfile()
         {
             CreateMap<PersonOnCreateUserDTO, Person>();
+            CreateMap<Person, ReadPersonDTO>();
         }
     }   
 }

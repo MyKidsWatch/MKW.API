@@ -23,10 +23,11 @@ namespace MKW.Domain.Interface.Services.AppServices.Identity
         Task<BaseResponseDTO<ReadUserDTO>> UpdateAccountAsync(int id, UpdateUserDTO userDTO);
         Task<BaseResponseDTO<object>> DeleteAccountByIdAsync(int id);
         Task<BaseResponseDTO<object>> DeleteAccountByUserNameAsync(string userName);
-        Task<BaseResponseDTO<object>> CheckUserNameAsync(string username);
-        Task<BaseResponseDTO<object>> CheckEmailAsync(string username);
-        Task<BaseResponseDTO<object>> ConfirmAccountEmailAsync(ConfirmAccountEmailDTO ActivationRequest);
-        Task<BaseResponseDTO<object>> ResetPasswordAsync(ResetPasswordDTO request);
-        Task<BaseResponseDTO<object>> RequestPasswordKeycodeAsync(RequestPasswordKeycodeDTO request);
+        Task<BaseResponseDTO<CheckUserNameDTO>> CheckUserNameAsync(string username);
+        Task<BaseResponseDTO<CheckEmailDTO>> CheckEmailAsync(string username);
+        Task<BaseResponseDTO<ResponseGenerateKeycodeDTO>> RequestEmailKeycodeAsync(RequestKeycodeDTO request);
+        Task<BaseResponseDTO<ReadUserDTO>> ConfirmAccountEmailAsync(ConfirmAccountEmailDTO ActivationRequest);
+        Task<BaseResponseDTO<ResponseGenerateKeycodeDTO>> RequestPasswordKeycodeAsync(RequestKeycodeDTO request);
+        Task<BaseResponseDTO<ReadUserDTO>> ResetPasswordAsync(ResetPasswordDTO request);
     }
 }

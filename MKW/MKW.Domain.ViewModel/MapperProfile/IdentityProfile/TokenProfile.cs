@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MKW.Domain.Dto.MapperProfile.IdentityUserProfile
+namespace MKW.Domain.Dto.MapperProfile.IdentityProfile
 {
-    public class AuthProfile : Profile
+    public class TokenProfile : Profile
     {
-        public AuthProfile()
+        public TokenProfile()
         {
             CreateMap<ApplicationToken, TokenDTO>();
         }

@@ -1,6 +1,8 @@
-﻿using FluentResults;
+﻿using AutoMapper;
+using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using MKW.Domain.Dto.Base;
+using MKW.Domain.Dto.DTO.IdentityDTO.Account;
 using MKW.Domain.Dto.DTO.IdentityDTO.Authorization;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
@@ -18,53 +20,86 @@ namespace MKW.Services.AppServices.IdentityService
     {
         private readonly IRoleRepository _repository;
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public RoleService(IRoleRepository repository, IUserRepository userRepository)
+        public RoleService(IRoleRepository repository, IUserRepository userRepository, IMapper mapper)
         {
             _repository = repository;
             _userRepository = userRepository;
-        }
-        public async Task<BaseResponseDTO<object>> AddRoleAsync(string role)
-        {
-            var result = await _repository.AddRoleAsync(role);
-            return result.Succeeded ? 
-                new BaseResponseDTO<object>() : 
-                new BaseResponseDTO<object>().WithErrors(getErros(result.Errors));
+            _mapper = mapper;
         }
 
-        public async Task<BaseResponseDTO<object>> AddUserToRoleAsync(string roleName, string userName)
+        public async Task<BaseResponseDTO<ReadRoleDTO>> GetRolesByNameAsync(string roleName)
         {
-            var response = new BaseResponseDTO<object>();
-            var getUser = await _userRepository.GetUserByUserNameAsync(userName);
-            if (getUser.result.IsSuccess)
+            try
             {
-                var result = await _repository.AddUserToRoleAsync(roleName, getUser.user);
-                return result.Succeeded ? response : response.WithErrors(getErros(result.Errors));
+                var response = new BaseResponseDTO<ReadRoleDTO>();
+                var (result, roleDb) = await _repository.GetRoleByNameAsync(roleName);
+                if (result.Succeeded)
+                {
+                    var role = _mapper.Map<ReadRoleDTO>(roleDb);
+                    return response.AddContent(role);
+                }
+                return response.WithErrors(GetErros(result.Errors));
             }
-            return response.WithErrors(new List<string>() { "user not found"});
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-
-        public Task<BaseResponseDTO<object>> DeleteRoleAsync(string roleName)
+        public async Task<BaseResponseDTO<ReadRoleDTO>> GetAllRolesAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = new BaseResponseDTO<ReadRoleDTO>();
+                var roleList = _mapper.Map<IEnumerable<ReadRoleDTO>>(await _repository.GetRolesAsync());
+                return response.WithSuccesses(roleList);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public Task<BaseResponseDTO<object>> DeleteUserFromRoleAsync(string roleName, ApplicationUser user)
+        public async Task<BaseResponseDTO<ReadRoleDTO>> AddUserToRoleAsync(string roleName, string userName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = new BaseResponseDTO<ReadRoleDTO>();
+                var getUser = await _userRepository.GetUserByUserNameAsync(userName);
+                if (getUser.result.IsSuccess)
+                {
+                    var result = await _repository.AddUserToRoleAsync(roleName, getUser.user);
+                    return result.Succeeded ? response : response.WithErrors(GetErros(result.Errors));
+                }
+                return response.AddError("user not found");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<BaseResponseDTO<object>> GetRolesAsync()
+        public async Task<BaseResponseDTO<ReadRoleDTO>> RemoveUserFromRoleAsync(string roleName, string userName)
         {
-            return new BaseResponseDTO<object>().WithSuccesses(await _repository.GetRolesAsync());
+            try
+            {
+                var response = new BaseResponseDTO<ReadRoleDTO>();
+                var getUser = await _userRepository.GetUserByUserNameAsync(userName);
+                if (getUser.result.IsSuccess)
+                {
+                    var result = await _repository.DeleteUserFromRoleAsync(roleName, getUser.user);
+                    return result.Succeeded ? response : response.WithErrors(GetErros(result.Errors));
+                }
+                return response.AddError("user not found");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public Task<BaseResponseDTO<object>> UpdateRoleAsync(string oldRoleName, string newRoleName)
-        {
-            throw new NotImplementedException();
-        }
-
-        private IEnumerable<string> getErros(IEnumerable<IdentityError> ErrorList)
+        private static IEnumerable<string> GetErros(IEnumerable<IdentityError> ErrorList)
         {
             var errorList = new List<string>();
 
