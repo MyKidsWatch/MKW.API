@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MKW.Domain.Entities.UserAggregate;
+using System.Linq.Expressions;
 
 namespace MKW.Data.Context.Mapping.UserAggregate
 {
@@ -19,50 +20,27 @@ namespace MKW.Data.Context.Mapping.UserAggregate
             modelBuilder.Entity<Person>()
                 .Property(x => x.Id)
                 .HasColumnName("ID");
+            
+            modelBuilder.Entity<Person>()
+                .Property(x => x.UserId)
+                .HasColumnName("USER_ID");
 
             modelBuilder.Entity<Person>()
                 .Property(x => x.UUID)
                 .HasColumnName("UUID");
 
             modelBuilder.Entity<Person>()
-                .Property(x => x.Username)
-                .HasColumnName("USERNAME");
-
-            modelBuilder.Entity<Person>()
-                .Property(x => x.Name)
-                .HasColumnName("NAME");
-
-            modelBuilder.Entity<Person>()
-                .Property(x => x.LastName)
-                .HasColumnName("SURNAME");
-
-            modelBuilder.Entity<Person>()
-                .Property(x => x.Hash)
-                .HasColumnName("HASH");
-
-            modelBuilder.Entity<Person>()
-                .Property(x => x.Email)
-                .HasColumnName("EMAIL");
-
-            modelBuilder.Entity<Person>()
                 .Property(x => x.GenderId)
                 .HasColumnName("GENDER_ID");
 
             modelBuilder.Entity<Person>()
-                .Property(x => x.PhoneCountry)
-                .HasColumnName("PHONE_COUNTRY");
+                .Property(x => x.ImageURL)
+                .HasColumnName("IMAGE_URL");
 
             modelBuilder.Entity<Person>()
-                .Property(x => x.PhoneArea)
-                .HasColumnName("PHONE_AREA");
-
-            modelBuilder.Entity<Person>()
-                .Property(x => x.PhoneNumber)
-                .HasColumnName("PHONE_NUMBER");
-
-            modelBuilder.Entity<Person>()
-                .Property(x => x.Password)
-                .HasColumnName("PASSWORD");
+                .Property(x => x.BirthDate)
+                .HasColumnName("BIRTHDATE")
+                .HasColumnType("date");
 
             modelBuilder.Entity<Person>()
                 .Property(x => x.CreateDate)

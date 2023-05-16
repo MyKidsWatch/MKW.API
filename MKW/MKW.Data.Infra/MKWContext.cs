@@ -1,10 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Options;
 using MKW.Data.Context.Mapping.ContentAggregate;
+using MKW.Data.Context.Mapping.IdentityAggregate;
 using MKW.Data.Context.Mapping.PremiumAggregate;
 using MKW.Data.Context.Mapping.ReviewAggregate;
 using MKW.Data.Context.Mapping.UserAggregate;
 using MKW.Domain.Entities.ContentAggregate;
+using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.PremiumAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
@@ -14,11 +19,13 @@ namespace MKW.Data.Context
     /// <summary>
     /// Contexto da Base de Dados do MyKidsWatch. Contém propriedades de acesso às Tabelas relacionadas às Entidades do Sistema.
     /// </summary>
-    public class MKWContext : DbContext
+    public class MKWContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
-        public MKWContext(DbContextOptions<MKWContext> options) : base(options)
-        {
+        private readonly ApplicationIdentityOptions _applicationIdentityOptions;
 
+        public MKWContext(DbContextOptions<MKWContext> options, IOptions<ApplicationIdentityOptions> applicationIdentityOptions) : base(options)
+        {
+            _applicationIdentityOptions = applicationIdentityOptions.Value;
         }
 
         public DbSet<Award> Award { get; set; }
@@ -38,6 +45,7 @@ namespace MKW.Data.Context
         public DbSet<TierPlan> TierPlan { get; set; }
         public DbSet<Timespan> Timespan { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -62,6 +70,8 @@ namespace MKW.Data.Context
             TierPlanMap.Map(modelBuilder);
             TimespanMap.Map(modelBuilder);
             TransactionMap.Map(modelBuilder);
+            UserTokenMap.Map(modelBuilder);
+            InitializeIdentityMap.Map(modelBuilder, _applicationIdentityOptions);
 
             base.OnModelCreating(modelBuilder);
         }

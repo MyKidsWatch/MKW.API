@@ -1,14 +1,26 @@
-#region Using
+﻿#region Using
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MKW.API.Dependencies;
 using MKW.Data.Context;
+using MKW.Domain.Entities.IdentityAggregate;
+using MKW.IoC.Modules;
 using MKW.Middleware;
 using Serilog;
+using System.Data;
+using System.Reflection;
+using System.Text;
 #endregion
 
 #region Builder
 var builder = WebApplication.CreateBuilder(args);
+#endregion
+
+#region secrets
+builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 #endregion
 
 #region Controllers & Endpoints
@@ -33,18 +45,18 @@ builder.Services.AddSwaggerGen(swagger =>
         BearerFormat = "JWT",
     });
     swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
         {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
      });
 });
 #endregion
@@ -60,11 +72,13 @@ builder.Services.AddDbContext<MKWContext>(options =>
 #endregion
 
 #region IoC
-builder.Services.StartRegisterServices();
+builder.Services.StartRegisterServices(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHttpClient();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 #endregion
+
 
 #region Serilog
 Log.Logger = new LoggerConfiguration()
@@ -88,6 +102,7 @@ app.UseHttpsRedirection();
 app.UseCors(options =>
     options.AllowAnyHeader().AllowAnyOrigin());
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
