@@ -12,10 +12,8 @@ namespace MKW.Domain.Interface.Repository.IdentityAggregate
     public interface IRoleRepository
     {
         Task<IEnumerable<IdentityRole<int>>> GetRolesAsync();        
-        Task<IdentityResult> AddRoleAsync(string role);
+        Task<(IdentityResult result, IdentityRole<int>? role)> GetRoleByNameAsync(string roleName);        
         Task<IdentityResult> AddUserToRoleAsync(string roleName, ApplicationUser user);
-        Task<IdentityResult> DeleteRoleAsync(string roleName);
-        Task<IdentityResult> UpdateRoleAsync(string oldRoleName, string newRoleName);
         Task<IdentityResult> DeleteUserFromRoleAsync(string roleName, ApplicationUser user);
     }
 }

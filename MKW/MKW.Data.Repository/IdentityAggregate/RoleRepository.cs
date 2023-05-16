@@ -20,9 +20,18 @@ namespace MKW.Data.Repository.IdentityAggregate
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task<IdentityResult> AddRoleAsync(string role)
+        public async Task<IEnumerable<IdentityRole<int>>> GetRolesAsync()
         {
-            return await _roleManager.CreateAsync(new IdentityRole<int> { Name = role});
+            return _roleManager.Roles;
+        }
+        public async Task<(IdentityResult, IdentityRole<int>?)> GetRoleByNameAsync(string roleName)
+        {
+            var role = await _roleManager.FindByNameAsync(roleName);
+            if (role is not null)
+            {
+                return (IdentityResult.Success, role);
+            }
+            return (IdentityResult.Failed(), null);
         }
 
         public async  Task<IdentityResult> AddUserToRoleAsync(string roleName, ApplicationUser user)
@@ -35,37 +44,12 @@ namespace MKW.Data.Repository.IdentityAggregate
             return IdentityResult.Failed();
         }
 
-        public async Task<IdentityResult> DeleteRoleAsync(string roleName)
-        {
-            var role = await _roleManager.FindByNameAsync(roleName);
-            if (role is not null)
-            {
-                return await _roleManager.DeleteAsync(role);
-            }
-            return IdentityResult.Failed();
-        }
-
         public async Task<IdentityResult> DeleteUserFromRoleAsync(string roleName, ApplicationUser user)
         {
             var role = await _roleManager.FindByNameAsync(roleName);
             if (role is not null)
             {
                 return await _userManager.RemoveFromRoleAsync(user, role.Name);
-            }
-            return IdentityResult.Failed();
-        }
-
-        public async Task<IEnumerable<IdentityRole<int>>> GetRolesAsync()
-        {
-            return _roleManager.Roles;
-        }
-
-        public async Task<IdentityResult> UpdateRoleAsync(string oldRoleName, string newRoleName)
-        {
-            var role = await _roleManager.FindByNameAsync(oldRoleName);
-            if (role is not null)
-            {
-                return await _roleManager.SetRoleNameAsync(role, newRoleName);
             }
             return IdentityResult.Failed();
         }
