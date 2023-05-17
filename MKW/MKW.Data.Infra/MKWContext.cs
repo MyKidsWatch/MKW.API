@@ -49,6 +49,9 @@ namespace MKW.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            InitializeIdentityMap.Map(modelBuilder, _applicationIdentityOptions);
             AgeRangeMap.Map(modelBuilder);
             AwardMap.Map(modelBuilder);
             AwardPersonMap.Map(modelBuilder);
@@ -71,9 +74,7 @@ namespace MKW.Data.Context
             TimespanMap.Map(modelBuilder);
             TransactionMap.Map(modelBuilder);
             UserTokenMap.Map(modelBuilder);
-            InitializeIdentityMap.Map(modelBuilder, _applicationIdentityOptions);
 
-            base.OnModelCreating(modelBuilder);
         }
 
         public IDbContextTransaction BeginTransaction()

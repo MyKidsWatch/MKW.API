@@ -35,8 +35,8 @@ namespace MKW.IoC.Modules
 
             builder.Configure<ApplicationJwtOptions>(options =>
             {
-                options.Issuer = jwtOptionsSettings[nameof(ApplicationJwtOptions.Issuer)];
-                options.Audience = jwtOptionsSettings[nameof(ApplicationJwtOptions.Audience)];
+                options.Issuer = jwtOptionsSettings[nameof(ApplicationJwtOptions.Issuer)] ?? "";
+                options.Audience = jwtOptionsSettings[nameof(ApplicationJwtOptions.Audience)] ?? "";
                 options.SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
                 options.AccessTokenExpiration = int.Parse(jwtOptionsSettings[nameof(ApplicationJwtOptions.AccessTokenExpiration)] ?? "0");
                 options.RefreshTokenExpiration = int.Parse(jwtOptionsSettings[nameof(ApplicationJwtOptions.RefreshTokenExpiration)] ?? "0");
@@ -55,6 +55,11 @@ namespace MKW.IoC.Modules
 
                 options.SignIn.RequireConfirmedEmail = false;
                 options.Lockout.MaxFailedAccessAttempts = 5;
+            });
+
+            builder.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromMinutes(30);
             });
 
             var tokenValidationParameter = new TokenValidationParameters
@@ -78,19 +83,15 @@ namespace MKW.IoC.Modules
             }).AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = tokenValidationParameter;
-                });
+            });
 
             var applicationIdentityOptions = ApplicationIdentityOptions(configuration);
-
-
             builder.Configure<ApplicationIdentityOptions>(options =>
             {
                 options.AdminUser = applicationIdentityOptions.AdminUser;
                 options.StandardRole = applicationIdentityOptions.StandardRole;
                 options.AdminRole = applicationIdentityOptions.AdminRole;
-
             });
-
 
             builder.AddTransient<ITokenService, TokenService>();
             builder.AddTransient<IAccountService, AccountService>();

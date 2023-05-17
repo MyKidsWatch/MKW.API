@@ -20,7 +20,6 @@ namespace MKW.IoC.Modules
             builder.AddTransient<IPersonService, PersonService>();
             #endregion
             #region BaseServices
-            builder.AddTransient<IEmailService, EmailService>();
             builder.AddTransient<ITmdbService, TmdbService>();
             builder.AddTransient<IAlgorithmService, AlgorithmService>();
             #endregion

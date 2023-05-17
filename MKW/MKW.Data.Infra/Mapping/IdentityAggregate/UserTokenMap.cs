@@ -16,7 +16,7 @@ namespace MKW.Data.Context.Mapping.IdentityAggregate
                 .HasKey(x => new {x.UserId, x.KeyCode});
             
             modelBuilder.Entity<UserToken>()
-                .ToTable("TB_MKW_USER_TOKEN");
+                .ToTable("TB_USR_USER_KEYCODE");
 
             modelBuilder.Entity<UserToken>()
                 .Property(x => x.UserId)
