@@ -12,6 +12,7 @@ using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.PremiumAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
+using MKW.Domain.Entities.UserAggregate;
 
 namespace MKW.Data.Context
 {
@@ -34,6 +35,8 @@ namespace MKW.Data.Context
         public DbSet<Content> Content { get; set; }
         public DbSet<ContentGenre> ContentGenre { get; set; }
         public DbSet<Genre> Genre { get; set; }
+        public DbSet<Operation> Operation { get; set; }
+        public DbSet<OperationType> OperationType { get; set; }
         public DbSet<Platform> Platform { get; set; }
         public DbSet<PlatformCategory> PlatformCategory { get; set; }
         public DbSet<PremiumPerson> PremiumPerson { get; set; }
@@ -69,7 +72,6 @@ namespace MKW.Data.Context
             TierPlanMap.Map(modelBuilder);
             TimespanMap.Map(modelBuilder);
             UserTokenMap.Map(modelBuilder);
-
         }
 
         public IDbContextTransaction BeginTransaction()

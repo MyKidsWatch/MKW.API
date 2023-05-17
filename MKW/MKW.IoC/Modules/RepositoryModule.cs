@@ -42,6 +42,8 @@ namespace MKW.IoC.Modules
             builder.AddTransient<IGenderRepository, GenderRepository>();
             builder.AddTransient<IPersonRepository, PersonRepository>();
             builder.AddTransient<IPersonChildRepository, PersonChildRepository>();
+            builder.AddTransient<IOperationRepository, OperationRepository>();
+            builder.AddTransient<IOperationTypeRepository, OperationTypeRepository>();
             #endregion
             #region Identity Aggregate
             builder.AddTransient<IUserRepository, UserRepository>();
