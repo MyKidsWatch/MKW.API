@@ -159,40 +159,41 @@ namespace MKW.Services.AppServices.IdentityService
         {
             try
             {
+                //TODO: EARLY RETURN / NEVER NESTER / 3 LEVEL MAX
                 var userResponseDTO = new BaseResponseDTO<ReadUserDTO>();
                 var userEntity = _mapper.Map<ApplicationUser>(userDTO);
                 var createUser = await _repository.AddUserAsync(userEntity, userDTO.Password);
 
-                if (createUser.result.Succeeded)
+                if (!createUser.result.Succeeded) return userResponseDTO.WithErrors(getErros(createUser.result.Errors));
+              
+                await _roleService.AddUserToRoleAsync("standard", createUser.user.UserName);
+                var userResponse = _mapper.Map<ReadUserDTO>(createUser.user);
+                var confirmEmailToken = await _repository.GenerateEmailConfirmationTokenAsync(createUser.user);
+                if (confirmEmailToken.result.IsSuccess)
                 {
-                    await _roleService.AddUserToRoleAsync("standard", createUser.user.UserName);
-                    var userResponse = _mapper.Map<ReadUserDTO>(createUser.user);
-                    var confirmEmailToken = await _repository.GenerateEmailConfirmationTokenAsync(createUser.user);
-                    if (confirmEmailToken.result.IsSuccess)
-                    {
-                        var resultKeycode = await _userTokenRepository.AddUserTokenAsync(createUser.user.Id, confirmEmailToken.token);
+                    var resultKeycode = await _userTokenRepository.AddUserTokenAsync(createUser.user.Id, confirmEmailToken.token);
 
-                        if (resultKeycode.result.IsSuccess)
-                        {
-                            var keycode = resultKeycode.keycode;
-                            _emailService.sendConfirmAccountEmail(new[] { createUser.user.Email }, "Código de Ativacão", keycode.ToString());
-                            userResponse.isConfirmEmailTokenSent = true;
-                        }
-                        else
-                        {
-                            userResponse.isConfirmEmailTokenSent = false;
-                        }
+                    if (resultKeycode.result.IsSuccess)
+                    {
+                        var keycode = resultKeycode.keycode;
+                        _emailService.sendConfirmAccountEmail(new[] { createUser.user.Email }, "Código de Ativacão", keycode.ToString());
+                        userResponse.isConfirmEmailTokenSent = true;
                     }
                     else
                     {
                         userResponse.isConfirmEmailTokenSent = false;
-                        userResponseDTO.WithErrors(getErros(confirmEmailToken.result.Reasons));
                     }
-
-                    userResponse.AssociatedWithPerson = await CreateAssociatedPerson(userDTO.PersonDetails, createUser.user);
-                    return userResponseDTO.AddContent(userResponse);
                 }
-                return userResponseDTO.WithErrors(getErros(createUser.result.Errors));
+                else
+                {
+                    userResponse.isConfirmEmailTokenSent = false;
+                    userResponseDTO.WithErrors(getErros(confirmEmailToken.result.Reasons));
+                }
+
+                userResponse.AssociatedWithPerson = await CreateAssociatedPerson(userDTO.PersonDetails, createUser.user);
+                return userResponseDTO.AddContent(userResponse);
+   
+                
             }
             catch (Exception ex)
             {
