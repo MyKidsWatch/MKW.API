@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MKW.Domain.Entities.UserAggregate;
-using System.Linq.Expressions;
 
 namespace MKW.Data.Context.Mapping.UserAggregate
 {
@@ -20,7 +19,7 @@ namespace MKW.Data.Context.Mapping.UserAggregate
             modelBuilder.Entity<Person>()
                 .Property(x => x.Id)
                 .HasColumnName("ID");
-            
+
             modelBuilder.Entity<Person>()
                 .Property(x => x.UserId)
                 .HasColumnName("USER_ID");
@@ -79,10 +78,6 @@ namespace MKW.Data.Context.Mapping.UserAggregate
                 .WithOne(x => x.Person)
                 .HasForeignKey(x => x.PersonId);
 
-            modelBuilder.Entity<Person>()
-                .HasOne(x => x.Balance)
-                .WithOne(x => x.Person)
-                .HasForeignKey<Balance>(x => x.PersonId);
 
             modelBuilder.Entity<Person>()
                 .HasMany(x => x.AwardsGiven)

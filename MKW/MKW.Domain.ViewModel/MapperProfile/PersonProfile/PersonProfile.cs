@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
-using MKW.Domain.Entities.UserAggregate;
-using MKW.Domain.Dto.PersonDTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MKW.Domain.Dto.DTO.PersonDTO;
+using MKW.Domain.Entities.UserAggregate;
 
 namespace MKW.Domain.Dto.MapperProfile.PersonProfile
 {
@@ -17,5 +11,5 @@ namespace MKW.Domain.Dto.MapperProfile.PersonProfile
             CreateMap<PersonOnCreateUserDTO, Person>();
             CreateMap<Person, ReadPersonDTO>();
         }
-    }   
+    }
 }

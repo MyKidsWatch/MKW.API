@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MKW.Domain.Dto.Base;
-using MKW.Domain.Dto.DTO.IdentityDTO.Account;
+using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Authorization;
-using MKW.Domain.Interface.Services.AppServices.Identity;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 
 namespace MKW.API.Controllers.Identity

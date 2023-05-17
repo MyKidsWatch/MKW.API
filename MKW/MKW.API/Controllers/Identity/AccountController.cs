@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Win32;
-using MKW.Domain.Dto.Base;
+using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
-using MKW.Domain.Interface.Services.AppServices.Identity;
+using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using MKW.Domain.Interface.Services.BaseServices;
 using System.Security.Claims;
 
@@ -29,14 +27,14 @@ namespace MKW.API.Controllers.Identity
 
         [HttpGet("active")]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetActiveAccounts()  => Ok(await _service.GetActiveAccountsAsync());
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetActiveAccounts() => Ok(await _service.GetActiveAccountsAsync());
 
         [HttpGet("{id}")]
         [Authorize]
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAccountByUserId([FromRoute] int id)
         {
             var account = await _service.GetAccountByUserIdAsync(id);
-            return account.IsSuccess? Ok(account) : NotFound(account);
+            return account.IsSuccess ? Ok(account) : NotFound(account);
         }
 
         [HttpGet("username/{userName}")]
@@ -67,13 +65,13 @@ namespace MKW.API.Controllers.Identity
         public async Task<ActionResult<BaseResponseDTO<CheckEmailDTO>>> CheckEmail([FromBody] RequestCheckEmailDTO request) => Ok(await _service.CheckEmailAsync(request.Email));
 
         [HttpPost("register/checkUsername")]
-        public async Task<ActionResult<BaseResponseDTO<CheckUserNameDTO>>> CheckUserName([FromBody] RequestCheckUserNameDTO request)  => Ok(await _service.CheckUserNameAsync(request.UserName));
+        public async Task<ActionResult<BaseResponseDTO<CheckUserNameDTO>>> CheckUserName([FromBody] RequestCheckUserNameDTO request) => Ok(await _service.CheckUserNameAsync(request.UserName));
 
         [HttpPost("register")]
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RegisterAccount([FromBody] CreateUserDTO createUserRequest)
         {
             var register = await _service.RegisterAccountAsync(createUserRequest);
-            return register.IsSuccess ? CreatedAtAction(nameof(GetAccountByUserId), new { Id = register.Content[0].Id } , register) : BadRequest(register);
+            return register.IsSuccess ? CreatedAtAction(nameof(GetAccountByUserId), new { Id = register.Content[0].Id }, register) : BadRequest(register);
         }
 
         [HttpPost("password/keycode")]
@@ -95,14 +93,14 @@ namespace MKW.API.Controllers.Identity
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> ConfirmAccountEmail([FromBody] ConfirmAccountEmailDTO confirmEmailRequest)
         {
             var result = await _service.ConfirmAccountEmailAsync(confirmEmailRequest);
-            return result.IsSuccess? Ok(result) : BadRequest(result);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPatch("password/reset")]
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RecoveryPassword([FromBody] ResetPasswordDTO resetRequest)
         {
             var result = await _service.ResetPasswordAsync(resetRequest);
-            return result.IsSuccess? Ok(result) : BadRequest(result);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpDelete("username/{userName}")]

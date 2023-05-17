@@ -13,7 +13,7 @@ namespace MKW.API.Controllers
             _algorithmService = algorithmService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> AlgorithmTest() => Ok(await _algorithmService.Bla());
+        //[HttpGet]
+        //public async Task<IActionResult> AlgorithmTest() => Ok(await _algorithmService.Bla());
     }
 }

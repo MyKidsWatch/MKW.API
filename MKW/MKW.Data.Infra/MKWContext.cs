@@ -12,7 +12,6 @@ using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.PremiumAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
-using MKW.Domain.Entities.UserAggregate;
 
 namespace MKW.Data.Context
 {
@@ -30,7 +29,6 @@ namespace MKW.Data.Context
 
         public DbSet<Award> Award { get; set; }
         public DbSet<AwardPerson> AwardPerson { get; set; }
-        public DbSet<Balance> Balance { get; set; }
         public DbSet<Comment> Comment { get; set; }
         public DbSet<CommentDetails> CommentDetails { get; set; }
         public DbSet<Content> Content { get; set; }
@@ -44,7 +42,6 @@ namespace MKW.Data.Context
         public DbSet<Tier> Tier { get; set; }
         public DbSet<TierPlan> TierPlan { get; set; }
         public DbSet<Timespan> Timespan { get; set; }
-        public DbSet<Transaction> Transaction { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -55,7 +52,6 @@ namespace MKW.Data.Context
             AgeRangeMap.Map(modelBuilder);
             AwardMap.Map(modelBuilder);
             AwardPersonMap.Map(modelBuilder);
-            BalanceMap.Map(modelBuilder);
             CommentDetailsMap.Map(modelBuilder);
             CommentMap.Map(modelBuilder);
             ContentGenreMap.Map(modelBuilder);
@@ -72,7 +68,6 @@ namespace MKW.Data.Context
             TierMap.Map(modelBuilder);
             TierPlanMap.Map(modelBuilder);
             TimespanMap.Map(modelBuilder);
-            TransactionMap.Map(modelBuilder);
             UserTokenMap.Map(modelBuilder);
 
         }

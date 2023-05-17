@@ -13,7 +13,6 @@ namespace MKW.Domain.Entities.UserAggregate
         public int GenderId { get; set; }
         public virtual ApplicationUser User { get; set; }
         public virtual Gender Gender { get; set; }
-        public virtual Balance Balance { get; set; }
         public virtual ICollection<PersonChild> Children { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

@@ -1,26 +1,16 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Microsoft.AspNetCore.Identity;
-using MKW.Domain.Dto.Base;
+using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
 using MKW.Domain.Dto.DTO.PersonDTO;
-using MKW.Domain.Dto.PersonDTO;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
-using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
-using MKW.Domain.Interface.Services.AppServices.Identity;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using MKW.Domain.Interface.Services.BaseServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace MKW.Services.AppServices.IdentityService
 {
@@ -62,7 +52,7 @@ namespace MKW.Services.AppServices.IdentityService
             {
                 throw ex;
             }
-        } 
+        }
 
         public async Task<BaseResponseDTO<ReadUserDTO>> GetActiveAccountsAsync()
         {
@@ -77,7 +67,7 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        public async Task<BaseResponseDTO<ReadUserDTO>> GetAccountByUserIdAsync(int id) 
+        public async Task<BaseResponseDTO<ReadUserDTO>> GetAccountByUserIdAsync(int id)
         {
             try
             {
@@ -154,7 +144,7 @@ namespace MKW.Services.AppServices.IdentityService
                 throw ex;
             }
         }
-        
+
         public async Task<BaseResponseDTO<ReadUserDTO>> RegisterAccountAsync(CreateUserDTO userDTO)
         {
             try
@@ -200,7 +190,7 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        public async Task<BaseResponseDTO<ReadUserDTO>> UpdateAccountAsync (int id, UpdateUserDTO userDTO)
+        public async Task<BaseResponseDTO<ReadUserDTO>> UpdateAccountAsync(int id, UpdateUserDTO userDTO)
         {
             try
             {
@@ -209,7 +199,7 @@ namespace MKW.Services.AppServices.IdentityService
                 var updateUser = await _repository.UpdateUserAsync(id, userEntity);
                 if (updateUser.result.Succeeded)
                 {
-                    var readUser= _mapper.Map<ReadUserDTO>(updateUser.user);
+                    var readUser = _mapper.Map<ReadUserDTO>(updateUser.user);
                     return response.AddContent(readUser);
                 }
                 return response.WithErrors(getErros(updateUser.result.Errors));
@@ -220,7 +210,7 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        public async Task<BaseResponseDTO<object>> DeleteAccountByIdAsync (int id)
+        public async Task<BaseResponseDTO<object>> DeleteAccountByIdAsync(int id)
         {
             try
             {
@@ -234,7 +224,7 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        public async Task<BaseResponseDTO<object>> DeleteAccountByUserNameAsync (string userName)
+        public async Task<BaseResponseDTO<object>> DeleteAccountByUserNameAsync(string userName)
         {
             try
             {
@@ -248,7 +238,7 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        public async Task<BaseResponseDTO<ReadUserDTO>> ConfirmAccountEmailAsync (ConfirmAccountEmailDTO activationRequest)
+        public async Task<BaseResponseDTO<ReadUserDTO>> ConfirmAccountEmailAsync(ConfirmAccountEmailDTO activationRequest)
         {
             try
             {
@@ -263,12 +253,12 @@ namespace MKW.Services.AppServices.IdentityService
                         var excludeToken = await _userTokenRepository.DeleteUserTokenAsync(activationRequest.UserId, activationRequest.Keycode);
                         var (result, user) = await _repository.GetUserByIdAsync(activationRequest.UserId);
                         return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(user));
-                    }                
+                    }
                     return responseDTO.WithErrors(getErros(confirmEmail.Reasons));
                 }
                 return responseDTO.WithErrors(getErros(getToken.result.Reasons));
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -405,7 +395,7 @@ namespace MKW.Services.AppServices.IdentityService
             return _mapper.Map<ReadPersonDTO>(person);
         }
 
-        private IEnumerable<string> getErros (IEnumerable<IdentityError> ErrorList)
+        private IEnumerable<string> getErros(IEnumerable<IdentityError> ErrorList)
         {
             var errorList = new List<string>();
 

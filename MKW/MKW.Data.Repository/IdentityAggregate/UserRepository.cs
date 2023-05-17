@@ -1,17 +1,10 @@
-﻿using Castle.Core.Internal;
-using FluentResults;
+﻿using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MKW.Data.Context;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.Data.Repository.IdentityAggregate
 {
@@ -32,8 +25,8 @@ namespace MKW.Data.Repository.IdentityAggregate
             var user = await _userManager.FindByIdAsync(id.ToString());
             return user is null ? (Result.Fail("user not found"), null) : (Result.Ok(), user);
         }
-        public async Task<(Result, ApplicationUser?)> GetUserByUserNameAsync(string userName) 
-        { 
+        public async Task<(Result, ApplicationUser?)> GetUserByUserNameAsync(string userName)
+        {
             var user = await _userManager.FindByNameAsync(userName);
             return user is null ? (Result.Fail("user not found"), null) : (Result.Ok(), user);
         }
@@ -42,9 +35,9 @@ namespace MKW.Data.Repository.IdentityAggregate
             var user = await _userManager.FindByEmailAsync(email);
             return user is null ? (Result.Fail("user not found"), null) : (Result.Ok(), user);
         }
-    
+
         public async Task<IEnumerable<ApplicationUser>> GetActiveUsersAsync() => await _dbSet.Where(x => x.Active).ToListAsync();
-        public async Task<IEnumerable<ApplicationUser>?> GetAllUsersAsync() => await _dbSet.ToListAsync(); 
+        public async Task<IEnumerable<ApplicationUser>?> GetAllUsersAsync() => await _dbSet.ToListAsync();
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersByClaimAsync(Claim claim) => await _userManager.GetUsersForClaimAsync(claim);
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersByRoleAsync(string roleName) => await _userManager.GetUsersInRoleAsync(roleName);
 
@@ -76,7 +69,7 @@ namespace MKW.Data.Repository.IdentityAggregate
             return userDatabase != null ? await DeleteUserAsync(userDatabase) : IdentityResult.Failed();
         }
 
-        public async Task<Result> ConfirmAccountEmailAsync(int userId, string  activationToken)
+        public async Task<Result> ConfirmAccountEmailAsync(int userId, string activationToken)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user is not null)
@@ -90,13 +83,13 @@ namespace MKW.Data.Repository.IdentityAggregate
         public async Task<(Result, string?)> GenerateEmailConfirmationTokenAsync(ApplicationUser user)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            return token is null? (Result.Fail("Failed to generate confirmation token"), null) : (Result.Ok(), token);
+            return token is null ? (Result.Fail("Failed to generate confirmation token"), null) : (Result.Ok(), token);
         }
 
         public async Task<Result> SetUserLockoutEndDateAsync(ApplicationUser user, DateTimeOffset dateTimeOffset)
         {
             string message = dateTimeOffset > DateTimeOffset.Now ? "block" : "unblock";
-            var BlockResult =  await _userManager.SetLockoutEndDateAsync(user, dateTimeOffset);
+            var BlockResult = await _userManager.SetLockoutEndDateAsync(user, dateTimeOffset);
             return BlockResult.Succeeded ? Result.Ok().WithSuccess($"lockouEnd: {message}") : Result.Fail("Failed to set lockoutEnd date");
         }
 
@@ -123,7 +116,7 @@ namespace MKW.Data.Repository.IdentityAggregate
                 user.AlterDate = DateTime.Now;
                 user.Active = false;
                 await _userManager.UpdateAsync(user);
-                return await _userManager.SetLockoutEndDateAsync(user,  DateTimeOffset.MaxValue);
+                return await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
             }
             return IdentityResult.Failed();
         }
