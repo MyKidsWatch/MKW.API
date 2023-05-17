@@ -15,6 +15,27 @@ namespace MKW.Data.Context.Mapping.IdentityAggregate
     {
         public static void Map(ModelBuilder modelBuilder, ApplicationIdentityOptions identityOptions)
         {
+            modelBuilder.Entity<ApplicationUser>()
+                .ToTable("TB_USR_USERS");
+            
+            modelBuilder.Entity<IdentityRole<int>>()
+                .ToTable("TB_USR_ROLES");
+
+            modelBuilder.Entity<IdentityUserRole<int>>()
+                .ToTable("TB_USR_USER_ROLE");
+
+            modelBuilder.Entity<IdentityUserLogin<int>>()
+                .ToTable("TB_USR_USER_LOGIN");
+
+            modelBuilder.Entity<IdentityUserToken<int>>()
+                .ToTable("TB_USR_USER_TOKEN");
+
+            modelBuilder.Entity<IdentityUserClaim<int>>()
+                .ToTable("TB_USR_USER_CLAIM");
+            
+            modelBuilder.Entity<IdentityRoleClaim<int>>()
+                .ToTable("TB_USR_ROLE_CLAIM");
+
             ApplicationUser admin = new ApplicationUser()
             {
                 Id = identityOptions.AdminUser.Id,
