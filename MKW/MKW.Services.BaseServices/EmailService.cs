@@ -1,5 +1,4 @@
 ﻿using MailKit.Net.Smtp;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MKW.Domain.Dto.DTO.EmailDTO;
@@ -11,7 +10,7 @@ namespace MKW.Services.BaseServices
     {
         private readonly EmailOptions _emailOptions;
 
-        public EmailService( IOptions<EmailOptions> emailOptions)
+        public EmailService(IOptions<EmailOptions> emailOptions)
         {
             _emailOptions = emailOptions.Value;
         }
@@ -45,7 +44,7 @@ namespace MKW.Services.BaseServices
         }
         private void sendEmailMessage(MimeMessage emailMessage)
         {
-            using(var client = new SmtpClient())
+            using (var client = new SmtpClient())
             {
                 try
                 {

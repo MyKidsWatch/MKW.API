@@ -1,14 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MKW.Domain.Dto.DTO.EmailDTO;
-using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Services.BaseServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.IoC.Modules
 {

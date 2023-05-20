@@ -1,11 +1,4 @@
-﻿using MKW.Domain.Entities.UserAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MKW.Domain.Entities.IdentityAggregate
+﻿namespace MKW.Domain.Entities.IdentityAggregate
 {
     public class UserToken
     {

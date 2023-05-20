@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
+﻿namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
 {
     public class ResponseGenerateKeycodeDTO
     {
@@ -12,6 +6,6 @@ namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
         {
             IsKeycodeSent = isKeycodeSent;
         }
-        public bool IsKeycodeSent { get;}
+        public bool IsKeycodeSent { get; }
     }
 }

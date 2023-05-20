@@ -1,14 +1,6 @@
-﻿using MKW.Domain.Dto.DTO.IdentityDTO.Auth;
-using MKW.Domain.Entities.ContentAggregate;
-using MKW.Domain.Interface.Repository.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
-namespace MKW.Domain.Dto.Base
+namespace MKW.Domain.Dto.DTO.Base
 {
     public class BaseResponseDTO<T> where T : class
     {
@@ -34,7 +26,7 @@ namespace MKW.Domain.Dto.Base
             IsSuccess = isSuccess;
             return this;
         }
-        public BaseResponseDTO<T> WithErrors(IEnumerable<string> errors, bool isSuccess = false) 
+        public BaseResponseDTO<T> WithErrors(IEnumerable<string> errors, bool isSuccess = false)
         {
             if (Errors is null) Errors = new List<string>();
             Errors.AddRange(errors);
@@ -52,7 +44,7 @@ namespace MKW.Domain.Dto.Base
 
         public BaseResponseDTO<T> AddError(string error, bool isSuccess = false)
         {
-            if(Errors is null) Errors = new List<string>();
+            if (Errors is null) Errors = new List<string>();
             Errors.Add(error);
             IsSuccess = isSuccess;
             return this;

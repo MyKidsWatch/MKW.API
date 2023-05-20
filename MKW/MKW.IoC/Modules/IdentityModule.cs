@@ -1,20 +1,12 @@
-﻿using Castle.Core.Configuration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MKW.Data.Context;
 using MKW.Domain.Entities.IdentityAggregate;
-using MKW.Domain.Interface.Services.AppServices.Identity;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using MKW.Services.AppServices.IdentityService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace MKW.IoC.Modules
@@ -83,7 +75,7 @@ namespace MKW.IoC.Modules
             }).AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = tokenValidationParameter;
-            });
+                });
 
             var applicationIdentityOptions = ApplicationIdentityOptions(configuration);
             builder.Configure<ApplicationIdentityOptions>(options =>
@@ -136,9 +128,9 @@ namespace MKW.IoC.Modules
             };
             return new ApplicationIdentityOptions()
             {
-               AdminUser = adminUser,
-               StandardRole = standardRole,
-               AdminRole = adminRole
+                AdminUser = adminUser,
+                StandardRole = standardRole,
+                AdminRole = adminRole
             };
         }
     }

@@ -1,13 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using MKW.Domain.Entities.IdentityAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.Data.Context.Mapping.IdentityAggregate
 {
@@ -17,7 +10,7 @@ namespace MKW.Data.Context.Mapping.IdentityAggregate
         {
             modelBuilder.Entity<ApplicationUser>()
                 .ToTable("TB_USR_USERS");
-            
+
             modelBuilder.Entity<IdentityRole<int>>()
                 .ToTable("TB_USR_ROLES");
 
@@ -32,7 +25,7 @@ namespace MKW.Data.Context.Mapping.IdentityAggregate
 
             modelBuilder.Entity<IdentityUserClaim<int>>()
                 .ToTable("TB_USR_USER_CLAIM");
-            
+
             modelBuilder.Entity<IdentityRoleClaim<int>>()
                 .ToTable("TB_USR_ROLE_CLAIM");
 
@@ -45,8 +38,8 @@ namespace MKW.Data.Context.Mapping.IdentityAggregate
                 NormalizedUserName = identityOptions.AdminUser.NormalizedUserName,
                 Email = identityOptions.AdminUser.Email,
                 NormalizedEmail = identityOptions.AdminUser.NormalizedEmail,
-                EmailConfirmed =  identityOptions.AdminUser.EmailConfirmed,
-                CreateDate =  DateTime.Now,
+                EmailConfirmed = identityOptions.AdminUser.EmailConfirmed,
+                CreateDate = DateTime.Now,
                 LockoutEnabled = identityOptions.AdminUser.LockoutEnabled,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 Active = identityOptions.AdminUser.Active,

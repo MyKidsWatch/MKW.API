@@ -1,15 +1,8 @@
-﻿using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
-using MKW.Domain.Dto.Base;
+using System.Security.Claims;
 
-namespace MKW.Domain.Interface.Services.AppServices.Identity
+namespace MKW.Domain.Interface.Services.AppServices.IdentityService
 {
     public interface IAccountService
     {

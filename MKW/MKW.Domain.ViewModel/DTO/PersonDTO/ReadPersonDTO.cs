@@ -1,14 +1,4 @@
-﻿using MKW.Domain.Entities.IdentityAggregate;
-using MKW.Domain.Entities.PremiumAggregate;
-using MKW.Domain.Entities.ReviewAggregate;
-using MKW.Domain.Entities.UserAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MKW.Domain.Dto.DTO.PersonDTO
+﻿namespace MKW.Domain.Dto.DTO.PersonDTO
 {
     public class ReadPersonDTO
     {

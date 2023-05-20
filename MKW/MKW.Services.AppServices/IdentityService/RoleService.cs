@@ -1,18 +1,9 @@
 ﻿using AutoMapper;
-using FluentResults;
 using Microsoft.AspNetCore.Identity;
-using MKW.Domain.Dto.Base;
-using MKW.Domain.Dto.DTO.IdentityDTO.Account;
+using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Authorization;
-using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.Services.AppServices.IdentityService
 {

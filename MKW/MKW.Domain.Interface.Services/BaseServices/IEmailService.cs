@@ -1,6 +1,4 @@
-﻿using MKW.Domain.Dto.DTO.EmailDTO;
-
-namespace MKW.Domain.Interface.Services.BaseServices
+﻿namespace MKW.Domain.Interface.Services.BaseServices
 {
     public interface IEmailService
     {
