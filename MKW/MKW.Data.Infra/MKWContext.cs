@@ -61,6 +61,8 @@ namespace MKW.Data.Context
             ContentMap.Map(modelBuilder);
             GenderMap.Map(modelBuilder);
             GenreMap.Map(modelBuilder);
+            OperationMap.Map(modelBuilder);
+            OperationTypeMap.Map(modelBuilder);
             PersonChildMap.Map(modelBuilder);
             PersonMap.Map(modelBuilder);
             PlatformCategoryMap.Map(modelBuilder);

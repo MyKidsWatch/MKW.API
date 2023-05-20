@@ -23,7 +23,7 @@ namespace MKW.Middleware
             }
         }
 
-        private async Task HandleNotFoundExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleNotFoundExceptionAsync(HttpContext context, NotFoundException exception)
         {
             var contentType = "application/json";
             var statusCode = (int)HttpStatusCode.NotFound;

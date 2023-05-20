@@ -19,6 +19,6 @@ namespace MKW.Domain.Entities.UserAggregate
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<PremiumPerson> PremiumPerson { get; set; }
         public virtual ICollection<AwardPerson> AwardsGiven { get; set; }
-        public virtual ICollection<Operation> Transactions { get; set; }
+        public virtual ICollection<Operation> Operations { get; set; }
     }
 }

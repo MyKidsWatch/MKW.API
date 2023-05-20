@@ -5,7 +5,7 @@ namespace MKW.Domain.Entities.UserAggregate
     public class OperationType : BaseEntity
     {
         public string Type { get; set; }
-        public bool Operation { get; set; }
-        public virtual ICollection<Operation> Transactions { get; set; }
+        public bool Credit { get; set; }
+        public virtual ICollection<Operation> Operations { get; set; }
     }
 }
