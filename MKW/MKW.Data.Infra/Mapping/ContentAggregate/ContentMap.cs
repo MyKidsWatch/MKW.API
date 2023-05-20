@@ -50,7 +50,7 @@ namespace MKW.Data.Context.Mapping.ContentAggregate
                 .HasForeignKey(x => x.PlatformCategoryId);
 
             modelBuilder.Entity<Content>()
-                .HasMany(x => x.Posts)
+                .HasMany(x => x.Reviews)
                 .WithOne(x => x.Content)
                 .HasForeignKey(x => x.ContentId);
 

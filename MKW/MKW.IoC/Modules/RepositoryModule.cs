@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MKW.Data.Repository.ContentAggregate;
+using MKW.Data.Repository.IdentityAggregate;
 using MKW.Data.Repository.PremiumAggregate;
 using MKW.Data.Repository.ReviewAggregate;
 using MKW.Data.Repository.UserAggregate;
 using MKW.Domain.Interface.Repository.ContentAggregate;
+using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Repository.PremiumAggregate;
 using MKW.Domain.Interface.Repository.ReviewAggregate;
 using MKW.Domain.Interface.Repository.UserAggregate;
@@ -28,16 +30,25 @@ namespace MKW.IoC.Modules
             builder.AddTransient<ITimespanRepository, TimespanRepository>();
             #endregion
             #region Review Aggregate
+            builder.AddTransient<IAwardPersonRepository, AwardPersonRepository>();
+            builder.AddTransient<IAwardRepository, AwardRepository>();
             builder.AddTransient<ICommentDetailsRepository, CommentDetailsRepository>();
             builder.AddTransient<ICommentRepository, CommentRepository>();
-            builder.AddTransient<IPostDetailsRepository, PostDetailsRepository>();
-            builder.AddTransient<IPostRepository, PostRepository>();
+            builder.AddTransient<IReviewDetailsRepository, ReviewDetailsRepository>();
+            builder.AddTransient<IReviewRepository, ReviewRepository>();
             #endregion
             #region User Aggregate
             builder.AddTransient<IAgeRangeRepository, AgeRangeRepository>();
             builder.AddTransient<IGenderRepository, GenderRepository>();
             builder.AddTransient<IPersonRepository, PersonRepository>();
             builder.AddTransient<IPersonChildRepository, PersonChildRepository>();
+            builder.AddTransient<IOperationRepository, OperationRepository>();
+            builder.AddTransient<IOperationTypeRepository, OperationTypeRepository>();
+            #endregion
+            #region Identity Aggregate
+            builder.AddTransient<IUserRepository, UserRepository>();
+            builder.AddTransient<IUserTokenRepository, UserTokenRepository>();
+            builder.AddTransient<IRoleRepository, RoleRepository>();
             #endregion
 
         }

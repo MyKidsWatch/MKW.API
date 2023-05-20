@@ -2,5 +2,7 @@
 {
     public interface IEmailService
     {
+        public void sendConfirmAccountEmail(string[] To, string subject, string keycode);
+        public void sendRecoveryPasswordEmail(string[] To, string subject, string keycode);
     }
 }

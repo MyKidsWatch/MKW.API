@@ -20,12 +20,12 @@ namespace MKW.Data.Repository.Base
             _dbSet = _context.Set<TEntity>();
         }
 
-        public async Task<IEnumerable<TEntity>?> GetAll() => await _dbSet.ToListAsync();
-        public async Task<IEnumerable<TEntity>?> GetActive() => await _dbSet.Where(x => x.Active).ToListAsync();
-        public async Task<TEntity?> GetById(int id) => await _dbSet.FindAsync(id);
-        public async Task<TEntity?> GetByUUID(Guid uuid) => await _dbSet.FirstOrDefaultAsync(x => x.UUID == uuid);
+        public virtual async Task<IEnumerable<TEntity>?> GetAll() => await _dbSet.ToListAsync();
+        public virtual async Task<IEnumerable<TEntity>?> GetActive() => await _dbSet.Where(x => x.Active).ToListAsync();
+        public virtual async Task<TEntity?> GetById(int id) => await _dbSet.FindAsync(id);
+        public virtual async Task<TEntity?> GetByUUID(Guid uuid) => await _dbSet.FirstOrDefaultAsync(x => x.UUID == uuid);
 
-        public async Task<TEntity> Add(TEntity entity)
+        public virtual async Task<TEntity> Add(TEntity entity)
         {
             entity.CreateDate = DateTime.Now;
             entity.AlterDate = DateTime.Now;
@@ -34,7 +34,7 @@ namespace MKW.Data.Repository.Base
             return addedEntity;
         }
 
-        public async Task<TEntity> Update(TEntity entity)
+        public virtual async Task<TEntity> Update(TEntity entity)
         {
             entity.AlterDate = DateTime.Now;
             var updatedEntity = _dbSet.Update(entity).Entity;
@@ -42,14 +42,14 @@ namespace MKW.Data.Repository.Base
             return updatedEntity;
         }
 
-        public async Task Delete(TEntity entity)
+        public virtual async Task Delete(TEntity entity)
         {
             entity.Active = false;
             _dbSet.Update(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteById(int id)
+        public virtual async Task DeleteById(int id)
         {
             var entity = _dbSet.Find(id);
 
@@ -61,7 +61,7 @@ namespace MKW.Data.Repository.Base
             }
         }
 
-        public async Task DeleteByUUID(Guid uuid)
+        public virtual async Task DeleteByUUID(Guid uuid)
         {
             var entity = _dbSet.FirstOrDefault(x => x.UUID == uuid);
 

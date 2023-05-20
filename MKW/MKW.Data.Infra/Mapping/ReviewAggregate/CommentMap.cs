@@ -29,7 +29,7 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
                 .HasColumnName("PERSON_ID");
 
             modelBuilder.Entity<Comment>()
-                .Property(x => x.PostId)
+                .Property(x => x.ReviewId)
                 .HasColumnName("POST_ID");
 
             modelBuilder.Entity<Comment>()
@@ -49,9 +49,9 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
                 .HasColumnName("ACTIVE");
 
             modelBuilder.Entity<Comment>()
-                .HasOne(x => x.Post)
+                .HasOne(x => x.Review)
                 .WithMany(x => x.Comments)
-                .HasForeignKey(x => x.PostId);
+                .HasForeignKey(x => x.ReviewId);
 
             modelBuilder.Entity<Comment>()
                 .HasMany(x => x.CommentDetails)
@@ -61,7 +61,8 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
             modelBuilder.Entity<Comment>()
                 .HasOne(x => x.Person)
                 .WithMany(x => x.Comments)
-                .HasForeignKey(x => x.PersonId);
+                .HasForeignKey(x => x.PersonId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Comment>()
                 .HasMany(x => x.Answers)
