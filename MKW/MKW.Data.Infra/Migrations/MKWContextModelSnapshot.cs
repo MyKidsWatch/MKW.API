@@ -49,7 +49,23 @@ namespace MKW.Data.Context.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("TB_USR_ROLES", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 11111,
+                            ConcurrencyStamp = "520574af-1b4b-48f1-b370-118a0ce36d1b",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 11112,
+                            ConcurrencyStamp = "12238b3f-d3c5-4af9-a460-1f3ea0bff878",
+                            Name = "standard",
+                            NormalizedName = "STANDARD"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -73,7 +89,7 @@ namespace MKW.Data.Context.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("TB_USR_ROLE_CLAIM", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
@@ -97,7 +113,7 @@ namespace MKW.Data.Context.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("TB_USR_USER_CLAIM", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
@@ -118,7 +134,7 @@ namespace MKW.Data.Context.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("TB_USR_USER_LOGIN", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
@@ -133,7 +149,14 @@ namespace MKW.Data.Context.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("TB_USR_USER_ROLE", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 11111,
+                            RoleId = 11111
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -152,7 +175,7 @@ namespace MKW.Data.Context.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("TB_USR_USER_TOKEN", (string)null);
                 });
 
             modelBuilder.Entity("MKW.Domain.Entities.ContentAggregate.Content", b =>
@@ -436,7 +459,30 @@ namespace MKW.Data.Context.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("TB_USR_USERS", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 11111,
+                            AccessFailedCount = 0,
+                            Active = true,
+                            ConcurrencyStamp = "9af75c79-f7bf-41b7-acc5-54197b93a9f3",
+                            CreateDate = new DateTime(2023, 5, 21, 15, 37, 38, 547, DateTimeKind.Local).AddTicks(1822),
+                            Email = "projeto.mkw@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Administrador",
+                            LastName = "MyKidsWatch",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "PROJETO.MWK@GMAIL.COM",
+                            NormalizedUserName = "ADMIN11111",
+                            PasswordHash = "AQAAAAEAACcQAAAAENIMTido/zkGpKPpPJWcbjK6Wo3NXtGWOBI6vBuaXxAwfwht/JExLD1R1X0ebwCpXg==",
+                            PhoneNumber = "5511978019550",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "4ee11345-1543-4136-96ab-6d31d1f51ad7",
+                            TwoFactorEnabled = false,
+                            UserName = "admin11111"
+                        });
                 });
 
             modelBuilder.Entity("MKW.Domain.Entities.IdentityAggregate.UserToken", b =>
@@ -985,31 +1031,31 @@ namespace MKW.Data.Context.Migrations
                         {
                             Id = 1,
                             Active = true,
-                            AlterDate = new DateTime(2023, 5, 20, 17, 52, 16, 462, DateTimeKind.Local).AddTicks(7148),
-                            CreateDate = new DateTime(2023, 5, 20, 17, 52, 16, 462, DateTimeKind.Local).AddTicks(7135),
+                            AlterDate = new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7850),
+                            CreateDate = new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7840),
                             IsBinary = true,
                             Name = "Masculino",
-                            UUID = new Guid("29e548cf-b53e-4527-aa58-170779629928")
+                            UUID = new Guid("bc97e9ac-e577-426b-8025-7f5424e1cd9f")
                         },
                         new
                         {
                             Id = 2,
                             Active = true,
-                            AlterDate = new DateTime(2023, 5, 20, 17, 52, 16, 462, DateTimeKind.Local).AddTicks(7155),
-                            CreateDate = new DateTime(2023, 5, 20, 17, 52, 16, 462, DateTimeKind.Local).AddTicks(7154),
+                            AlterDate = new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7854),
+                            CreateDate = new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7854),
                             IsBinary = true,
                             Name = "Feminino",
-                            UUID = new Guid("7625bc27-c0b8-4f2b-86f9-b85a59a71ae7")
+                            UUID = new Guid("d1fc9614-04b5-447a-84e6-01f1a8fbf259")
                         },
                         new
                         {
                             Id = 3,
                             Active = true,
-                            AlterDate = new DateTime(2023, 5, 20, 17, 52, 16, 462, DateTimeKind.Local).AddTicks(7159),
-                            CreateDate = new DateTime(2023, 5, 20, 17, 52, 16, 462, DateTimeKind.Local).AddTicks(7159),
+                            AlterDate = new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7857),
+                            CreateDate = new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7856),
                             IsBinary = false,
                             Name = "Não Binário",
-                            UUID = new Guid("2f6bcc31-55e8-4e71-a6cb-2fd90019220f")
+                            UUID = new Guid("9f5f4c85-c0c3-42c2-a96d-df725ff97cd6")
                         });
                 });
 
