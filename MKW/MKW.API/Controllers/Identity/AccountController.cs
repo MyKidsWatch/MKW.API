@@ -82,6 +82,7 @@ namespace MKW.API.Controllers.Identity
         }
 
         [HttpPost("email/keycode")]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RequestEmailKeycode([FromBody] RequestKeycodeDTO keycodeRequest)
         {
             var result = await _service.RequestEmailKeycodeAsync(keycodeRequest);
