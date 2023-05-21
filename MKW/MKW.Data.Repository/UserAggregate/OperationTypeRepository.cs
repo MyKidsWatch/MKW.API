@@ -5,9 +5,9 @@ using MKW.Domain.Interface.Repository.UserAggregate;
 
 namespace MKW.Data.Repository.UserAggregate
 {
-    public class BalanceRepository : BaseRepository<Balance>, IBalanceRepository
+    public class OperationTypeRepository : BaseRepository<OperationType>, IOperationTypeRepository
     {
-        public BalanceRepository(MKWContext context) : base(context)
+        public OperationTypeRepository(MKWContext context) : base(context)
         {
         }
     }

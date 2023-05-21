@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Entities.IdentityAggregate;
-using MKW.Domain.Entities.UserAggregate;
 
 namespace MKW.Data.Context.Mapping.IdentityAggregate
 {
@@ -13,8 +11,8 @@ namespace MKW.Data.Context.Mapping.IdentityAggregate
         public static void Map(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserToken>()
-                .HasKey(x => new {x.UserId, x.KeyCode});
-            
+                .HasKey(x => new { x.UserId, x.KeyCode });
+
             modelBuilder.Entity<UserToken>()
                 .ToTable("TB_USR_USER_KEYCODE");
 
@@ -26,12 +24,12 @@ namespace MKW.Data.Context.Mapping.IdentityAggregate
             modelBuilder.Entity<UserToken>()
                 .Property(x => x.KeyCode)
                 .HasColumnName("KEY_CODE")
-                .IsRequired();          
+                .IsRequired();
 
             modelBuilder.Entity<UserToken>()
                 .Property(x => x.Token)
                 .HasColumnName("TOKEN")
-                .IsRequired(); 
+                .IsRequired();
         }
     }
 }

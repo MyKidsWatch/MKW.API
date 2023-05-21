@@ -1,12 +1,6 @@
-﻿using FluentResults;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.Data.Repository.IdentityAggregate
 {
@@ -34,10 +28,10 @@ namespace MKW.Data.Repository.IdentityAggregate
             return (IdentityResult.Failed(), null);
         }
 
-        public async  Task<IdentityResult> AddUserToRoleAsync(string roleName, ApplicationUser user)
+        public async Task<IdentityResult> AddUserToRoleAsync(string roleName, ApplicationUser user)
         {
             var role = await _roleManager.FindByNameAsync(roleName);
-            if(role is not null)
+            if (role is not null)
             {
                 return await _userManager.AddToRoleAsync(user, role.Name);
             }

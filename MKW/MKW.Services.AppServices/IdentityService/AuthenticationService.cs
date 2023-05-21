@@ -1,22 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using MKW.Domain.Entities.IdentityAggregate;
-using MKW.Domain.Interface.Repository.IdentityAggregate;
-using MKW.Domain.Interface.Services.AppServices.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using MKW.Domain.Dto.DTO.IdentityDTO.Auth;
-using FluentResults;
-using MKW.Domain.Interface.Services.AppServices.IdentityService;
-using Newtonsoft.Json;
-using Microsoft.IdentityModel.Tokens;
-using MKW.Domain.Dto.Base;
-using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using MKW.Domain.Dto.DTO.Base;
+using MKW.Domain.Dto.DTO.IdentityDTO.Authentication;
+using MKW.Domain.Entities.IdentityAggregate;
+using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using System.Security.Claims;
 
 namespace MKW.Services.AppServices.IdentityService
@@ -28,7 +17,7 @@ namespace MKW.Services.AppServices.IdentityService
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public AuthenticationService( SignInManager<ApplicationUser> signInManager,  ITokenService tokenService, IMapper mapper)
+        public AuthenticationService(SignInManager<ApplicationUser> signInManager, ITokenService tokenService, IMapper mapper)
         {
             _signInManager = signInManager;
             _tokenService = tokenService;
@@ -94,13 +83,13 @@ namespace MKW.Services.AppServices.IdentityService
             {
                 var LoginResponseDTO = new BaseResponseDTO<TokenDTO>();
                 var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(applicationUser, password, false);
-  
+
                 if (checkPasswordResult.Succeeded)
                 {
                     return LoginResponseDTO.AddContent(await generateToken(applicationUser));
                 }
 
-                return LoginResponseDTO.WithErrors(GetErros(checkPasswordResult)); 
+                return LoginResponseDTO.WithErrors(GetErros(checkPasswordResult));
             }
             catch (Exception ex)
             {
@@ -121,14 +110,14 @@ namespace MKW.Services.AppServices.IdentityService
         {
             var errorList = new List<string>();
 
-            if(result is not null)
+            if (result is not null)
             {
                 if (result.IsLockedOut) errorList.Add("LockedOut");
                 if (result.IsNotAllowed) errorList.Add("NotAllowed");
                 if (result.RequiresTwoFactor) errorList.Add("RequiresTwoFactor");
             }
 
-            if(errorList.IsNullOrEmpty<string>())
+            if (errorList.IsNullOrEmpty<string>())
                 errorList.Add("User or password are incorrect");
 
             return errorList;

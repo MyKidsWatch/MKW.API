@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MKW.Domain.Dto.Base;
-using MKW.Domain.Dto.DTO.IdentityDTO.Auth;
-using MKW.Domain.Interface.Services.AppServices.Identity;
-using System.Security.Claims;
+using MKW.Domain.Dto.DTO.Base;
+using MKW.Domain.Dto.DTO.IdentityDTO.Authentication;
+using MKW.Domain.Interface.Services.AppServices.IdentityService;
 
 namespace MKW.API.Controllers.Identity
 {
@@ -22,7 +20,7 @@ namespace MKW.API.Controllers.Identity
         public async Task<ActionResult<BaseResponseDTO<TokenDTO>>> LoginByUserName([FromBody] LoginRequestByUserNameDTO loginRequestDTO)
         {
             var loginResult = await _service.LoginByUserNameAsync(loginRequestDTO);
-            return loginResult.IsSuccess? Ok(loginResult) : Unauthorized(loginResult);
+            return loginResult.IsSuccess ? Ok(loginResult) : Unauthorized(loginResult);
         }
 
         [HttpPost("email")]

@@ -1,18 +1,11 @@
 ﻿#region Using
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MKW.API.Dependencies;
 using MKW.Data.Context;
-using MKW.Domain.Entities.IdentityAggregate;
-using MKW.IoC.Modules;
 using MKW.Middleware;
 using Serilog;
-using System.Data;
 using System.Reflection;
-using System.Text;
 #endregion
 
 #region Builder

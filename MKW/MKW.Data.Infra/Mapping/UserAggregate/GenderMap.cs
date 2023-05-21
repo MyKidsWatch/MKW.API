@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MKW.Domain.Entities.IdentityAggregate;
+﻿using Microsoft.EntityFrameworkCore;
 using MKW.Domain.Entities.UserAggregate;
 
 namespace MKW.Data.Context.Mapping.UserAggregate

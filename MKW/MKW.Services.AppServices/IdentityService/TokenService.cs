@@ -1,18 +1,10 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
-using System;
-using System.Collections.Generic;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace MKW.Services.AppServices.IdentityService
@@ -66,7 +58,7 @@ namespace MKW.Services.AppServices.IdentityService
                 accessClaims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            return (accessClaims , refreshClaims);
+            return (accessClaims, refreshClaims);
         }
 
         private (JwtSecurityToken accessToken, JwtSecurityToken refreshToken) GenerateSecurityToken(IEnumerable<Claim> accessClaims, IEnumerable<Claim> refreshClaims)
