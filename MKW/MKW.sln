@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Tests", "MKW.Tests\MKW.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.2 - Utility", "4.2 - Utility", "{44C5B958-593E-44D7-981E-17CECF1D1BE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKW.Domain.Utility", "MKW.Domain.Utility\MKW.Domain.Utility.csproj", "{5F767CC4-FDC2-40B4-B799-6E9BFB8C1048}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKW.Domain.Utility", "MKW.Domain.Utility\MKW.Domain.Utility.csproj", "{5F767CC4-FDC2-40B4-B799-6E9BFB8C1048}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
