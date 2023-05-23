@@ -8,5 +8,6 @@ namespace MKW.Domain.Interface.Repository.UserAggregate
     /// </summary>
     public interface IPersonRepository : IBaseRepository<Person>
     {
+        Task<Person> GetByEmail(string email);
     }
 }
