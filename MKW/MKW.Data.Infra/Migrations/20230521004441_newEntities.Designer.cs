@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MKW.Data.Context.Migrations
 {
     [DbContext(typeof(MKWContext))]
-    [Migration("20230517012124_initDatabase")]
-    partial class initDatabase
+    [Migration("20230521004441_newEntities")]
+    partial class newEntities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,14 +57,14 @@ namespace MKW.Data.Context.Migrations
                         new
                         {
                             Id = 11111,
-                            ConcurrencyStamp = "b061365b-8fa7-403e-962a-15242d97d929",
+                            ConcurrencyStamp = "1e078ba4-e954-487a-b5c2-cfcd1eb416d9",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 11112,
-                            ConcurrencyStamp = "b7533cbb-b092-4c56-b901-8c6e79c903a9",
+                            ConcurrencyStamp = "2f46661b-35b5-4fb2-b5f2-da27e2d89750",
                             Name = "standard",
                             NormalizedName = "STANDARD"
                         });
@@ -469,8 +469,8 @@ namespace MKW.Data.Context.Migrations
                             Id = 11111,
                             AccessFailedCount = 0,
                             Active = true,
-                            ConcurrencyStamp = "4cd66287-1128-4acd-808f-f63a5e7c7f17",
-                            CreateDate = new DateTime(2023, 5, 16, 22, 21, 24, 319, DateTimeKind.Local).AddTicks(179),
+                            ConcurrencyStamp = "f16da048-23d4-44a8-9cf4-b8c1318269ce",
+                            CreateDate = new DateTime(2023, 5, 20, 21, 44, 40, 772, DateTimeKind.Local).AddTicks(7648),
                             Email = "projeto.mkw@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Administrador",
@@ -478,10 +478,10 @@ namespace MKW.Data.Context.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PROJETO.MWK@GMAIL.COM",
                             NormalizedUserName = "ADMIN11111",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDSsCMw4sRRN4Tqqa6xFK9droeypLNyZNNvVk1fKcsqGDfU3PXJaPMkdqVPWtlQSXA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMyG4vtnXB8Sq2ScI6tU6aetDV/ztN7QSmszXIa9FqY4F6lJoFVRdCblG1SLb2u9sA==",
                             PhoneNumber = "5511978019550",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "bb15160f-ba0a-4462-acf1-86c6c0e3a402",
+                            SecurityStamp = "cfd69d2f-377e-44f2-a08d-da595d6b3a5f",
                             TwoFactorEnabled = false,
                             UserName = "admin11111"
                         });
@@ -990,47 +990,6 @@ namespace MKW.Data.Context.Migrations
                     b.ToTable("TB_USR_AGE_RANGE", (string)null);
                 });
 
-            modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Balance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit")
-                        .HasColumnName("ACTIVE");
-
-                    b.Property<DateTime?>("AlterDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("ALTER_DATE");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CREATE_DATE");
-
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int")
-                        .HasColumnName("PERSON_ID");
-
-                    b.Property<int>("StarCoins")
-                        .HasColumnType("int")
-                        .HasColumnName("STAR_COINS");
-
-                    b.Property<Guid?>("UUID")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("UUID");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId")
-                        .IsUnique();
-
-                    b.ToTable("TB_USR_BALANCE", (string)null);
-                });
-
             modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Gender", b =>
                 {
                     b.Property<int>("Id")
@@ -1074,32 +1033,117 @@ namespace MKW.Data.Context.Migrations
                         {
                             Id = 1,
                             Active = true,
-                            AlterDate = new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4322),
-                            CreateDate = new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4312),
+                            AlterDate = new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5929),
+                            CreateDate = new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5918),
                             IsBinary = true,
                             Name = "Masculino",
-                            UUID = new Guid("4c51f7eb-2558-4be9-bf03-2c608c1ffc86")
+                            UUID = new Guid("f302123a-82b0-47fa-8d86-817b9c6513e4")
                         },
                         new
                         {
                             Id = 2,
                             Active = true,
-                            AlterDate = new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4327),
-                            CreateDate = new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4326),
+                            AlterDate = new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5934),
+                            CreateDate = new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5933),
                             IsBinary = true,
                             Name = "Feminino",
-                            UUID = new Guid("7f197a57-41dc-43cb-bee4-3e1bc01205e4")
+                            UUID = new Guid("6f5fb446-d753-4f0a-a087-134ca9cca8e1")
                         },
                         new
                         {
                             Id = 3,
                             Active = true,
-                            AlterDate = new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4329),
-                            CreateDate = new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4329),
+                            AlterDate = new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5936),
+                            CreateDate = new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5935),
                             IsBinary = false,
                             Name = "Não Binário",
-                            UUID = new Guid("7280c500-5363-4909-ad2c-9578bb64f093")
+                            UUID = new Guid("9f7afae3-4027-4c5e-973f-8b1598ed944e")
                         });
+                });
+
+            modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Operation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit")
+                        .HasColumnName("ACTIVE");
+
+                    b.Property<DateTime?>("AlterDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ALTER_DATE");
+
+                    b.Property<int>("Coins")
+                        .HasColumnType("int")
+                        .HasColumnName("COINS");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATE_DATE");
+
+                    b.Property<int>("OperationTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("OPERATION_TYPE_ID");
+
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int")
+                        .HasColumnName("PERSON_ID");
+
+                    b.Property<Guid?>("UUID")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UUID");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperationTypeId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("TB_USR_OPERATION", (string)null);
+                });
+
+            modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.OperationType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit")
+                        .HasColumnName("ACTIVE");
+
+                    b.Property<DateTime?>("AlterDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ALTER_DATE");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATE_DATE");
+
+                    b.Property<bool>("Credit")
+                        .HasColumnType("bit")
+                        .HasColumnName("CREDIT");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("TYPE");
+
+                    b.Property<Guid?>("UUID")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UUID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TB_USR_OPERATION_TYPE", (string)null);
                 });
 
             modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Person", b =>
@@ -1118,6 +1162,9 @@ namespace MKW.Data.Context.Migrations
                     b.Property<DateTime?>("AlterDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("ALTER_DATE");
+
+                    b.Property<int>("Balance")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("date")
@@ -1198,58 +1245,6 @@ namespace MKW.Data.Context.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("TB_USR_PERSON_CHILD", (string)null);
-                });
-
-            modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit")
-                        .HasColumnName("ACTIVE");
-
-                    b.Property<DateTime?>("AlterDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("ALTER_DATE");
-
-                    b.Property<int>("BalanceId")
-                        .HasColumnType("int")
-                        .HasColumnName("BALANCE_ID");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CREATE_DATE");
-
-                    b.Property<int>("CurrentBalance")
-                        .HasColumnType("int")
-                        .HasColumnName("CURRENT_BALANCE");
-
-                    b.Property<int>("NewBalance")
-                        .HasColumnType("int")
-                        .HasColumnName("NEW_BALANCE");
-
-                    b.Property<bool>("Operation")
-                        .HasColumnType("bit")
-                        .HasColumnName("OPERATION");
-
-                    b.Property<Guid?>("UUID")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("UUID");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int")
-                        .HasColumnName("VALUE");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BalanceId");
-
-                    b.ToTable("TB_USR_TRANSACTION", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -1486,13 +1481,21 @@ namespace MKW.Data.Context.Migrations
                     b.Navigation("Review");
                 });
 
-            modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Balance", b =>
+            modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Operation", b =>
                 {
-                    b.HasOne("MKW.Domain.Entities.UserAggregate.Person", "Person")
-                        .WithOne("Balance")
-                        .HasForeignKey("MKW.Domain.Entities.UserAggregate.Balance", "PersonId")
+                    b.HasOne("MKW.Domain.Entities.UserAggregate.OperationType", "OperationType")
+                        .WithMany("Operations")
+                        .HasForeignKey("OperationTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("MKW.Domain.Entities.UserAggregate.Person", "Person")
+                        .WithMany("Operations")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OperationType");
 
                     b.Navigation("Person");
                 });
@@ -1541,17 +1544,6 @@ namespace MKW.Data.Context.Migrations
                     b.Navigation("Gender");
 
                     b.Navigation("Person");
-                });
-
-            modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Transaction", b =>
-                {
-                    b.HasOne("MKW.Domain.Entities.UserAggregate.Balance", "Balance")
-                        .WithMany("Transactions")
-                        .HasForeignKey("BalanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Balance");
                 });
 
             modelBuilder.Entity("MKW.Domain.Entities.ContentAggregate.Content", b =>
@@ -1617,11 +1609,6 @@ namespace MKW.Data.Context.Migrations
                     b.Navigation("Children");
                 });
 
-            modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Balance", b =>
-                {
-                    b.Navigation("Transactions");
-                });
-
             modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Gender", b =>
                 {
                     b.Navigation("Children");
@@ -1629,16 +1616,20 @@ namespace MKW.Data.Context.Migrations
                     b.Navigation("People");
                 });
 
+            modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.OperationType", b =>
+                {
+                    b.Navigation("Operations");
+                });
+
             modelBuilder.Entity("MKW.Domain.Entities.UserAggregate.Person", b =>
                 {
                     b.Navigation("AwardsGiven");
 
-                    b.Navigation("Balance")
-                        .IsRequired();
-
                     b.Navigation("Children");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("Operations");
 
                     b.Navigation("PremiumPerson");
 
