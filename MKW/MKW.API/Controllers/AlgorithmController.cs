@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MKW.API.Controllers.Base;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.ReviewDTO;
-using MKW.Domain.Interface.Repository.Base;
 using MKW.Domain.Interface.Services.BaseServices;
 using System.Net.Mime;
 
