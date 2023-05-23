@@ -1,15 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace MKW.Data.Context.Migrations
 {
-<<<<<<<< HEAD:MKW/MKW.Data.Infra/Migrations/20230521004441_newEntities.cs
-    public partial class newEntities : Migration
-========
-    public partial class initEfDatabase : Migration
->>>>>>>> origin/staging:MKW/MKW.Data.Infra/Migrations/20230521183738_initEfDatabase.cs
+    public partial class initDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -137,24 +132,6 @@ namespace MKW.Data.Context.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TB_USR_GENDER", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TB_USR_OPERATION_TYPE",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TYPE = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CREDIT = table.Column<bool>(type: "bit", nullable: false),
-                    UUID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CREATE_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ALTER_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ACTIVE = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TB_USR_OPERATION_TYPE", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -289,7 +266,6 @@ namespace MKW.Data.Context.Migrations
                     BIRTHDATE = table.Column<DateTime>(type: "date", nullable: false),
                     USER_ID = table.Column<int>(type: "int", nullable: false),
                     GENDER_ID = table.Column<int>(type: "int", nullable: false),
-                    Balance = table.Column<int>(type: "int", nullable: false),
                     UUID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CREATE_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ALTER_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -474,14 +450,13 @@ namespace MKW.Data.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TB_USR_OPERATION",
+                name: "TB_USR_BALANCE",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PERSON_ID = table.Column<int>(type: "int", nullable: false),
-                    OPERATION_TYPE_ID = table.Column<int>(type: "int", nullable: false),
-                    COINS = table.Column<int>(type: "int", nullable: false),
+                    STAR_COINS = table.Column<int>(type: "int", nullable: false),
                     UUID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CREATE_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ALTER_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -489,15 +464,9 @@ namespace MKW.Data.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TB_USR_OPERATION", x => x.ID);
+                    table.PrimaryKey("PK_TB_USR_BALANCE", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_TB_USR_OPERATION_TB_USR_OPERATION_TYPE_OPERATION_TYPE_ID",
-                        column: x => x.OPERATION_TYPE_ID,
-                        principalTable: "TB_USR_OPERATION_TYPE",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TB_USR_OPERATION_TB_USR_PERSON_PERSON_ID",
+                        name: "FK_TB_USR_BALANCE_TB_USR_PERSON_PERSON_ID",
                         column: x => x.PERSON_ID,
                         principalTable: "TB_USR_PERSON",
                         principalColumn: "ID",
@@ -596,6 +565,33 @@ namespace MKW.Data.Context.Migrations
                         name: "FK_TB_RVW_REVIEW_TB_USR_PERSON_PERSON_ID",
                         column: x => x.PERSON_ID,
                         principalTable: "TB_USR_PERSON",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TB_USR_TRANSACTION",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BALANCE_ID = table.Column<int>(type: "int", nullable: false),
+                    VALUE = table.Column<int>(type: "int", nullable: false),
+                    OPERATION = table.Column<bool>(type: "bit", nullable: false),
+                    CURRENT_BALANCE = table.Column<int>(type: "int", nullable: false),
+                    NEW_BALANCE = table.Column<int>(type: "int", nullable: false),
+                    UUID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CREATE_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ALTER_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ACTIVE = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TB_USR_TRANSACTION", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_TB_USR_TRANSACTION_TB_USR_BALANCE_BALANCE_ID",
+                        column: x => x.BALANCE_ID,
+                        principalTable: "TB_USR_BALANCE",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -725,15 +721,9 @@ namespace MKW.Data.Context.Migrations
                 columns: new[] { "ID", "ACTIVE", "ALTER_DATE", "CREATE_DATE", "IS_BINARY", "NAME", "UUID" },
                 values: new object[,]
                 {
-<<<<<<<< HEAD:MKW/MKW.Data.Infra/Migrations/20230521004441_newEntities.cs
-                    { 1, true, new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5929), new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5918), true, "Masculino", new Guid("f302123a-82b0-47fa-8d86-817b9c6513e4") },
-                    { 2, true, new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5934), new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5933), true, "Feminino", new Guid("6f5fb446-d753-4f0a-a087-134ca9cca8e1") },
-                    { 3, true, new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5936), new DateTime(2023, 5, 20, 21, 44, 40, 781, DateTimeKind.Local).AddTicks(5935), false, "Não Binário", new Guid("9f7afae3-4027-4c5e-973f-8b1598ed944e") }
-========
-                    { 1, true, new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7850), new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7840), true, "Masculino", new Guid("bc97e9ac-e577-426b-8025-7f5424e1cd9f") },
-                    { 2, true, new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7854), new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7854), true, "Feminino", new Guid("d1fc9614-04b5-447a-84e6-01f1a8fbf259") },
-                    { 3, true, new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7857), new DateTime(2023, 5, 21, 15, 37, 38, 558, DateTimeKind.Local).AddTicks(7856), false, "Não Binário", new Guid("9f5f4c85-c0c3-42c2-a96d-df725ff97cd6") }
->>>>>>>> origin/staging:MKW/MKW.Data.Infra/Migrations/20230521183738_initEfDatabase.cs
+                    { 1, true, new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4322), new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4312), true, "Masculino", new Guid("4c51f7eb-2558-4be9-bf03-2c608c1ffc86") },
+                    { 2, true, new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4327), new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4326), true, "Feminino", new Guid("7f197a57-41dc-43cb-bee4-3e1bc01205e4") },
+                    { 3, true, new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4329), new DateTime(2023, 5, 16, 22, 21, 24, 329, DateTimeKind.Local).AddTicks(4329), false, "Não Binário", new Guid("7280c500-5363-4909-ad2c-9578bb64f093") }
                 });
 
             migrationBuilder.InsertData(
@@ -741,23 +731,14 @@ namespace MKW.Data.Context.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-<<<<<<<< HEAD:MKW/MKW.Data.Infra/Migrations/20230521004441_newEntities.cs
-                    { 11111, "1e078ba4-e954-487a-b5c2-cfcd1eb416d9", "admin", "ADMIN" },
-                    { 11112, "2f46661b-35b5-4fb2-b5f2-da27e2d89750", "standard", "STANDARD" }
-========
-                    { 11111, "520574af-1b4b-48f1-b370-118a0ce36d1b", "admin", "ADMIN" },
-                    { 11112, "12238b3f-d3c5-4af9-a460-1f3ea0bff878", "standard", "STANDARD" }
->>>>>>>> origin/staging:MKW/MKW.Data.Infra/Migrations/20230521183738_initEfDatabase.cs
+                    { 11111, "b061365b-8fa7-403e-962a-15242d97d929", "admin", "ADMIN" },
+                    { 11112, "b7533cbb-b092-4c56-b901-8c6e79c903a9", "standard", "STANDARD" }
                 });
 
             migrationBuilder.InsertData(
                 table: "TB_USR_USERS",
                 columns: new[] { "Id", "AccessFailedCount", "Active", "AlterDate", "ConcurrencyStamp", "CreateDate", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-<<<<<<<< HEAD:MKW/MKW.Data.Infra/Migrations/20230521004441_newEntities.cs
-                values: new object[] { 11111, 0, true, null, "f16da048-23d4-44a8-9cf4-b8c1318269ce", new DateTime(2023, 5, 20, 21, 44, 40, 772, DateTimeKind.Local).AddTicks(7648), "projeto.mkw@gmail.com", true, "Administrador", "MyKidsWatch", false, null, "PROJETO.MWK@GMAIL.COM", "ADMIN11111", "AQAAAAEAACcQAAAAEMyG4vtnXB8Sq2ScI6tU6aetDV/ztN7QSmszXIa9FqY4F6lJoFVRdCblG1SLb2u9sA==", "5511978019550", true, "cfd69d2f-377e-44f2-a08d-da595d6b3a5f", false, "admin11111" });
-========
-                values: new object[] { 11111, 0, true, null, "9af75c79-f7bf-41b7-acc5-54197b93a9f3", new DateTime(2023, 5, 21, 15, 37, 38, 547, DateTimeKind.Local).AddTicks(1822), "projeto.mkw@gmail.com", true, "Administrador", "MyKidsWatch", false, null, "PROJETO.MWK@GMAIL.COM", "ADMIN11111", "AQAAAAEAACcQAAAAENIMTido/zkGpKPpPJWcbjK6Wo3NXtGWOBI6vBuaXxAwfwht/JExLD1R1X0ebwCpXg==", "5511978019550", true, "4ee11345-1543-4136-96ab-6d31d1f51ad7", false, "admin11111" });
->>>>>>>> origin/staging:MKW/MKW.Data.Infra/Migrations/20230521183738_initEfDatabase.cs
+                values: new object[] { 11111, 0, true, null, "4cd66287-1128-4acd-808f-f63a5e7c7f17", new DateTime(2023, 5, 16, 22, 21, 24, 319, DateTimeKind.Local).AddTicks(179), "projeto.mkw@gmail.com", true, "Administrador", "MyKidsWatch", false, null, "PROJETO.MWK@GMAIL.COM", "ADMIN11111", "AQAAAAEAACcQAAAAEDSsCMw4sRRN4Tqqa6xFK9droeypLNyZNNvVk1fKcsqGDfU3PXJaPMkdqVPWtlQSXA==", "5511978019550", true, "bb15160f-ba0a-4462-acf1-86c6c0e3a402", false, "admin11111" });
 
             migrationBuilder.InsertData(
                 table: "TB_USR_USER_ROLE",
@@ -855,14 +836,10 @@ namespace MKW.Data.Context.Migrations
                 column: "POST_ID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TB_USR_OPERATION_OPERATION_TYPE_ID",
-                table: "TB_USR_OPERATION",
-                column: "OPERATION_TYPE_ID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TB_USR_OPERATION_PERSON_ID",
-                table: "TB_USR_OPERATION",
-                column: "PERSON_ID");
+                name: "IX_TB_USR_BALANCE_PERSON_ID",
+                table: "TB_USR_BALANCE",
+                column: "PERSON_ID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TB_USR_PERSON_GENDER_ID",
@@ -900,6 +877,11 @@ namespace MKW.Data.Context.Migrations
                 column: "NormalizedName",
                 unique: true,
                 filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TB_USR_TRANSACTION_BALANCE_ID",
+                table: "TB_USR_TRANSACTION",
+                column: "BALANCE_ID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TB_USR_USER_CLAIM_UserId",
@@ -947,13 +929,13 @@ namespace MKW.Data.Context.Migrations
                 name: "TB_RVW_REVIEW_DETAILS");
 
             migrationBuilder.DropTable(
-                name: "TB_USR_OPERATION");
-
-            migrationBuilder.DropTable(
                 name: "TB_USR_PERSON_CHILD");
 
             migrationBuilder.DropTable(
                 name: "TB_USR_ROLE_CLAIM");
+
+            migrationBuilder.DropTable(
+                name: "TB_USR_TRANSACTION");
 
             migrationBuilder.DropTable(
                 name: "TB_USR_USER_CLAIM");
@@ -983,10 +965,10 @@ namespace MKW.Data.Context.Migrations
                 name: "TB_RVW_COMMENT");
 
             migrationBuilder.DropTable(
-                name: "TB_USR_OPERATION_TYPE");
+                name: "TB_USR_AGE_RANGE");
 
             migrationBuilder.DropTable(
-                name: "TB_USR_AGE_RANGE");
+                name: "TB_USR_BALANCE");
 
             migrationBuilder.DropTable(
                 name: "TB_USR_ROLES");
