@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Utility.Exceptions;
 using Newtonsoft.Json;
 using System.Net;
@@ -28,7 +29,8 @@ namespace MKW.Middleware
             var contentType = "application/json";
             var statusCode = (int)HttpStatusCode.NotFound;
 
-            var response = JsonConvert.SerializeObject(exception.Message);
+            var resposta = new BaseResponseDTO<string>().WithErrors(exception.Errors);
+            var response = JsonConvert.SerializeObject(resposta);
 
             context.Response.ContentType = contentType;
             context.Response.StatusCode = statusCode;
@@ -40,7 +42,8 @@ namespace MKW.Middleware
             var contentType = "application/json";
             var statusCode = (int)HttpStatusCode.InternalServerError;
 
-            var response = JsonConvert.SerializeObject(exception.Message);
+            var resposta = new BaseResponseDTO<string>().AddError(exception.Message);
+            var response = JsonConvert.SerializeObject(resposta);
 
             context.Response.ContentType = contentType;
             context.Response.StatusCode = statusCode;
