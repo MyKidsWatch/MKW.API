@@ -1,10 +1,8 @@
 ﻿using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.GenderDTO;
-using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Utility.Exceptions;
-using MKW.Services.AppServices.Base;
 
 namespace MKW.Services.AppServices
 {

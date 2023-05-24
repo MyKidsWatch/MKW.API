@@ -20,36 +20,36 @@ namespace MKW.API.Controllers
         [HttpGet("{id:int}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ChildDto>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<string>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<string>))]
         public async Task<ActionResult<BaseResponseDTO<ChildDto>>> Get([FromRoute] int id) => Ok(await _childService.GetById(id));
 
         [HttpGet]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ChildDto>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<string>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<string>))]
         public async Task<ActionResult<BaseResponseDTO<ChildDto>>> Get() => Ok(await _childService.Get());
 
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ChildDto>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<string>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<string>))]
         public async Task<ActionResult<BaseResponseDTO<ChildDto>>> AddChild([FromBody] CreateChildDto createChildDto) => Ok(await _childService.AddChild(createChildDto));
 
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ChildDto>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<string>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<string>))]
         public async Task<ActionResult<BaseResponseDTO<ChildDto>>> UpdateChild([FromBody] ChildDto createChildDto) => Ok(await _childService.UpdateChild(createChildDto));
 
         [HttpDelete("{id:int}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ChildDto>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<string>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<string>))]
         public async Task<ActionResult> DeleteChild([FromRoute] int childId)
         {
             await _childService.DeleteChild(childId);
