@@ -2,7 +2,6 @@
 using MKW.API.Controllers.Base;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.GenderDTO;
-using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 
 namespace MKW.API.Controllers
@@ -19,6 +18,10 @@ namespace MKW.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<BaseResponseDTO<GenderDto>>> Get() => Ok(_genderService.Get());
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<GenderDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<string>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<string>))]
+        [HttpGet]
+        public async Task<ActionResult<BaseResponseDTO<GenderDto>>> Get() => Ok(await _genderService.Get());
     }
 }
