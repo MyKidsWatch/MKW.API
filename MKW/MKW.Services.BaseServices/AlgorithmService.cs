@@ -23,7 +23,7 @@ namespace MKW.Services.BaseServices
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<BaseResponseDTO<IEnumerable<ReviewDto>>> GetReviewsByUserId(int page, int count)
+        public async Task<BaseResponseDTO<ReviewDto>> GetReviewsByUserId(int page, int count)
         {
             var email = _httpContextAccessor.HttpContext?.User?.Claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
             var user = await _personRepository.GetByEmail(email);
@@ -32,7 +32,7 @@ namespace MKW.Services.BaseServices
             var reviews = (await GetRelevantReviews(user.Id, page, count)).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
 
-            return new BaseResponseDTO<IEnumerable<ReviewDto>>().AddContent(reviews);
+            return new BaseResponseDTO<ReviewDto>().AddContent(reviews);
         }
 
         public async Task<List<Review>> GetRelevantReviews(int id, int page, int count)
