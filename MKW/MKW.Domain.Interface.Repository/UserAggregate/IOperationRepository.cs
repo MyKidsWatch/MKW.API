@@ -3,7 +3,7 @@ using MKW.Domain.Interface.Repository.Base;
 
 namespace MKW.Domain.Interface.Repository.UserAggregate
 {
-    public interface IBalanceRepository : IBaseRepository<Balance>
+    public interface IOperationRepository : IBaseRepository<Operation>
     {
     }
 }

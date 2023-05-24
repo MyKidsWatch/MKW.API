@@ -1,19 +1,38 @@
-﻿using MKW.Domain.Entities.ContentAggregate;
+﻿using Microsoft.AspNetCore.Http;
+using MKW.Domain.Dto.DTO.Base;
+using MKW.Domain.Dto.DTO.ReviewDTO;
+using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.BaseServices;
+using MKW.Domain.Utility.Exceptions;
 using MKW.Domain.Utility.Extensions;
+using System.Security.Claims;
 
 namespace MKW.Services.BaseServices
 {
     public class AlgorithmService : IAlgorithmService
     {
         private readonly IPersonRepository _personRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AlgorithmService(IPersonRepository personRepository)
+        public AlgorithmService(IPersonRepository personRepository, IHttpContextAccessor httpContextAccessor)
         {
             _personRepository = personRepository;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<BaseResponseDTO<ReviewDto>> GetReviewsByUserId(int page, int count)
+        {
+            var email = _httpContextAccessor.HttpContext?.User?.Claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
+            var user = await _personRepository.GetByEmail(email);
+            if (user == null) throw new NotFoundException("User not found.");
+
+            var reviews = (await GetRelevantReviews(user.Id, page, count)).Select(x => new ReviewDto(x));
+            if (reviews == null) throw new NotFoundException("No reviews were found.");
+
+            return new BaseResponseDTO<ReviewDto>().AddContent(reviews);
         }
 
         public async Task<List<Review>> GetRelevantReviews(int id, int page, int count)

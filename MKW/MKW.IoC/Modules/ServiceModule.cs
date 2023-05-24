@@ -11,12 +11,14 @@ namespace MKW.IoC.Modules
         public static void InjectDependencies(IServiceCollection builder)
         {
             #region AppServices
+            builder.AddTransient<IAgeRangeService, AgeRangeService>();
+            builder.AddTransient<IChildService, ChildService>();
             builder.AddTransient<IPlatformService, PlatformService>();
             builder.AddTransient<IReviewService, ReviewService>();
             builder.AddTransient<IGenderService, GenderService>();
+            builder.AddTransient<IPersonService, PersonService>();
             #endregion
             #region BaseServices
-            builder.AddTransient<IEmailService, EmailService>();
             builder.AddTransient<ITmdbService, TmdbService>();
             builder.AddTransient<IAlgorithmService, AlgorithmService>();
             #endregion

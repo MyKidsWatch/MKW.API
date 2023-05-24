@@ -51,7 +51,8 @@ namespace MKW.Data.Context.Mapping.UserAggregate
             modelBuilder.Entity<PersonChild>()
                 .HasOne(x => x.Person)
                 .WithMany(x => x.Children)
-                .HasForeignKey(x => x.PersonId);
+                .HasForeignKey(x => x.PersonId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<PersonChild>()
                 .HasOne(x => x.Gender)
