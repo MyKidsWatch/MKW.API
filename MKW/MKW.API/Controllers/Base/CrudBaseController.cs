@@ -16,7 +16,7 @@ namespace MKW.API.Controllers.Base
         [HttpGet]
         public async Task<IActionResult> Get() => Ok(await _service.Get());
 
-        [HttpGet("{id:int}")]
+        [HttpGet("id/{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id) => Ok(await _service.GetById(id));
 
         [HttpPost]

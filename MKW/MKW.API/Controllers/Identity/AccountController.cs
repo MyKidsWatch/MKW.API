@@ -38,7 +38,7 @@ namespace MKW.API.Controllers.Identity
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetActiveAccounts() => Ok(await _service.GetActiveAccountsAsync());
 
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
