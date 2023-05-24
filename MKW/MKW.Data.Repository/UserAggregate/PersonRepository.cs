@@ -13,5 +13,7 @@ namespace MKW.Data.Repository.UserAggregate
         public PersonRepository(MKWContext context) : base(context)
         {
         }
+
+        public async Task<Person> GetByEmail(string email) => _dbSet.FirstOrDefault(x => x.User.Email.ToLower() == email.ToLower());
     }
 }

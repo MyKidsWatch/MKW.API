@@ -48,7 +48,8 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
             modelBuilder.Entity<AwardPerson>()
                 .HasOne(x => x.Person)
                 .WithMany(x => x.AwardsGiven)
-                .HasForeignKey(x => x.PersonId);
+                .HasForeignKey(x => x.PersonId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AwardPerson>()
                 .HasOne(x => x.Award)

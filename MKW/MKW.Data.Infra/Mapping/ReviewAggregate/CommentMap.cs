@@ -61,7 +61,8 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
             modelBuilder.Entity<Comment>()
                 .HasOne(x => x.Person)
                 .WithMany(x => x.Comments)
-                .HasForeignKey(x => x.PersonId);
+                .HasForeignKey(x => x.PersonId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Comment>()
                 .HasMany(x => x.Answers)
