@@ -103,7 +103,7 @@ namespace MKW.API.Controllers.Identity
 
         [HttpPost("register")]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RegisterAccount([FromBody] CreateUserDTO createUserRequest)
