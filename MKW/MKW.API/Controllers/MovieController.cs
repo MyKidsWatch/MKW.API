@@ -18,7 +18,7 @@ namespace MKW.API.Controllers
             _tmdbService = tmdbService;
         }
 
-        [HttpGet("{movieId:int}")]
+        [HttpGet("id/{movieId:int}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<object>))]
