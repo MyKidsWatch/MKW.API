@@ -155,7 +155,7 @@ namespace MKW.Services.AppServices.IdentityService
                 var createUser = await _repository.AddUserAsync(userEntity, userDTO.Password);
 
                 if (!createUser.result.Succeeded) return userResponseDTO.WithErrors(getErros(createUser.result.Errors));
-              
+
                 await _roleService.AddUserToRoleAsync("standard", createUser.user.UserName);
                 var userResponse = _mapper.Map<ReadUserDTO>(createUser.user);
                 var confirmEmailToken = await _repository.GenerateEmailConfirmationTokenAsync(createUser.user);
@@ -182,8 +182,8 @@ namespace MKW.Services.AppServices.IdentityService
 
                 userResponse.AssociatedWithPerson = await CreateAssociatedPerson(userDTO.PersonDetails, createUser.user);
                 return userResponseDTO.AddContent(userResponse);
-   
-                
+
+
             }
             catch (Exception ex)
             {

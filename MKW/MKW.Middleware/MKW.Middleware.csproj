@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MKW.Domain.Utility\MKW.Domain.Utility.csproj" />
+    <ProjectReference Include="..\MKW.Domain.ViewModel\MKW.Domain.Dto.csproj" />
   </ItemGroup>
 
 </Project>

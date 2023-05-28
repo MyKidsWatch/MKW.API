@@ -33,6 +33,10 @@ namespace MKW.Data.Context.Mapping.ContentAggregate
                 .HasColumnName("CATEGORY_ID");
 
             modelBuilder.Entity<Content>()
+                .Property(x => x.ExternalId)
+                .HasColumnName("EXTERNAL_ID");
+
+            modelBuilder.Entity<Content>()
                 .Property(x => x.CreateDate)
                 .HasColumnName("CREATE_DATE");
 

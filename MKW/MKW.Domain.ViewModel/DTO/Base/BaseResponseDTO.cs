@@ -42,6 +42,14 @@ namespace MKW.Domain.Dto.DTO.Base
             return this;
         }
 
+        public BaseResponseDTO<T> AddContent(IEnumerable<T> content, bool isSuccess = true)
+        {
+            if (Content is null) Content = new List<T>();
+            Content.AddRange(content);
+            IsSuccess = isSuccess;
+            return this;
+        }
+
         public BaseResponseDTO<T> AddError(string error, bool isSuccess = false)
         {
             if (Errors is null) Errors = new List<string>();
