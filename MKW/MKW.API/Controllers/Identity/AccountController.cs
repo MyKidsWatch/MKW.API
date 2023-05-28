@@ -51,6 +51,18 @@ namespace MKW.API.Controllers.Identity
             return account.IsSuccess ? Ok(account) : NotFound(account);
         }
 
+        [HttpGet("user/token")]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> GetAccountByToken()
+        {
+            var account = await _service.GetAccountByTokenAsync(HttpContext);
+            return account.IsSuccess ? Ok(account) : NotFound(account);
+        }
+
         [HttpGet("username/{userName}")]
         [Authorize(Roles = "admin")]
         [Produces(MediaTypeNames.Application.Json)]
@@ -128,6 +140,7 @@ namespace MKW.API.Controllers.Identity
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RequestEmailKeycode([FromBody] RequestKeycodeDTO keycodeRequest)
         {
             var result = await _service.RequestEmailKeycodeAsync(keycodeRequest);
