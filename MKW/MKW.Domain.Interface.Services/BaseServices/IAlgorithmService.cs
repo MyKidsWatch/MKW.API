@@ -7,7 +7,7 @@ namespace MKW.Domain.Interface.Services.BaseServices
 {
     public interface IAlgorithmService
     {
-        Task<BaseResponseDTO<IEnumerable<ReviewDto>>> GetRecommended(int page, int count);
+        Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count);
         Task<List<Review>> GetRelevantReviews(int id, int page, int count);
         Task<List<Content>?> GetRecomendations(List<Review> reviews);
     }

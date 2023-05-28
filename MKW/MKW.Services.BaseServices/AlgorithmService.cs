@@ -23,7 +23,7 @@ namespace MKW.Services.BaseServices
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<BaseResponseDTO<IEnumerable<ReviewDto>>> GetRecommended(int page, int count)
+        public async Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count)
         {
             var email = _httpContextAccessor.HttpContext?.User?.Claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
             var user = await _personRepository.GetByEmail(email);
