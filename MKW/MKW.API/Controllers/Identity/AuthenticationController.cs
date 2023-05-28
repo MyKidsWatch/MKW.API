@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Authentication;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
+using System.Net.Mime;
 
 namespace MKW.API.Controllers.Identity
 {
@@ -17,6 +18,10 @@ namespace MKW.API.Controllers.Identity
         }
 
         [HttpPost("username")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<TokenDTO>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<TokenDTO>>> LoginByUserName([FromBody] LoginRequestByUserNameDTO loginRequestDTO)
         {
             var loginResult = await _service.LoginByUserNameAsync(loginRequestDTO);
@@ -24,6 +29,10 @@ namespace MKW.API.Controllers.Identity
         }
 
         [HttpPost("email")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<TokenDTO>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<TokenDTO>>> LoginByEmail([FromBody] LoginRequestByEmailDTO loginRequestDTO)
         {
             var loginResult = await _service.LoginByEmailAsync(loginRequestDTO);
@@ -32,6 +41,10 @@ namespace MKW.API.Controllers.Identity
 
         [HttpPost("refresh")]
         [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<TokenDTO>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<TokenDTO>>> RefreshLogin()
         {
             var refreshResult = await _service.RefreshLoginAsync(HttpContext);

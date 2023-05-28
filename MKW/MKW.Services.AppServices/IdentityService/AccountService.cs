@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
@@ -418,6 +419,24 @@ namespace MKW.Services.AppServices.IdentityService
             }
 
             return errorList;
+        }
+
+        public async Task<BaseResponseDTO<ReadUserDTO>> GetAccountByTokenAsync(HttpContext httpContext)
+        {
+            try
+            {
+                var responseDTO = new BaseResponseDTO<ReadUserDTO>();
+                var claims = httpContext.User.Identity as ClaimsIdentity;
+                var userId = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+                var (result, user) = await _repository.GetUserByIdAsync(int.Parse(userId));
+                if (result.IsFailed) return responseDTO.WithErrors(getErros(result.Reasons));
+
+                return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(user));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

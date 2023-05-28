@@ -1,4 +1,5 @@
-﻿using MKW.Domain.Dto.DTO.Base;
+﻿using Microsoft.AspNetCore.Http;
+using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
 using System.Security.Claims;
 
@@ -22,5 +23,6 @@ namespace MKW.Domain.Interface.Services.AppServices.IdentityService
         Task<BaseResponseDTO<ReadUserDTO>> ConfirmAccountEmailAsync(ConfirmAccountEmailDTO ActivationRequest);
         Task<BaseResponseDTO<ResponseGenerateKeycodeDTO>> RequestPasswordKeycodeAsync(RequestKeycodeDTO request);
         Task<BaseResponseDTO<ReadUserDTO>> ResetPasswordAsync(ResetPasswordDTO request);
+        Task<BaseResponseDTO<ReadUserDTO>> GetAccountByTokenAsync(HttpContext httpContext);
     }
 }

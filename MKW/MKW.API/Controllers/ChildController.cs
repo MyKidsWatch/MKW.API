@@ -17,7 +17,7 @@ namespace MKW.API.Controllers
             _childService = childService;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("id/{id:int}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ChildDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<string>))]
