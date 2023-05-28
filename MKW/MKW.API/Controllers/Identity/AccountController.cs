@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
-using MKW.Domain.Dto.DTO.ReviewDTO;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using MKW.Domain.Interface.Services.BaseServices;
 using System.Net.Mime;

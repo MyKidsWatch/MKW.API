@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MKW.Domain.Dto.DTO.Base;
-using MKW.Domain.Dto.DTO.IdentityDTO.Account;
 using MKW.Domain.Dto.DTO.IdentityDTO.Authentication;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using System.Net.Mime;
