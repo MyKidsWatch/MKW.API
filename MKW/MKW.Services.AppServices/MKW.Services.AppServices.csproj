@@ -20,6 +20,7 @@
     <ProjectReference Include="..\MKW.Domain.Entities\MKW.Domain.Entities.csproj" />
     <ProjectReference Include="..\MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj" />
     <ProjectReference Include="..\MKW.Domain.Interface.Services\MKW.Domain.Interface.Services.csproj" />
+    <ProjectReference Include="..\MKW.Domain.Utility\MKW.Domain.Utility.csproj" />
   </ItemGroup>
 
 </Project>

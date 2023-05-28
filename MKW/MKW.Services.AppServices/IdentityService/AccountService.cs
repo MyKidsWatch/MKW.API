@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
+using MKW.Domain.Dto.DTO.IdentityDTO.Authentication;
 using MKW.Domain.Dto.DTO.PersonDTO;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.UserAggregate;
@@ -10,6 +12,7 @@ using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using MKW.Domain.Interface.Services.BaseServices;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Claims;
 
 namespace MKW.Services.AppServices.IdentityService
@@ -155,7 +158,7 @@ namespace MKW.Services.AppServices.IdentityService
                 var createUser = await _repository.AddUserAsync(userEntity, userDTO.Password);
 
                 if (!createUser.result.Succeeded) return userResponseDTO.WithErrors(getErros(createUser.result.Errors));
-              
+
                 await _roleService.AddUserToRoleAsync("standard", createUser.user.UserName);
                 var userResponse = _mapper.Map<ReadUserDTO>(createUser.user);
                 var confirmEmailToken = await _repository.GenerateEmailConfirmationTokenAsync(createUser.user);
@@ -182,8 +185,8 @@ namespace MKW.Services.AppServices.IdentityService
 
                 userResponse.AssociatedWithPerson = await CreateAssociatedPerson(userDTO.PersonDetails, createUser.user);
                 return userResponseDTO.AddContent(userResponse);
-   
-                
+
+
             }
             catch (Exception ex)
             {
@@ -418,6 +421,24 @@ namespace MKW.Services.AppServices.IdentityService
             }
 
             return errorList;
+        }
+
+        public async Task<BaseResponseDTO<ReadUserDTO>> GetAccountByTokenAsync(HttpContext httpContext)
+        {
+            try
+            {
+                var responseDTO = new BaseResponseDTO<ReadUserDTO>();
+                var claims = httpContext.User.Identity as ClaimsIdentity;
+                var userId = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+                var (result, user) = await _repository.GetUserByIdAsync(int.Parse(userId));
+                if (result.IsFailed) return responseDTO.WithErrors(getErros(result.Reasons));
+                
+                return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(user));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
