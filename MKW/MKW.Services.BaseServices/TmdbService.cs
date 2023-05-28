@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Interface.Services.BaseServices;
 using System.Net.Http.Json;
 
@@ -19,7 +20,13 @@ namespace MKW.Services.BaseServices
 
         public async Task<object> GetMovie(int movieId)
         {
-            return (await _client.GetFromJsonAsync<object>($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}"))!;
+            return (await _client.GetFromJsonAsync<object>($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}&language=pt-BR"))!;
+        }
+
+        public async Task<BaseResponseDTO<object>> GetMovieByName(string name)
+        {
+            var objects = (await _client.GetFromJsonAsync<object>($"{_baseUrl}/search/movie?query={name}&language=pt-BR&api_key={_apiKey}"))!;
+            return new BaseResponseDTO<object>().AddContent(objects);
         }
     }
 }

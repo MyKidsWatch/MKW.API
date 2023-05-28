@@ -24,5 +24,8 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<object>> GetMovie([FromRoute] int movieId) => Ok(await _tmdbService.GetMovie(movieId));
+
+        [HttpGet]
+        public async Task<ActionResult<object>> GetMovieByName([FromQuery] string name) => Ok(await _tmdbService.GetMovieByName(name));
     }
 }
