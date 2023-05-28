@@ -28,7 +28,7 @@ namespace MKW.Services.AppServices.IdentityService
                 var generatedAccessToken = new JwtSecurityTokenHandler().WriteToken(tokens.accessToken);
                 var generatedRefreshToken = new JwtSecurityTokenHandler().WriteToken(tokens.refreshToken);
 
-                return Result.Ok<ApplicationToken>(new ApplicationToken(generatedAccessToken, generatedRefreshToken));
+                return Result.Ok<ApplicationToken>(new ApplicationToken(generatedAccessToken, generatedRefreshToken, tokens.accessExpiration, tokens.refreshExpiration));
             }
             catch (Exception ex)
             {
@@ -61,7 +61,8 @@ namespace MKW.Services.AppServices.IdentityService
             return (accessClaims, refreshClaims);
         }
 
-        private (JwtSecurityToken accessToken, JwtSecurityToken refreshToken) GenerateSecurityToken(IEnumerable<Claim> accessClaims, IEnumerable<Claim> refreshClaims)
+        private (JwtSecurityToken accessToken, JwtSecurityToken refreshToken, DateTime accessExpiration, DateTime refreshExpiration) 
+            GenerateSecurityToken(IEnumerable<Claim> accessClaims, IEnumerable<Claim> refreshClaims)
         {
             var accessTokenExpiration = DateTime.Now.AddSeconds(_jwtOptions.AccessTokenExpiration);
             var refreshTokenExpiration = DateTime.Now.AddSeconds(_jwtOptions.RefreshTokenExpiration);
@@ -84,7 +85,7 @@ namespace MKW.Services.AppServices.IdentityService
                 signingCredentials: _jwtOptions.SigningCredentials
             );
 
-            return (accessToken, refreshToken);
+            return (accessToken, refreshToken, accessTokenExpiration, refreshTokenExpiration);
         }
     }
 }
