@@ -1,15 +1,25 @@
-﻿using MKW.Domain.Entities.UserAggregate;
+﻿using MKW.Domain.Dto.DTO.Base;
+using MKW.Domain.Dto.DTO.GenderDTO;
 using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
-using MKW.Services.AppServices.Base;
+using MKW.Domain.Utility.Exceptions;
 
 namespace MKW.Services.AppServices
 {
-    public class GenderService : BaseService<Gender>, IGenderService
+    public class GenderService : IGenderService
     {
-        public GenderService(IGenderRepository genderRepository) : base(genderRepository)
+        private readonly IGenderRepository _genderRepository;
+        public GenderService(IGenderRepository genderRepository)
         {
+            _genderRepository = genderRepository;
+        }
 
+        public async Task<BaseResponseDTO<GenderDto>> Get()
+        {
+            var genders = await _genderRepository.GetActive();
+            if (genders == null) throw new NotFoundException("Nenhum gênero encontrado");
+
+            return new BaseResponseDTO<GenderDto>().AddContent(genders.Select(x => new GenderDto(x)));
         }
     }
 }

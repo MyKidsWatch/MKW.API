@@ -32,7 +32,7 @@ namespace MKW.Services.BaseServices
             var reviews = (await GetRelevantReviews(user.Id, page, count)).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
 
-            return new BaseResponseDTO<IEnumerable<ReviewDto>>().AddContent(reviews);
+            return new BaseResponseDTO<ReviewDto>().AddContent(reviews);
         }
 
         public async Task<List<Review>> GetRelevantReviews(int id, int page, int count)
