@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MKW.API.Controllers.Base;
+using MKW.Domain.Dto.DTO.Base;
+using MKW.Domain.Dto.DTO.ReviewDTO;
 using MKW.Domain.Interface.Services.BaseServices;
+using System.Net.Mime;
 
 namespace MKW.API.Controllers
 {
@@ -16,9 +20,19 @@ namespace MKW.API.Controllers
         }
 
         [HttpGet("{movieId:int}")]
-        public async Task<ActionResult<object>> GetMovie([FromRoute] int movieId) => Ok(await _tmdbService.GetMovie(movieId));
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<object>>> GetMovie([FromRoute] int movieId, [FromQuery] string? language = "pt-BR") => Ok(await _tmdbService.GetMovie(movieId, language));
 
         [HttpGet]
-        public async Task<ActionResult<object>> GetMovieByName([FromQuery] string name) => Ok(await _tmdbService.GetMovieByName(name));
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<object>>> GetMovieByName([FromQuery] string name, [FromQuery] string? language = "pt-BR") => Ok(await _tmdbService.GetMovieByName(name, language));
     }
 }
