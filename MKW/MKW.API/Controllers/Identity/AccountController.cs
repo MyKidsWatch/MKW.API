@@ -128,6 +128,7 @@ namespace MKW.API.Controllers.Identity
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RequestEmailKeycode([FromBody] RequestKeycodeDTO keycodeRequest)
         {
             var result = await _service.RequestEmailKeycodeAsync(keycodeRequest);
