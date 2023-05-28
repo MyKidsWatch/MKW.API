@@ -17,5 +17,8 @@ namespace MKW.API.Controllers
 
         [HttpGet("{movieId:int}")]
         public async Task<ActionResult<object>> GetMovie([FromRoute] int movieId) => Ok(await _tmdbService.GetMovie(movieId));
+
+        [HttpGet]
+        public async Task<ActionResult<object>> GetMovieByName([FromQuery] string name) => Ok(await _tmdbService.GetMovieByName(name));
     }
 }
