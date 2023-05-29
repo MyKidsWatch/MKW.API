@@ -72,7 +72,7 @@ namespace MKW.Services.BaseServices
 
             var users = await _personRepository.GetActive();
 
-            similarUsers = users?.Where(x => x.Children.Any(y => y.Active)).OrderBy(x => GetChildrenSimilarity(user, x)).ToList();
+            similarUsers = users?.Where(x => x.Children.Any(y => y.Active)).OrderByDescending(x => GetChildrenSimilarity(user, x)).ToList();
 
             return similarUsers!;
         }
@@ -108,7 +108,7 @@ namespace MKW.Services.BaseServices
 
             //adicionar lógica das reviews mais relevantes aqui
 
-            return reviews.Take(500).ToList().Take(100).ToList();
+            return reviews.Take(100).ToList().Shuffle().ToList();
         }
     }
 }
