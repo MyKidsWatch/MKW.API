@@ -73,13 +73,12 @@ namespace MKW.Services.AppServices.IdentityService
             try
             {
                 var response = new BaseResponseDTO<ReadUserDTO>();
-                var user = await _repository.GetUserByIdAsync(id);
-                if (user.result.IsSuccess)
-                {
-                    var userResponse = _mapper.Map<ReadUserDTO>(user.user);
-                    return response.AddContent(userResponse);
-                }
-                return response.AddError("User not found!");
+                var (result, user) = await _repository.GetUserByIdAsync(id);
+                if (result.IsSuccess) return response.AddError("User not found!");
+                
+                var userResponse = _mapper.Map<ReadUserDTO>(user);
+                userResponse.AssociatedWithPerson = await GetAssociatedPerson(user);
+                return response.AddContent(userResponse);         
             }
             catch (Exception ex)
             {
@@ -92,10 +91,11 @@ namespace MKW.Services.AppServices.IdentityService
             try
             {
                 var response = new BaseResponseDTO<ReadUserDTO>();
-                var user = await _repository.GetUserByUserNameAsync(userName);
-                if (user.result.IsSuccess)
+                var (result, user) = await _repository.GetUserByUserNameAsync(userName);
+                if (result.IsSuccess)
                 {
-                    var userResponse = _mapper.Map<ReadUserDTO>(user.user);
+                    var userResponse = _mapper.Map<ReadUserDTO>(user);
+                    userResponse.AssociatedWithPerson = await GetAssociatedPerson(user);
                     return response.AddContent(userResponse);
                 }
                 return response.AddError("User not found!");
@@ -150,12 +150,17 @@ namespace MKW.Services.AppServices.IdentityService
             try
             {
                 var responseDTO = new BaseResponseDTO<ReadUserDTO>();
+
                 var claims = httpContext.User.Identity as ClaimsIdentity;
                 var userId = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+                
                 var (result, user) = await _repository.GetUserByIdAsync(int.Parse(userId));
-                if (result.IsFailed) return responseDTO.WithErrors(getErros(result.Reasons));
+                if (result.IsFailed) return responseDTO.WithErrors(GetErros(result.Reasons));
 
-                return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(user));
+                var readUser = _mapper.Map<ReadUserDTO>(user);
+                readUser.AssociatedWithPerson = await GetAssociatedPerson(user);
+
+                return responseDTO.AddContent(readUser);
             }
             catch (Exception ex)
             {
@@ -168,22 +173,22 @@ namespace MKW.Services.AppServices.IdentityService
             try
             {
                 var userResponseDTO = new BaseResponseDTO<ReadUserDTO>();
-
                 var applicationUser = _mapper.Map<ApplicationUser>(userDTO);
 
                 var (result, user) = await _repository.AddUserAsync(applicationUser, userDTO.Password);
-                if (!result.Succeeded) return userResponseDTO.WithErrors(getErros(result.Errors));
+                if (!result.Succeeded) return userResponseDTO.WithErrors(GetErros(result.Errors));
 
                 var role = await _roleService.AddUserToRoleAsync("standard", user.UserName);
                 if (role is null) userResponseDTO.AddError("role not assign to user");
 
+                var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user);
+                if (!isEmailSent) userResponseDTO.WithErrors(emailErrors);
+                                
                 var userResponse = _mapper.Map<ReadUserDTO>(user);
-                userResponseDTO.AddContent(userResponse);
+                userResponse.isConfirmEmailTokenSent = isEmailSent;
                 userResponse.AssociatedWithPerson = await CreateAssociatedPerson(userDTO.PersonDetails, user);
 
-                userResponseDTO = await SendActiveEmailKeycodeAsync(user, userResponseDTO);
-
-                return userResponseDTO;
+                return userResponseDTO.AddContent(userResponse);
             }
             catch (Exception ex)
             {
@@ -191,23 +196,17 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        private async Task<BaseResponseDTO<ReadUserDTO>> SendActiveEmailKeycodeAsync (ApplicationUser user, BaseResponseDTO<ReadUserDTO> userResponseDTO) 
+        private async Task<(bool isEmailSent, IEnumerable<string> emailErrors)> SendActiveEmailKeycodeAsync (ApplicationUser user) 
         {
-            var userResponse = userResponseDTO;
-            var confirmEmailToken = await _repository.GenerateEmailConfirmationTokenAsync(user);
-            if (!confirmEmailToken.result.IsSuccess) return userResponse.WithErrors(getErros(confirmEmailToken.result.Reasons));
+            var (result, token) = await _repository.GenerateEmailConfirmationTokenAsync(user);
+            if (!result.IsSuccess) return (false, GetErros(result.Reasons));
           
-            var resultKeycode = await _userTokenRepository.AddUserTokenAsync(user.Id, confirmEmailToken.token);
-            if (!resultKeycode.result.IsSuccess) 
-            { 
-                userResponse.Content.First().isConfirmEmailTokenSent = false;
-                return userResponse;
-            }   
-          
-            var keycode = resultKeycode.keycode;
-            _emailService.sendConfirmAccountEmail(new[] { user.Email }, "Código de Ativacão", keycode.ToString());
-            userResponse.Content.First().isConfirmEmailTokenSent = true;
-            return userResponse;
+            var (resultKeycode, keycodeValue) = await _userTokenRepository.AddUserTokenAsync(user.Id, token);
+            if (!resultKeycode.IsSuccess) return (false, GetErros(resultKeycode.Reasons));
+
+            _emailService.sendConfirmAccountEmail(new[] { user.Email }, "Código de Ativacão", keycodeValue.ToString());
+
+            return (true, GetErros(result.Reasons));
         }
 
         public async Task<BaseResponseDTO<ReadUserDTO>> UpdateAccountAsync(HttpContext httpContext, UpdateUserDTO userDTO)
@@ -215,21 +214,21 @@ namespace MKW.Services.AppServices.IdentityService
             try
             {
                 var response = new BaseResponseDTO<ReadUserDTO>();
+                var applicationUser = _mapper.Map<ApplicationUser>(userDTO);
 
                 var userClaims = httpContext.User.Identity as ClaimsIdentity;
-                var userId = int.Parse(userClaims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
+                var userId = int.Parse(httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
-                var applicationUser = _mapper.Map<ApplicationUser>(userDTO);
                 var (result, user) = await _repository.UpdateUserAsync(userId, applicationUser);
+                if (!result.Succeeded) return response.WithErrors(GetErros(result.Errors));
 
-                if(userDTO is not null && !user.EmailConfirmed)
-                {
-                    response = await SendActiveEmailKeycodeAsync(user, response);
-                }
-
-                if (!result.Succeeded) return response.WithErrors(getErros(result.Errors));
                 var readUser = _mapper.Map<ReadUserDTO>(user);
+                if (user.EmailConfirmed) return response.AddContent(readUser);
+             
+                var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user);
+                if (!isEmailSent) response.WithErrors(emailErrors);
 
+                readUser.isConfirmEmailTokenSent = isEmailSent;
                 return response.AddContent(readUser);
             }
             catch (Exception ex)
@@ -244,7 +243,7 @@ namespace MKW.Services.AppServices.IdentityService
             {
                 var response = new BaseResponseDTO<object>();
                 var deleteUser = await _repository.DeleteUserByIdAsync(id);
-                return deleteUser.Succeeded ? response : response.WithErrors(getErros(deleteUser.Errors));
+                return deleteUser.Succeeded ? response : response.WithErrors(GetErros(deleteUser.Errors));
             }
             catch (Exception ex)
             {
@@ -258,7 +257,7 @@ namespace MKW.Services.AppServices.IdentityService
             {
                 var response = new BaseResponseDTO<object>();
                 var deleteUser = await _repository.DeleteUserByUserNameAsync(userName);
-                return deleteUser.Succeeded ? response : response.WithErrors(getErros(deleteUser.Errors));
+                return deleteUser.Succeeded ? response : response.WithErrors(GetErros(deleteUser.Errors));
             }
             catch (Exception ex)
             {
@@ -273,10 +272,10 @@ namespace MKW.Services.AppServices.IdentityService
                 var responseDTO = new BaseResponseDTO<ReadUserDTO>();
 
                 var getToken = await _userTokenRepository.GetUserTokenAsync(activationRequest.UserId, activationRequest.Keycode);
-                if (getToken.result.IsFailed) return responseDTO.WithErrors(getErros(getToken.result.Reasons));
+                if (getToken.result.IsFailed) return responseDTO.WithErrors(GetErros(getToken.result.Reasons));
            
                 var confirmEmail = await _repository.ConfirmAccountEmailAsync(activationRequest.UserId, getToken.userToken.Token);
-                if (confirmEmail.IsFailed) return responseDTO.WithErrors(getErros(confirmEmail.Reasons));
+                if (confirmEmail.IsFailed) return responseDTO.WithErrors(GetErros(confirmEmail.Reasons));
                
                 var excludeToken = await _userTokenRepository.DeleteUserTokenAsync(activationRequest.UserId, activationRequest.Keycode);
                 var (result, user) = await _repository.GetUserByIdAsync(activationRequest.UserId);
@@ -336,9 +335,9 @@ namespace MKW.Services.AppServices.IdentityService
                         _emailService.sendConfirmAccountEmail(new[] { request.Email }, "Código de Ativacão", keycode.ToString());
                         return responseDTO.AddContent(new ResponseGenerateKeycodeDTO(true));
                     }
-                    return responseDTO.WithErrors(getErros(result.Reasons));
+                    return responseDTO.WithErrors(GetErros(result.Reasons));
                 }
-                return responseDTO.WithErrors(getErros(getUserResult.Reasons));
+                return responseDTO.WithErrors(GetErros(getUserResult.Reasons));
             }
             catch (Exception ex)
             {
@@ -365,11 +364,11 @@ namespace MKW.Services.AppServices.IdentityService
                             _emailService.sendRecoveryPasswordEmail(new[] { request.Email }, "Recuperacao de Senha", keycode.ToString());
                             return responseDTO.AddContent(new ResponseGenerateKeycodeDTO(true));
                         }
-                        return responseDTO.WithErrors(getErros(generateKeycode.result.Reasons));
+                        return responseDTO.WithErrors(GetErros(generateKeycode.result.Reasons));
                     }
-                    return responseDTO.WithErrors(getErros(getUser.result.Reasons));
+                    return responseDTO.WithErrors(GetErros(getUser.result.Reasons));
                 }
-                return responseDTO.WithErrors(getErros(recoveryResult.result.Reasons));
+                return responseDTO.WithErrors(GetErros(recoveryResult.result.Reasons));
             }
             catch (Exception ex)
             {
@@ -380,33 +379,21 @@ namespace MKW.Services.AppServices.IdentityService
 
         public async Task<BaseResponseDTO<ReadUserDTO>> ResetPasswordAsync(ResetPasswordDTO request)
         {
-            try
-            {
-                var responseDTO = new BaseResponseDTO<ReadUserDTO>();
+            var responseDTO = new BaseResponseDTO<ReadUserDTO>();
 
-                var getUser = await _repository.GetUserByEmailAsync(request.Email);
-                if (getUser.result.IsSuccess)
-                {
-                    var getToken = await _userTokenRepository.GetUserTokenAsync(getUser.user.Id, request.KeyCode);
-                    if (getToken.result.IsSuccess)
-                    {
-                        var resetPassword = await _repository.ResetPasswordAsync(getUser.user, getToken.userToken.Token, request.Password);
-                        if (resetPassword.Succeeded)
-                        {
-                            await _userTokenRepository.DeleteUserTokenAsync(getUser.user.Id, request.KeyCode);
-                            var (result, user) = await _repository.GetUserByIdAsync(getUser.user.Id);
-                            return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(user));
-                        }
-                        return responseDTO.WithErrors(getErros(resetPassword.Errors));
-                    }
-                    return responseDTO.WithErrors(getErros(getToken.result.Reasons));
-                }
-                return responseDTO.WithErrors(getErros(getUser.result.Reasons));
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var (result, user) = await _repository.GetUserByEmailAsync(request.Email);
+            if (!result.IsSuccess) return responseDTO.WithErrors(GetErros(result.Reasons));
+                
+            var (resultToken, userToken) = await _userTokenRepository.GetUserTokenAsync(user.Id, request.KeyCode);
+            if (!resultToken.IsSuccess) return responseDTO.WithErrors(GetErros(resultToken.Reasons));
+                
+            var resetPassword = await _repository.ResetPasswordAsync(user, userToken.Token, request.Password);
+            if (!resetPassword.Succeeded) return responseDTO.WithErrors(GetErros(resetPassword.Errors));
+
+            await _userTokenRepository.DeleteUserTokenAsync(user.Id, request.KeyCode);
+
+            var getUser = await _repository.GetUserByIdAsync(user.Id);
+            return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(getUser.user));
         }
 
         private async Task<ReadPersonDTO> CreateAssociatedPerson(PersonOnCreateUserDTO PersonDTO, ApplicationUser user)
@@ -419,7 +406,14 @@ namespace MKW.Services.AppServices.IdentityService
             return _mapper.Map<ReadPersonDTO>(person);
         }
 
-        private IEnumerable<string> getErros(IEnumerable<IdentityError> ErrorList)
+        private async Task<ReadPersonDTO> GetAssociatedPerson(ApplicationUser user)
+        {
+            var person = await _personRepository.GetByUserEmail(user.Email);
+            return _mapper.Map<ReadPersonDTO>(person);
+        }
+
+
+        private IEnumerable<string> GetErros(IEnumerable<IdentityError> ErrorList)
         {
             var errorList = new List<string>();
 
@@ -431,7 +425,7 @@ namespace MKW.Services.AppServices.IdentityService
             return errorList;
         }
 
-        private IEnumerable<string> getErros(List<IReason> ErrorList)
+        private IEnumerable<string> GetErros(List<IReason> ErrorList)
         {
             var errorList = new List<string>();
 
