@@ -1,10 +1,8 @@
 using AutoMapper;
 using FluentResults;
-using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
-using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using MKW.Domain.Interface.Services.BaseServices;
@@ -26,13 +24,33 @@ namespace MKW.Tests
 
         public void AccountService()
         {
-            this.userRepositoryMock = new Mock<IUserRepository>();
-            this.userTokenRepositoryMock = new Mock<IUserTokenRepository>();
-            this.personServiceMock = new Mock<IPersonService>();
-            this.emailServiceMock = new Mock<IEmailService>();
-            this.roleServiceMock = new Mock<IRoleService>();
-            this.mapperMock = new Mock<IMapper>();
-            this.accountService = new AccountService(
+            // this.userRepositoryMock = new Mock<IUserRepository>();
+            // this.userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+            // this.personServiceMock = new Mock<IPersonService>();
+            // this.emailServiceMock = new Mock<IEmailService>();
+            // this.roleServiceMock = new Mock<IRoleService>();
+            // this.mapperMock = new Mock<IMapper>();
+            // this.accountService = new AccountService(
+            //    userRepositoryMock.Object,
+            //    userTokenRepositoryMock.Object,
+            //    personServiceMock.Object,
+            //    emailServiceMock.Object,
+            //    roleServiceMock.Object,
+            //    mapperMock.Object
+            //    );
+        }
+
+        [Fact]
+        public async void TestGetUserByIdAsync()
+        {
+            // Arrange
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+            var personServiceMock = new Mock<IPersonService>();
+            var emailServiceMock = new Mock<IEmailService>();
+            var roleServiceMock = new Mock<IRoleService>();
+            var mapperMock = new Mock<IMapper>();
+            var accountService = new AccountService(
                userRepositoryMock.Object,
                userTokenRepositoryMock.Object,
                personServiceMock.Object,
@@ -40,12 +58,6 @@ namespace MKW.Tests
                roleServiceMock.Object,
                mapperMock.Object
                );
-        }
-
-        [Fact]
-        public async void TestGetUserByIdAsync()
-        {
-            // Arrange
             // criando um usuario pra ser retornado pelo repositorio
             var user = new ApplicationUser();
             user.Id = 1;
@@ -74,35 +86,39 @@ namespace MKW.Tests
             // act
             var response = await accountService.GetAccountByUserIdAsync(1);
 
-
             // assert
             Assert.True(response.IsSuccess);
             Assert.NotNull(response.Content);
             Assert.Equal(response.Content.FirstOrDefault(), readUserDTO);
 
-
-            // // Arrange
-            // var mock = new Mock<IAccountService>();
-
-            // res = new BaseResponseDTO<ReadUserDTO>(true);
-            // mock.Setup(m => m.GetAccountByUserIdAsync(It.IsAny<int>())).ReturnsAsync(res);
-
-            // // Act
-
-            // // Assert
-            // Assert.True(res.IsSuccess);
         }
 
         [Fact]
         public async void TestGetUserByUserNameAsync()
         {
-            //Arrange
+            // Arrange
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+            var personServiceMock = new Mock<IPersonService>();
+            var emailServiceMock = new Mock<IEmailService>();
+            var roleServiceMock = new Mock<IRoleService>();
+            var mapperMock = new Mock<IMapper>();
+            var accountService = new AccountService(
+               userRepositoryMock.Object,
+               userTokenRepositoryMock.Object,
+               personServiceMock.Object,
+               emailServiceMock.Object,
+               roleServiceMock.Object,
+               mapperMock.Object
+               );
+            // criando um usuario pra ser retornado pelo repositorio
             var user = new ApplicationUser();
             user.Id = 1;
             user.UserName = "not-batman";
             user.FirstName = "Bruce";
             user.LastName = "Wayne";
 
+            // definindo que o mock do repositorio vai retornar o user acima
             userRepositoryMock
                 .Setup(x => x.GetUserByUserNameAsync(user.UserName))
                 .ReturnsAsync((Result.Ok(), user));
@@ -120,48 +136,94 @@ namespace MKW.Tests
                 .Setup(x => x.Map<ReadUserDTO>(It.IsAny<ApplicationUser>()))
                 .Returns(readUserDTO);
 
+            // act
+            var response = await accountService.GetAccountByUserNameAsync(readUserDTO.userName);
 
-            // Act
-            var response = await accountService.GetAccountByUserIdAsync(1);
 
-
-            // Assert
+            // assert
             Assert.True(response.IsSuccess);
             Assert.NotNull(response.Content);
             Assert.Equal(response.Content.FirstOrDefault(), readUserDTO);
         }
 
-        [Fact]
-        public async void TestGetActiveUsersAsync(){
-            //Arrange
+        // [Fact]
+        // public async void TestGetActiveUsersAsync()
 
+        // [Fact]
+        // async void TestGetAllAccountsByRoleAsync()
+
+        // [Fact]
+        // async void TestGetAllAccountsByClaimAsync()
+
+        // [Fact]
+        // async void TestRegisterAccountAsync()
+
+        // [Fact]
+        // async void TestUpdateAccountAsync(int id, UpdateUserDTO userDTO)
+
+        // [Fact]
+        // async void TestDeleteAccountByIdAsync(int id)
+
+        // [Fact]
+        // async void TestDeleteAccountByUserNameAsync(string userName)
+
+        // [Fact]
+        // async void TestConfirmAccountEmailAsync(ConfirmAccountEmailDTO activationRequest)
+
+        [Fact]
+        async void TestCheckUserNameAsync()
+        {
+            // Arrange
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+            var personServiceMock = new Mock<IPersonService>();
+            var emailServiceMock = new Mock<IEmailService>();
+            var roleServiceMock = new Mock<IRoleService>();
+            var mapperMock = new Mock<IMapper>();
+            var accountService = new AccountService(
+               userRepositoryMock.Object,
+               userTokenRepositoryMock.Object,
+               personServiceMock.Object,
+               emailServiceMock.Object,
+               roleServiceMock.Object,
+               mapperMock.Object
+               );
             var user = new ApplicationUser();
             user.Id = 1;
-            user.UserName = "not-batman";
-            user.FirstName = "Bruce";
-            user.LastName = "Wayne";
+            user.UserName = "notbatman";
 
-            // userRepositoryMock
-            //     .Setup(x => x.GetActiveUsersAsync())
-            //     .ReturnsAsync((IEnumerable<ApplicationUser>)user);
+            userRepositoryMock
+                .Setup(x => x.GetUserByUserNameAsync(user.UserName))
+                .ReturnsAsync((Result.Ok(), user));
 
-            var readUserDTO = new ReadUserDTO();
-            readUserDTO.Id = 1;
-            readUserDTO.FirstName = user.FirstName;
-            readUserDTO.LastName = user.LastName;
-            readUserDTO.userName = user.UserName;
+            var checkUserNameDTO = new CheckUserNameDTO(false);
 
             mapperMock
-                .Setup(x => x.Map<IEnumerable<ReadUserDTO>>(It.IsAny<ApplicationUser>()))
-                .Returns((IEnumerable<ReadUserDTO>)readUserDTO);
+                .Setup(x => x.Map<CheckUserNameDTO>(It.IsAny<ApplicationUser>()))
+                .Returns(checkUserNameDTO);
 
-            
-             // Act
-            var response = await accountService.GetActiveAccountsAsync();
+            // act
+            var response = await accountService.CheckUserNameAsync("notbatman");
 
-            // Assert
-
-            Assert.True(true);
+            // assert
+            Assert.False(response.IsSuccess);
+            Assert.NotNull(response.Content);
         }
+
+        // [Fact]
+        // async void TestCheckEmailAsync()
+
+        // [Fact]
+        // async void TestRequestEmailKeycodeAsync()
+
+        // [Fact]
+        // async void TestRequestPasswordKeycodeAsync()
+
+        // [Fact]
+        // async Task<BaseResponseDTO<ReadUserDTO>> TestResetPasswordAsync()
+
+        // [Fact]
+        // async void TestGetAccountByTokenAsync()
     }
+
 }
