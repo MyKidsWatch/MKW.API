@@ -75,10 +75,10 @@ namespace MKW.Services.AppServices.IdentityService
                 var response = new BaseResponseDTO<ReadUserDTO>();
                 var (result, user) = await _repository.GetUserByIdAsync(id);
                 if (result.IsSuccess) return response.AddError("User not found!");
-                
+
                 var userResponse = _mapper.Map<ReadUserDTO>(user);
                 userResponse.AssociatedWithPerson = await GetAssociatedPerson(user);
-                return response.AddContent(userResponse);         
+                return response.AddContent(userResponse);
             }
             catch (Exception ex)
             {
@@ -153,7 +153,7 @@ namespace MKW.Services.AppServices.IdentityService
 
                 var claims = httpContext.User.Identity as ClaimsIdentity;
                 var userId = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-                
+
                 var (result, user) = await _repository.GetUserByIdAsync(int.Parse(userId));
                 if (result.IsFailed) return responseDTO.WithErrors(GetErros(result.Reasons));
 
@@ -183,7 +183,7 @@ namespace MKW.Services.AppServices.IdentityService
 
                 var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user);
                 if (!isEmailSent) userResponseDTO.WithErrors(emailErrors);
-                                
+
                 var userResponse = _mapper.Map<ReadUserDTO>(user);
                 userResponse.isConfirmEmailTokenSent = isEmailSent;
                 userResponse.AssociatedWithPerson = await CreateAssociatedPerson(userDTO.PersonDetails, user);
@@ -212,7 +212,7 @@ namespace MKW.Services.AppServices.IdentityService
                 var readUser = _mapper.Map<ReadUserDTO>(user);
                 readUser.AssociatedWithPerson = await UpdateAssociatedPerson(userDTO.PersonDetails, user);
                 if (user.EmailConfirmed) return response.AddContent(readUser);
-             
+
                 var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user);
                 if (!isEmailSent) response.WithErrors(emailErrors);
 
@@ -261,10 +261,10 @@ namespace MKW.Services.AppServices.IdentityService
 
                 var getToken = await _userTokenRepository.GetUserTokenAsync(activationRequest.UserId, activationRequest.Keycode);
                 if (getToken.result.IsFailed) return responseDTO.WithErrors(GetErros(getToken.result.Reasons));
-           
+
                 var confirmEmail = await _repository.ConfirmAccountEmailAsync(activationRequest.UserId, getToken.userToken.Token);
                 if (confirmEmail.IsFailed) return responseDTO.WithErrors(GetErros(confirmEmail.Reasons));
-               
+
                 var excludeToken = await _userTokenRepository.DeleteUserTokenAsync(activationRequest.UserId, activationRequest.Keycode);
                 var (result, user) = await _repository.GetUserByIdAsync(activationRequest.UserId);
                 return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(user));
@@ -371,10 +371,10 @@ namespace MKW.Services.AppServices.IdentityService
 
             var (result, user) = await _repository.GetUserByEmailAsync(request.Email);
             if (!result.IsSuccess) return responseDTO.WithErrors(GetErros(result.Reasons));
-                
+
             var (resultToken, userToken) = await _userTokenRepository.GetUserTokenAsync(user.Id, request.KeyCode);
             if (!resultToken.IsSuccess) return responseDTO.WithErrors(GetErros(resultToken.Reasons));
-                
+
             var resetPassword = await _repository.ResetPasswordAsync(user, userToken.Token, request.Password);
             if (!resetPassword.Succeeded) return responseDTO.WithErrors(GetErros(resetPassword.Errors));
 
