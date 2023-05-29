@@ -25,7 +25,7 @@ namespace MKW.Services.BaseServices
 
         public async Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count)
         {
-            var email = _httpContextAccessor.HttpContext?.User?.Claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
+            var email = _httpContextAccessor.HttpContext?.GetUserEmail();
             var user = await _personRepository.GetByEmail(email);
             if (user == null) throw new NotFoundException("User not found.");
 
@@ -45,7 +45,7 @@ namespace MKW.Services.BaseServices
 
         public async Task<List<Content>?> GetRecomendations(List<Review> reviews)
         {
-            List<Content> recommendedMovies = reviews?.Select(x => x.Content).DistinctBy(x => x.Id).ToList();
+            var recommendedMovies = reviews?.Select(x => x.Content).DistinctBy(x => x.Id).ToList();
 
             return recommendedMovies;
         }
@@ -63,25 +63,25 @@ namespace MKW.Services.BaseServices
 
         private double GetChildrenSimilarity(Person user, Person reviewer)
         {
-            var minSimilarities = user.Children.SelectAsync(async x => await GetMinSimilarity(x, reviewer.Children.ToList())).Result;
+            var minSimilarities = user.Children.Where(x => x.Active).Select(x => GetMinSimilarity(x, reviewer.Children.Where(x => x.Active).ToList()));
 
             return minSimilarities.Sum() / minSimilarities.Count();
         }
 
-        private async Task<double> GetMinSimilarity(PersonChild child, List<PersonChild> children)
+        private double GetMinSimilarity(PersonChild child, List<PersonChild> children)
         {
-            return children.SelectAsync(async x => await GetChildSimilarity(child, x)).Result.Min();
+            return children.Select(x => GetChildSimilarity(child, x)).Min();
         }
 
-        private async Task<double> GetChildSimilarity(PersonChild child, PersonChild reviewerChild)
+        private double GetChildSimilarity(PersonChild child, PersonChild reviewerChild)
         {
             double genderValue = child.GenderId == reviewerChild.GenderId ? 0 : 1;
             double ageValue = Math.Abs(child.AgeRange.GetMeanAge() - reviewerChild.AgeRange.GetMeanAge());
 
-            return await GetSimilarity(genderValue, ageValue);
+            return GetSimilarity(genderValue, ageValue);
         }
 
-        private async Task<double> GetSimilarity(params double[] parameters)
+        private double GetSimilarity(params double[] parameters)
         {
             return 1 / (1 + parameters.Sum());
         }

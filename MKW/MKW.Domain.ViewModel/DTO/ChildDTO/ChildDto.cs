@@ -6,7 +6,7 @@ namespace MKW.Domain.Dto.DTO.ChildDTO
     {
         public ChildDto()
         {
-                
+
         }
         public int Id { get; set; }
         public int AgeRangeId { get; set; }
