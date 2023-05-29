@@ -18,18 +18,18 @@ namespace MKW.Services.BaseServices
         public void sendConfirmAccountEmail(string[] To, string subject, string keycode)
         {
             var message = new MessageConfirmEmailDTO(To, subject, keycode);
-            var emailMessage = createMessageBody(message);
-            sendEmailMessage(emailMessage);
+            var emailMessage = CreateMessageBody(message);
+            SendEmailMessage(emailMessage);
         }
 
         public void sendRecoveryPasswordEmail(string[] To, string subject, string keycode)
         {
             var message = new MessageRecoveryPasswordDTO(To, subject, keycode);
-            var emailMessage = createMessageBody(message);
-            sendEmailMessage(emailMessage);
+            var emailMessage = CreateMessageBody(message);
+            SendEmailMessage(emailMessage);
         }
 
-        private MimeMessage createMessageBody(BaseMessageEmailDTO message)
+        private MimeMessage CreateMessageBody(BaseMessageEmailDTO message)
         {
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress("MyKidsWatch", _emailOptions.From));
@@ -42,7 +42,7 @@ namespace MKW.Services.BaseServices
 
             return emailMessage;
         }
-        private void sendEmailMessage(MimeMessage emailMessage)
+        private void SendEmailMessage(MimeMessage emailMessage)
         {
             using (var client = new SmtpClient())
             {

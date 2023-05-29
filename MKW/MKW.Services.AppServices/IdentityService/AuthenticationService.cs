@@ -69,7 +69,7 @@ namespace MKW.Services.AppServices.IdentityService
                     return new BaseResponseDTO<TokenDTO>().WithErrors(GetErros());
                 }
 
-                return responseDTO.AddContent(await generateToken(user));
+                return responseDTO.AddContent(await GenerateToken(user));
             }
             catch (Exception ex)
             {
@@ -86,7 +86,7 @@ namespace MKW.Services.AppServices.IdentityService
 
                 if (checkPasswordResult.Succeeded)
                 {
-                    return LoginResponseDTO.AddContent(await generateToken(applicationUser));
+                    return LoginResponseDTO.AddContent(await GenerateToken(applicationUser));
                 }
 
                 return LoginResponseDTO.WithErrors(GetErros(checkPasswordResult));
@@ -97,7 +97,7 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        private async Task<TokenDTO> generateToken(ApplicationUser applicationUser)
+        private async Task<TokenDTO> GenerateToken(ApplicationUser applicationUser)
         {
             var userRoles = await _signInManager.UserManager.GetRolesAsync(applicationUser);
             var userClaims = await _signInManager.UserManager.GetClaimsAsync(applicationUser);

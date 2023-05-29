@@ -23,21 +23,20 @@ namespace MKW.Services.BaseServices
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<BaseResponseDTO<IEnumerable<ReviewDto>>> GetReviewsByUserId(int page, int count)
+        public async Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count)
         {
             var email = _httpContextAccessor.HttpContext?.User?.Claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
             var user = await _personRepository.GetByEmail(email);
             if (user == null) throw new NotFoundException("User not found.");
 
-            var reviews = (await GetRelevantReviews(user.Id, page, count)).Select(x => new ReviewDto(x));
+            var reviews = (await GetRelevantReviews(user, page, count)).DistinctBy(x => x.Content.ExternalId).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
 
-            return new BaseResponseDTO<IEnumerable<ReviewDto>>().AddContent(reviews);
+            return new BaseResponseDTO<ReviewDto>().AddContent(reviews);
         }
 
-        public async Task<List<Review>> GetRelevantReviews(int id, int page, int count)
+        public async Task<List<Review>> GetRelevantReviews(Person user, int page, int count)
         {
-            var user = await _personRepository.GetById(id);
             List<Person> similarUsers = await GetSimilarUsers(user!);
             List<Review> reviews = GetReviews(similarUsers);
 
@@ -46,7 +45,7 @@ namespace MKW.Services.BaseServices
 
         public async Task<List<Content>?> GetRecomendations(List<Review> reviews)
         {
-            List<Content> recommendedMovies = reviews?.Select(x => x.Content).ToList();
+            List<Content> recommendedMovies = reviews?.Select(x => x.Content).DistinctBy(x => x.Id).ToList();
 
             return recommendedMovies;
         }
@@ -64,25 +63,25 @@ namespace MKW.Services.BaseServices
 
         private double GetChildrenSimilarity(Person user, Person reviewer)
         {
-            var minSimilarities = user.Children.Select(x => GetMinSimilarity(x, reviewer.Children.ToList()));
+            var minSimilarities = user.Children.SelectAsync(async x => await GetMinSimilarity(x, reviewer.Children.ToList())).Result;
 
             return minSimilarities.Sum() / minSimilarities.Count();
         }
 
-        private double GetMinSimilarity(PersonChild child, List<PersonChild> children)
+        private async Task<double> GetMinSimilarity(PersonChild child, List<PersonChild> children)
         {
-            return children.Select(x => GetChildSimilarity(child, x)).Min();
+            return children.SelectAsync(async x => await GetChildSimilarity(child, x)).Result.Min();
         }
 
-        private double GetChildSimilarity(PersonChild child, PersonChild reviewerChild)
+        private async Task<double> GetChildSimilarity(PersonChild child, PersonChild reviewerChild)
         {
             double genderValue = child.GenderId == reviewerChild.GenderId ? 0 : 1;
             double ageValue = Math.Abs(child.AgeRange.GetMeanAge() - reviewerChild.AgeRange.GetMeanAge());
 
-            return GetSimilarity(genderValue, ageValue);
+            return await GetSimilarity(genderValue, ageValue);
         }
 
-        private double GetSimilarity(params double[] parameters)
+        private async Task<double> GetSimilarity(params double[] parameters)
         {
             return 1 / (1 + parameters.Sum());
         }
