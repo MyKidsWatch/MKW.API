@@ -7,8 +7,13 @@ namespace MKW.Services.AppServices
 {
     public class PersonService : BaseService<Person>, IPersonService
     {
+        private readonly IPersonRepository _personRepository;
+
         public PersonService(IPersonRepository personRepository) : base(personRepository)
         {
+            _personRepository = personRepository;
         }
+
+        public Task<Person> GetByUserEmail(string email) => _personRepository.GetByEmail(email);
     }
 }

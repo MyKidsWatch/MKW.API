@@ -123,6 +123,18 @@ namespace MKW.API.Controllers.Identity
             return register.IsSuccess ? CreatedAtAction(nameof(GetAccountByUserId), new { Id = register.Content[0].Id }, register) : BadRequest(register);
         }
 
+        [HttpPatch("user/update")]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> UpdateAccount([FromBody] UpdateUserDTO createUserRequest)
+        {
+            var update = await _service.UpdateAccountAsync(HttpContext, createUserRequest);
+            return update.IsSuccess ? NoContent() : BadRequest(update);
+        }
+
         [HttpPost("password/keycode")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ResponseGenerateKeycodeDTO>))]
