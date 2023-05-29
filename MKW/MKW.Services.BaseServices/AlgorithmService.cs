@@ -56,16 +56,16 @@ namespace MKW.Services.BaseServices
 
             var users = await _personRepository.GetActive();
 
-            similarUsers = users?.OrderBy(x => GetChildrenSimilarity(user, x)).ToList();
+            similarUsers = users?.Where(x => x.Children.Any(y => y.Active)).OrderBy(x => GetChildrenSimilarity(user, x)).ToList();
 
             return similarUsers!;
         }
 
         private double GetChildrenSimilarity(Person user, Person reviewer)
         {
-            var minSimilarities = user.Children.Where(x => x.Active).Select(x => GetMinSimilarity(x, reviewer.Children.Where(x => x.Active).ToList()));
-
-            return minSimilarities.Sum() / minSimilarities.Count();
+            var minSimilarities = user.Children.Where(x => x.Active).Select(x => GetMinSimilarity(x, reviewer.Children.Where(x => x.Active).ToList())).ToList();
+            if (minSimilarities == null) return 1;
+            return minSimilarities.Sum() / minSimilarities.Count;
         }
 
         private double GetMinSimilarity(PersonChild child, List<PersonChild> children)
