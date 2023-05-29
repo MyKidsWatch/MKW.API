@@ -250,8 +250,44 @@ namespace MKW.Tests
             Assert.NotNull(response.Content);
         }
 
-        // [Fact]
-        // async void TestRequestEmailKeycodeAsync()
+        [Fact]
+        async void TestRequestEmailKeycodeAsync(){
+            // Arrange
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+            var personServiceMock = new Mock<IPersonService>();
+            var emailServiceMock = new Mock<IEmailService>();
+            var roleServiceMock = new Mock<IRoleService>();
+            var mapperMock = new Mock<IMapper>();
+            var accountService = new AccountService(
+               userRepositoryMock.Object,
+               userTokenRepositoryMock.Object,
+               personServiceMock.Object,
+               emailServiceMock.Object,
+               roleServiceMock.Object,
+               mapperMock.Object
+               );
+            var user = new ApplicationUser();
+            user.Id = 1;
+            user.Email = "josedasilva@email.com";
+
+            userRepositoryMock
+                .Setup(x => x.GetUserByEmailAsync(user.Email))
+                .ReturnsAsync((Result.Ok(), user));
+
+            var responseGeneratedKeycode = new ResponseGenerateKeycodeDTO(true);
+
+            mapperMock
+                .Setup(x => x.Map<CheckEmailDTO>(It.IsAny<ApplicationUser>()))
+                .Returns(responseGeneratedKeycode);
+
+            // act
+            var response = await accountService.RequestEmailKeycodeAsync();
+
+            // assert
+            Assert.False(response.IsSuccess);
+            Assert.NotNull(response.Content);
+        }
 
         // [Fact]
         // async void TestRequestPasswordKeycodeAsync()
