@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MKW.Domain.Dto.DTO.PersonDTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
 {
@@ -21,5 +22,8 @@ namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
 
         [Phone(ErrorMessage = "The field {0} is invalid")]
         public string? PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is required")]
+        public PersonOnCreateUserDTO PersonDetails { get; set; }
     }
 }

@@ -196,19 +196,6 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        private async Task<(bool isEmailSent, IEnumerable<string> emailErrors)> SendActiveEmailKeycodeAsync (ApplicationUser user) 
-        {
-            var (result, token) = await _repository.GenerateEmailConfirmationTokenAsync(user);
-            if (!result.IsSuccess) return (false, GetErros(result.Reasons));
-          
-            var (resultKeycode, keycodeValue) = await _userTokenRepository.AddUserTokenAsync(user.Id, token);
-            if (!resultKeycode.IsSuccess) return (false, GetErros(resultKeycode.Reasons));
-
-            _emailService.sendConfirmAccountEmail(new[] { user.Email }, "Código de Ativacão", keycodeValue.ToString());
-
-            return (true, GetErros(result.Reasons));
-        }
-
         public async Task<BaseResponseDTO<ReadUserDTO>> UpdateAccountAsync(HttpContext httpContext, UpdateUserDTO userDTO)
         {
             try
@@ -223,6 +210,7 @@ namespace MKW.Services.AppServices.IdentityService
                 if (!result.Succeeded) return response.WithErrors(GetErros(result.Errors));
 
                 var readUser = _mapper.Map<ReadUserDTO>(user);
+                readUser.AssociatedWithPerson = await UpdateAssociatedPerson(userDTO.PersonDetails, user);
                 if (user.EmailConfirmed) return response.AddContent(readUser);
              
                 var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user);
@@ -396,6 +384,19 @@ namespace MKW.Services.AppServices.IdentityService
             return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(getUser.user));
         }
 
+        private async Task<(bool isEmailSent, IEnumerable<string> emailErrors)> SendActiveEmailKeycodeAsync(ApplicationUser user)
+        {
+            var (result, token) = await _repository.GenerateEmailConfirmationTokenAsync(user);
+            if (!result.IsSuccess) return (false, GetErros(result.Reasons));
+
+            var (resultKeycode, keycodeValue) = await _userTokenRepository.AddUserTokenAsync(user.Id, token);
+            if (!resultKeycode.IsSuccess) return (false, GetErros(resultKeycode.Reasons));
+
+            _emailService.sendConfirmAccountEmail(new[] { user.Email }, "Código de Ativacão", keycodeValue.ToString());
+
+            return (true, GetErros(result.Reasons));
+        }
+
         private async Task<ReadPersonDTO> CreateAssociatedPerson(PersonOnCreateUserDTO PersonDTO, ApplicationUser user)
         {
             var personDetails = _mapper.Map<Person>(PersonDTO);
@@ -412,6 +413,16 @@ namespace MKW.Services.AppServices.IdentityService
             return _mapper.Map<ReadPersonDTO>(person);
         }
 
+        private async Task<ReadPersonDTO> UpdateAssociatedPerson(PersonOnCreateUserDTO PersonDTO, ApplicationUser user)
+        {
+            var personEntity = await _personRepository.GetByUserEmail(user.Email);
+
+            personEntity.BirthDate = PersonDTO.BirthDate;
+            personEntity.GenderId = PersonDTO.GenderId;
+
+            var personUpdated = await _personRepository.Update(personEntity);
+            return _mapper.Map<ReadPersonDTO>(personUpdated);
+        }
 
         private IEnumerable<string> GetErros(IEnumerable<IdentityError> ErrorList)
         {
