@@ -46,7 +46,7 @@ namespace MKW.Services.BaseServices
 
         public async Task<List<Content>?> GetRecomendations(List<Review> reviews)
         {
-            List<Content> recommendedMovies = reviews?.Select(x => x.Content).ToList();
+            List<Content> recommendedMovies = reviews?.Select(x => x.Content).DistinctBy(x => x.Id).ToList();
 
             return recommendedMovies;
         }
