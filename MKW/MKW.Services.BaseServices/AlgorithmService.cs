@@ -16,11 +16,27 @@ namespace MKW.Services.BaseServices
     {
         private readonly IPersonRepository _personRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ITmdbService _tmdbService;
 
-        public AlgorithmService(IPersonRepository personRepository, IHttpContextAccessor httpContextAccessor)
+        public AlgorithmService(IPersonRepository personRepository, IHttpContextAccessor httpContextAccessor, ITmdbService tmdbService)
         {
             _personRepository = personRepository;
             _httpContextAccessor = httpContextAccessor;
+            _tmdbService = tmdbService;
+        }
+
+        public async Task<BaseResponseDTO<object>> GetRelevantMovies(int page, int count, string language)
+        {
+            var email = _httpContextAccessor.HttpContext?.GetUserEmail();
+            var user = await _personRepository.GetByEmail(email);
+            if (user == null) throw new NotFoundException("User not found.");
+
+            var reviews = (await GetRelevantReviews(user, page, count)).DistinctBy(x => x.Content.ExternalId).Select(x => new ReviewDto(x));
+            if (reviews == null) throw new NotFoundException("No reviews were found.");
+
+            var movies = reviews.Select(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language).Result);
+
+            return new BaseResponseDTO<object>().AddContent(movies);
         }
 
         public async Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count)
@@ -92,7 +108,7 @@ namespace MKW.Services.BaseServices
 
             //adicionar lógica das reviews mais relevantes aqui
 
-            return reviews.Take(500).ToList().Shuffle().Take(100).ToList();
+            return reviews.Take(500).ToList().Take(100).ToList();
         }
     }
 }
