@@ -58,17 +58,20 @@ namespace MKW.Data.Repository.IdentityAggregate
 
             if (user.FirstName is not null) userEntity.FirstName = user.FirstName;
             if (user.LastName is not null) userEntity.LastName = user.LastName;
+
             if (user.UserName is not null)
             {
                 userEntity.UserName = user.UserName;
                 userEntity.NormalizedUserName = user.UserName.ToUpper();
             }
+
             if (user.PhoneNumber is not null)
             {
                 userEntity.PhoneNumber = user.PhoneNumber;
                 userEntity.PhoneNumberConfirmed = false;
             }
-            if (user.Email is not null) 
+
+            if ((user.Email != null) && (userEntity.Email.ToUpper() != user.Email.ToUpper())) 
             {
                 userEntity.Email = user.Email;
                 userEntity.NormalizedEmail = user.Email.ToUpper();
