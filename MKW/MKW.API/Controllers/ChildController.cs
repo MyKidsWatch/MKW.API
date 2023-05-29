@@ -45,7 +45,7 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<string>))]
         public async Task<ActionResult<BaseResponseDTO<ChildDto>>> UpdateChild([FromBody] ChildDto createChildDto) => Ok(await _childService.UpdateChild(createChildDto));
 
-        [HttpDelete("{childId:int}")]
+        [HttpDelete("{id:int}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ChildDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<string>))]
