@@ -14,9 +14,6 @@ namespace MKW.Services.AppServices
             _personRepository = personRepository;
         }
 
-        public Task<Person> GetByUserEmail(string email)
-        {
-            return _personRepository.GetByEmail(email);
-        }
+        public Task<Person> GetByUserEmail(string email) => _personRepository.GetByEmail(email);
     }
 }
