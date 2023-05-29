@@ -29,7 +29,7 @@ namespace MKW.Services.BaseServices
             var user = await _personRepository.GetByEmail(email);
             if (user == null) throw new NotFoundException("User not found.");
 
-            var reviews = (await GetRelevantReviews(user.Id, page, count)).Select(x => new ReviewDto(x));
+            var reviews = (await GetRelevantReviews(user.Id, page, count)).DistinctBy(x => x.Content.ExternalId).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
 
             return new BaseResponseDTO<ReviewDto>().AddContent(reviews);
@@ -46,7 +46,7 @@ namespace MKW.Services.BaseServices
 
         public async Task<List<Content>?> GetRecomendations(List<Review> reviews)
         {
-            List<Content> recommendedMovies = reviews?.Select(x => x.Content).ToList();
+            List<Content> recommendedMovies = reviews?.Select(x => x.Content).DistinctBy(x => x.Id).ToList();
 
             return recommendedMovies;
         }
