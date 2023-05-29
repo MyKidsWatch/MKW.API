@@ -71,7 +71,7 @@ namespace MKW.Data.Repository.IdentityAggregate
                 userEntity.PhoneNumberConfirmed = false;
             }
 
-            if ((user.Email != null) && (userEntity.Email.ToUpper() != user.Email.ToUpper())) 
+            if ((user.Email != null) && (userEntity.Email.ToUpper() != user.Email.ToUpper()))
             {
                 userEntity.Email = user.Email;
                 userEntity.NormalizedEmail = user.Email.ToUpper();
