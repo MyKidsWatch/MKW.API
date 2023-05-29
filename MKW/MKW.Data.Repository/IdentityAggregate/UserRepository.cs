@@ -52,9 +52,32 @@ namespace MKW.Data.Repository.IdentityAggregate
 
         public async Task<(IdentityResult, ApplicationUser)> UpdateUserAsync(int id, ApplicationUser user)
         {
-            user.AlterDate = DateTime.Now;
-            var updateResult = await _userManager.UpdateAsync(user);
-            return (updateResult, user);
+
+            var userEntity = await _userManager.FindByIdAsync(id.ToString());
+            if (userEntity is null) return (IdentityResult.Failed(), null);
+
+            if (user.FirstName is not null) userEntity.FirstName = user.FirstName;
+            if (user.LastName is not null) userEntity.LastName = user.LastName;
+            if (user.UserName is not null)
+            {
+                userEntity.UserName = user.UserName;
+                userEntity.NormalizedUserName = user.UserName.ToUpper();
+            }
+            if (user.PhoneNumber is not null)
+            {
+                userEntity.PhoneNumber = user.PhoneNumber;
+                userEntity.PhoneNumberConfirmed = false;
+            }
+            if (user.Email is not null) 
+            {
+                userEntity.Email = user.Email;
+                userEntity.NormalizedEmail = user.Email.ToUpper();
+                userEntity.EmailConfirmed = false;
+            }
+
+            userEntity.AlterDate = DateTime.Now;
+            var updateResult = await _userManager.UpdateAsync(userEntity);
+            return (updateResult, userEntity);
         }
 
         public async Task<IdentityResult> DeleteUserByIdAsync(int id)

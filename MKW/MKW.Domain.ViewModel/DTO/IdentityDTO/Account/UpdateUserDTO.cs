@@ -6,7 +6,7 @@ namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
     {
         [MaxLength(12, ErrorMessage = "Max length 12")]
         [MinLength(3, ErrorMessage = "Min length 2")]
-        public string? userName { get; set; }
+        public string? UserName { get; set; }
 
         [MaxLength(50, ErrorMessage = "Max length 50")]
         [MinLength(3, ErrorMessage = "Min length 3")]
