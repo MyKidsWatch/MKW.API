@@ -23,6 +23,7 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReviewDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<IEnumerable<ReviewDto>>>> AlgorithmTest([FromQuery] int page, [FromQuery] int count) => Ok(await _algorithmService.GetRecommended(page, count));
+        public async Task<ActionResult<BaseResponseDTO<IEnumerable<ReviewDto>>>> AlgorithmTest([FromQuery] int page = 1, [FromQuery] int count = 20)
+            => Ok(await _algorithmService.GetRecommended(page, count));
     }
 }
