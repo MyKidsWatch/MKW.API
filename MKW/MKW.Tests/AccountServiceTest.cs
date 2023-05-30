@@ -197,8 +197,41 @@ namespace MKW.Tests
             Assert.Null(response.Content);
         }
 
-        // [Fact]
-        // async void TestDeleteAccountByUserNameAsync(string userName)
+        [Fact]
+        async void TestDeleteAccountByUserNameAsync(){
+            // Arrange
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+            var personServiceMock = new Mock<IPersonService>();
+            var emailServiceMock = new Mock<IEmailService>();
+            var roleServiceMock = new Mock<IRoleService>();
+            var mapperMock = new Mock<IMapper>();
+            var accountService = new AccountService(
+               userRepositoryMock.Object,
+               userTokenRepositoryMock.Object,
+               personServiceMock.Object,
+               emailServiceMock.Object,
+               roleServiceMock.Object,
+               mapperMock.Object
+               );
+
+            var user = new ApplicationUser();
+            user.Id = 1;
+            user.UserName = "not-batman";
+
+            var result = IdentityResult.Success;            
+
+            userRepositoryMock
+                .Setup(x => x.DeleteUserByUserNameAsync(user.UserName))
+                .ReturnsAsync(result);
+
+            // act
+            var response = await accountService.DeleteAccountByUserNameAsync(user.UserName);
+
+            // assert
+            Assert.True(response.IsSuccess);
+            Assert.Null(response.Content);
+        }
 
         // [Fact]
         // async void TestConfirmAccountEmailAsync(ConfirmAccountEmailDTO activationRequest)
