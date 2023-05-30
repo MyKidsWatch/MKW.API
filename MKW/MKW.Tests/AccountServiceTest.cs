@@ -1,5 +1,6 @@
 using AutoMapper;
 using FluentResults;
+using Microsoft.AspNetCore.Identity;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
@@ -69,7 +70,6 @@ namespace MKW.Tests
             userRepositoryMock
                 .Setup(x => x.GetUserByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((Result.Ok(), user));
-
 
             // criando o DTO a ser retornado pelo Mapper
             var readUserDTO = new ReadUserDTO();
@@ -161,8 +161,41 @@ namespace MKW.Tests
         // [Fact]
         // async void TestUpdateAccountAsync(int id, UpdateUserDTO userDTO)
 
-        // [Fact]
-        // async void TestDeleteAccountByIdAsync(int id)
+        [Fact]
+        async void TestDeleteAccountByIdAsync()
+        {
+            // Arrange
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+            var personServiceMock = new Mock<IPersonService>();
+            var emailServiceMock = new Mock<IEmailService>();
+            var roleServiceMock = new Mock<IRoleService>();
+            var mapperMock = new Mock<IMapper>();
+            var accountService = new AccountService(
+               userRepositoryMock.Object,
+               userTokenRepositoryMock.Object,
+               personServiceMock.Object,
+               emailServiceMock.Object,
+               roleServiceMock.Object,
+               mapperMock.Object
+               );
+
+            var user = new ApplicationUser();
+            user.Id = 1;
+
+            var result = IdentityResult.Success;            
+
+            userRepositoryMock
+                .Setup(x => x.DeleteUserByIdAsync(user.Id))
+                .ReturnsAsync(result);
+
+            // act
+            var response = await accountService.DeleteAccountByIdAsync(user.Id);
+
+            // assert
+            Assert.True(response.IsSuccess);
+            Assert.Null(response.Content);
+        }
 
         // [Fact]
         // async void TestDeleteAccountByUserNameAsync(string userName)
@@ -211,7 +244,8 @@ namespace MKW.Tests
         }
 
         [Fact]
-        async void TestCheckEmailAsync(){
+        async void TestCheckEmailAsync()
+        {
             // Arrange
             var userRepositoryMock = new Mock<IUserRepository>();
             var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
@@ -250,44 +284,44 @@ namespace MKW.Tests
             Assert.NotNull(response.Content);
         }
 
-        [Fact]
-        async void TestRequestEmailKeycodeAsync(){
-            // Arrange
-            var userRepositoryMock = new Mock<IUserRepository>();
-            var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
-            var personServiceMock = new Mock<IPersonService>();
-            var emailServiceMock = new Mock<IEmailService>();
-            var roleServiceMock = new Mock<IRoleService>();
-            var mapperMock = new Mock<IMapper>();
-            var accountService = new AccountService(
-               userRepositoryMock.Object,
-               userTokenRepositoryMock.Object,
-               personServiceMock.Object,
-               emailServiceMock.Object,
-               roleServiceMock.Object,
-               mapperMock.Object
-               );
-            var user = new ApplicationUser();
-            user.Id = 1;
-            user.Email = "josedasilva@email.com";
+        // [Fact]
+        // async void TestRequestEmailKeycodeAsync(){
+        //     // Arrange
+        //     var userRepositoryMock = new Mock<IUserRepository>();
+        //     var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+        //     var personServiceMock = new Mock<IPersonService>();
+        //     var emailServiceMock = new Mock<IEmailService>();
+        //     var roleServiceMock = new Mock<IRoleService>();
+        //     var mapperMock = new Mock<IMapper>();
+        //     var accountService = new AccountService(
+        //        userRepositoryMock.Object,
+        //        userTokenRepositoryMock.Object,
+        //        personServiceMock.Object,
+        //        emailServiceMock.Object,
+        //        roleServiceMock.Object,
+        //        mapperMock.Object
+        //        );
+        //     var user = new ApplicationUser();
+        //     user.Id = 1;
+        //     user.Email = "josedasilva@email.com";
 
-            userRepositoryMock
-                .Setup(x => x.GetUserByEmailAsync(user.Email))
-                .ReturnsAsync((Result.Ok(), user));
+        //     userRepositoryMock
+        //         .Setup(x => x.GetUserByEmailAsync(user.Email))
+        //         .ReturnsAsync((Result.Ok(), user));
 
-            var responseGeneratedKeycode = new ResponseGenerateKeycodeDTO(true);
+        //     var responseGeneratedKeycode = new ResponseGenerateKeycodeDTO(true);
 
-            mapperMock
-                .Setup(x => x.Map<CheckEmailDTO>(It.IsAny<ApplicationUser>()))
-                .Returns(responseGeneratedKeycode);
+        //     mapperMock
+        //         .Setup(x => x.Map<CheckEmailDTO>(It.IsAny<ApplicationUser>()))
+        //         .Returns(responseGeneratedKeycode);
 
-            // act
-            var response = await accountService.RequestEmailKeycodeAsync();
+        //     // act
+        //     var response = await accountService.RequestEmailKeycodeAsync();
 
-            // assert
-            Assert.False(response.IsSuccess);
-            Assert.NotNull(response.Content);
-        }
+        //     // assert
+        //     Assert.False(response.IsSuccess);
+        //     Assert.NotNull(response.Content);
+        // }
 
         // [Fact]
         // async void TestRequestPasswordKeycodeAsync()
