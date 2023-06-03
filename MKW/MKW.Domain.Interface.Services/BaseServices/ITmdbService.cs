@@ -4,7 +4,7 @@ namespace MKW.Domain.Interface.Services.BaseServices
 {
     public interface ITmdbService
     {
-        Task<BaseResponseDTO<object>> GetMovie(int movieId, string language);
+        Task<object> GetMovie(int movieId, string language);
         Task<BaseResponseDTO<object>> GetMovieByName(string name, string language);
     }
 }
