@@ -31,7 +31,7 @@ namespace MKW.Services.BaseServices
             var user = await _personRepository.GetByEmail(email);
             if (user == null) throw new NotFoundException("User not found.");
 
-            if(!user.Children.Any())
+            if(!user.Children.Select(x => x.Active).Any())
             {
                 return new BaseResponseDTO<object>();
             }
