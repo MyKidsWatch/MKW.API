@@ -31,6 +31,11 @@ namespace MKW.Services.BaseServices
             var user = await _personRepository.GetByEmail(email);
             if (user == null) throw new NotFoundException("User not found.");
 
+            if(!user.Children.Any())
+            {
+                return new BaseResponseDTO<object>();
+            }
+
             var reviews = (await GetRelevantReviews(user, page, count)).DistinctBy(x => x.Content.ExternalId).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
 
