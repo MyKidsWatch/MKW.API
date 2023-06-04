@@ -77,7 +77,7 @@ namespace MKW.Services.BaseServices
 
             var users = await _personRepository.GetActive();
 
-            similarUsers = users?.Where(x => x.Children.Any(y => y.Active)).OrderByDescending(x => GetChildrenSimilarity(user, x)).ToList();
+            similarUsers = users?.Where(x => x.Children.Any(y => y.Active) && x.Reviews.Any()).OrderByDescending(x => GetChildrenSimilarity(user, x)).ToList();
 
             return similarUsers!;
         }
@@ -111,9 +111,14 @@ namespace MKW.Services.BaseServices
         {
             var reviews = reviewers.SelectMany(x => x.Reviews).ToList();
 
-            //adicionar lógica das reviews mais relevantes aqui
+            reviews = OrderMostRelevant(reviews);
 
             return reviews.Take(100).ToList().Shuffle().ToList();
+        }
+
+        public List<Review> OrderMostRelevant(List<Review> reviews)
+        {
+            return reviews;
         }
     }
 }
