@@ -110,7 +110,8 @@ namespace MKW.Services.BaseServices
         {
             var reviews = reviewers.SelectMany(x => x.Reviews).ToList();
 
-            return OrderMostRelevant(reviews);
+            //return OrderMostRelevant(reviews);
+            return reviews.Take(100).ToList().Shuffle().ToList();
         }
 
         public List<Review> OrderMostRelevant(List<Review> reviews)
