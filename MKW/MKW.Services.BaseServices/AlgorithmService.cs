@@ -8,6 +8,7 @@ using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Exceptions;
 using MKW.Domain.Utility.Extensions;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace MKW.Services.BaseServices
@@ -31,7 +32,7 @@ namespace MKW.Services.BaseServices
             var user = await _personRepository.GetByEmail(email);
             if (user == null) throw new NotFoundException("User not found.");
 
-            if(!user.Children.Select(x => x.Active).Any())
+            if (!user.Children.Select(x => x.Active).Any())
             {
                 return new BaseResponseDTO<object>();
             }
@@ -111,14 +112,18 @@ namespace MKW.Services.BaseServices
         {
             var reviews = reviewers.SelectMany(x => x.Reviews).ToList();
 
-            reviews = OrderMostRelevant(reviews);
-
-            return reviews.Take(100).ToList().Shuffle().ToList();
+            return OrderMostRelevant(reviews);
         }
 
         public List<Review> OrderMostRelevant(List<Review> reviews)
         {
-            return reviews;
+            return reviews
+                .OrderBy(x => (int)(reviews.IndexOf(x) / 3))
+                .ThenByDescending(x => reviews.Count(y => y.ContentId == x.ContentId))
+                .DistinctBy(x => x.ContentId)
+                .ToList();
         }
+
+
     }
 }
