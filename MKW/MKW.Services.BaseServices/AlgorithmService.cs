@@ -8,6 +8,7 @@ using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Exceptions;
 using MKW.Domain.Utility.Extensions;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace MKW.Services.BaseServices
@@ -27,16 +28,19 @@ namespace MKW.Services.BaseServices
 
         public async Task<BaseResponseDTO<object>> GetRelevantMovies(int page, int count, string language)
         {
+            var responseDTO = new BaseResponseDTO<object>();
             var email = _httpContextAccessor.HttpContext?.GetUserEmail();
             var user = await _personRepository.GetByEmail(email);
             if (user == null) throw new NotFoundException("User not found.");
+
+            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<object>());
 
             var reviews = (await GetRelevantReviews(user, page, count)).DistinctBy(x => x.Content.ExternalId).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
 
             var movies = reviews.Select(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language).Result);
 
-            return new BaseResponseDTO<object>().AddContent(movies);
+            return responseDTO.AddContent(movies);
         }
 
         public async Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count)
@@ -122,5 +126,7 @@ namespace MKW.Services.BaseServices
                 .Take(100)
                 .ToList();
         }
+
+
     }
 }

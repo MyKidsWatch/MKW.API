@@ -21,6 +21,7 @@ namespace MKW.Services.BaseServices
         public async Task<object> GetMovie(int movieId, string language)
         {
             return (await _client.GetFromJsonAsync<object>($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}&language={language}"))!;
+
         }
 
         public async Task<BaseResponseDTO<object>> GetMovieByName(string name, string language)
