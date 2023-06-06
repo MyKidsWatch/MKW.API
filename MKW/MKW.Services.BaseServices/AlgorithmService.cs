@@ -35,7 +35,7 @@ namespace MKW.Services.BaseServices
 
             if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<object>());
 
-            var reviews = (await GetRelevantReviews(user, page, count)).DistinctBy(x => x.Content.ExternalId).Select(x => new ReviewDto(x));
+            var reviews = (await GetRelevantReviews(user, page, count)).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
 
             var movies = reviews.Select(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language).Result);
@@ -111,7 +111,6 @@ namespace MKW.Services.BaseServices
             var reviews = reviewers.SelectMany(x => x.Reviews).ToList();
 
             return OrderMostRelevant(reviews);
-            //return reviews.Take(100).ToList().Shuffle().ToList();
         }
 
         public List<Review> OrderMostRelevant(List<Review> reviews)
