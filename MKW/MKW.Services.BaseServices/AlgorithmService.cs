@@ -111,14 +111,19 @@ namespace MKW.Services.BaseServices
             var reviews = reviewers.SelectMany(x => x.Reviews).ToList();
 
             return OrderMostRelevant(reviews);
+            //return reviews.Take(100).ToList().Shuffle().ToList();
         }
 
         public List<Review> OrderMostRelevant(List<Review> reviews)
         {
             return reviews
-                .OrderBy(x => (int)(reviews.IndexOf(x) / 3))
+                .Take(150)
+                .OrderBy(x => (int)(reviews.IndexOf(x) / 5))
                 .ThenByDescending(x => reviews.Count(y => y.ContentId == x.ContentId))
                 .DistinctBy(x => x.ContentId)
+                .GroupBy(x => reviews.IndexOf(x) / 5)
+                .SelectMany(x => x.ToList().Shuffle())
+                .Take(100)
                 .ToList();
         }
 
