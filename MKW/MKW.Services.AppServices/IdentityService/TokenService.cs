@@ -61,7 +61,7 @@ namespace MKW.Services.AppServices.IdentityService
             return (accessClaims, refreshClaims);
         }
 
-        private (JwtSecurityToken accessToken, JwtSecurityToken refreshToken, DateTime accessExpiration, DateTime refreshExpiration) 
+        private (JwtSecurityToken accessToken, JwtSecurityToken refreshToken, DateTime accessExpiration, DateTime refreshExpiration)
             GenerateSecurityToken(IEnumerable<Claim> accessClaims, IEnumerable<Claim> refreshClaims)
         {
             var accessTokenExpiration = DateTime.Now.AddSeconds(_jwtOptions.AccessTokenExpiration);

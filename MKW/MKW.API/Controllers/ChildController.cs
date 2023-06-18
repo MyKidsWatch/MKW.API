@@ -50,9 +50,9 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ChildDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<string>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<string>))]
-        public async Task<ActionResult> DeleteChild([FromRoute] int childId)
+        public async Task<ActionResult> DeleteChild([FromRoute] int id)
         {
-            await _childService.DeleteChild(childId);
+            await _childService.DeleteChild(id);
             return NoContent();
         }
     }

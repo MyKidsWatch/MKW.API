@@ -8,6 +8,7 @@ using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Exceptions;
 using MKW.Domain.Utility.Extensions;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace MKW.Services.BaseServices
@@ -16,28 +17,46 @@ namespace MKW.Services.BaseServices
     {
         private readonly IPersonRepository _personRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ITmdbService _tmdbService;
 
-        public AlgorithmService(IPersonRepository personRepository, IHttpContextAccessor httpContextAccessor)
+        public AlgorithmService(IPersonRepository personRepository, IHttpContextAccessor httpContextAccessor, ITmdbService tmdbService)
         {
             _personRepository = personRepository;
             _httpContextAccessor = httpContextAccessor;
+            _tmdbService = tmdbService;
+        }
+
+        public async Task<BaseResponseDTO<object>> GetRelevantMovies(int page, int count, string language)
+        {
+            var responseDTO = new BaseResponseDTO<object>();
+            var email = _httpContextAccessor.HttpContext?.GetUserEmail();
+            var user = await _personRepository.GetByEmail(email);
+            if (user == null) throw new NotFoundException("User not found.");
+
+            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<object>());
+
+            var reviews = (await GetRelevantReviews(user, page, count)).Select(x => new ReviewDto(x));
+            if (reviews == null) throw new NotFoundException("No reviews were found.");
+
+            var movies = reviews.Select(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language).Result);
+
+            return responseDTO.AddContent(movies);
         }
 
         public async Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count)
         {
-            var email = _httpContextAccessor.HttpContext?.User?.Claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
+            var email = _httpContextAccessor.HttpContext?.GetUserEmail();
             var user = await _personRepository.GetByEmail(email);
             if (user == null) throw new NotFoundException("User not found.");
 
-            var reviews = (await GetRelevantReviews(user.Id, page, count)).Select(x => new ReviewDto(x));
+            var reviews = (await GetRelevantReviews(user, page, count)).DistinctBy(x => x.Content.ExternalId).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
 
             return new BaseResponseDTO<ReviewDto>().AddContent(reviews);
         }
 
-        public async Task<List<Review>> GetRelevantReviews(int id, int page, int count)
+        public async Task<List<Review>> GetRelevantReviews(Person user, int page, int count)
         {
-            var user = await _personRepository.GetById(id);
             List<Person> similarUsers = await GetSimilarUsers(user!);
             List<Review> reviews = GetReviews(similarUsers);
 
@@ -46,7 +65,7 @@ namespace MKW.Services.BaseServices
 
         public async Task<List<Content>?> GetRecomendations(List<Review> reviews)
         {
-            List<Content> recommendedMovies = reviews?.Select(x => x.Content).ToList();
+            var recommendedMovies = reviews?.Select(x => x.Content).DistinctBy(x => x.Id).ToList();
 
             return recommendedMovies;
         }
@@ -57,16 +76,16 @@ namespace MKW.Services.BaseServices
 
             var users = await _personRepository.GetActive();
 
-            similarUsers = users?.OrderBy(x => GetChildrenSimilarity(user, x)).ToList();
+            similarUsers = users?.Where(x => x.Children.Any(y => y.Active) && x.Reviews.Any()).OrderByDescending(x => GetChildrenSimilarity(user, x)).ToList();
 
             return similarUsers!;
         }
 
         private double GetChildrenSimilarity(Person user, Person reviewer)
         {
-            var minSimilarities = user.Children.Select(x => GetMinSimilarity(x, reviewer.Children.ToList()));
-
-            return minSimilarities.Sum() / minSimilarities.Count();
+            var minSimilarities = user.Children.Where(x => x.Active).Select(x => GetMinSimilarity(x, reviewer.Children.Where(x => x.Active).ToList())).ToList();
+            if (minSimilarities == null) return 1;
+            return minSimilarities.Sum() / minSimilarities.Count;
         }
 
         private double GetMinSimilarity(PersonChild child, List<PersonChild> children)
@@ -91,9 +110,22 @@ namespace MKW.Services.BaseServices
         {
             var reviews = reviewers.SelectMany(x => x.Reviews).ToList();
 
-            //adicionar lógica das reviews mais relevantes aqui
-
-            return reviews.Take(500).ToList().Shuffle().Take(100).ToList();
+            return OrderMostRelevant(reviews);
         }
+
+        public List<Review> OrderMostRelevant(List<Review> reviews)
+        {
+            return reviews
+                .Take(150)
+                .OrderBy(x => (int)(reviews.IndexOf(x) / 5))
+                .ThenByDescending(x => reviews.Count(y => y.ContentId == x.ContentId))
+                .DistinctBy(x => x.ContentId)
+                .GroupBy(x => reviews.IndexOf(x) / 5)
+                .SelectMany(x => x.ToList().Shuffle())
+                .Take(100)
+                .ToList();
+        }
+
+
     }
 }

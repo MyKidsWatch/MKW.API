@@ -3,15 +3,15 @@
     public class ApplicationToken
     {
         public ApplicationToken(
-            string accessTokenValue, 
-            string refreshTokenValue, 
-            DateTime accessExpiration, 
+            string accessTokenValue,
+            string refreshTokenValue,
+            DateTime accessExpiration,
             DateTime refreshExpiration)
         {
             AccessToken = accessTokenValue;
             RefreshToken = refreshTokenValue;
             AccessTokenExpiration = accessExpiration;
-            RefreshTokenExpiration = refreshExpiration; 
+            RefreshTokenExpiration = refreshExpiration;
         }
         public string AccessToken { get; }
         public DateTime AccessTokenExpiration { get; set; }
