@@ -1,10 +1,11 @@
 ﻿using MKW.Domain.Dto.DTO.Base;
+using MKW.Domain.Dto.DTO.TmdbDTO;
 
 namespace MKW.Domain.Interface.Services.BaseServices
 {
     public interface ITmdbService
     {
-        Task<object> GetMovie(int movieId, string language);
+        Task<MovieDTO> GetMovie(int movieId, string language);
         Task<BaseResponseDTO<object>> GetMovieByName(string name, string language);
     }
 }

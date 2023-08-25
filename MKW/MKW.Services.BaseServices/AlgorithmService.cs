@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MKW.Domain.Dto.DTO.Base;
+using MKW.Domain.Dto.DTO.ContentDTO;
 using MKW.Domain.Dto.DTO.ReviewDTO;
+using MKW.Domain.Dto.DTO.TmdbDTO;
 using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
@@ -8,8 +10,6 @@ using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Exceptions;
 using MKW.Domain.Utility.Extensions;
-using System.Collections.Generic;
-using System.Security.Claims;
 
 namespace MKW.Services.BaseServices
 {
@@ -26,14 +26,29 @@ namespace MKW.Services.BaseServices
             _tmdbService = tmdbService;
         }
 
-        public async Task<BaseResponseDTO<object>> GetRelevantMovies(int page, int count, string language)
+        public async Task<BaseResponseDTO<ReviewDetailsDto>> GetRelevantReviews(int page, int count, string language)
         {
-            var responseDTO = new BaseResponseDTO<object>();
+            var responseDTO = new BaseResponseDTO<ReviewDetailsDto>();
             var email = _httpContextAccessor.HttpContext?.GetUserEmail();
             var user = await _personRepository.GetByEmail(email);
             if (user == null) throw new NotFoundException("User not found.");
 
-            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<object>());
+            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<ReviewDetailsDto>());
+
+            var reviews = (await GetRelevantReviews(user, page, count)).Select(x => GetReviewDetails(x, language));
+            if (reviews == null) throw new NotFoundException("No reviews were found.");
+
+            return responseDTO.AddContent(reviews);
+        }
+
+        public async Task<BaseResponseDTO<MovieDTO>> GetRelevantMovies(int page, int count, string language)
+        {
+            var responseDTO = new BaseResponseDTO<MovieDTO>();
+            var email = _httpContextAccessor.HttpContext?.GetUserEmail();
+            var user = await _personRepository.GetByEmail(email);
+            if (user == null) throw new NotFoundException("User not found.");
+
+            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<MovieDTO>());
 
             var reviews = (await GetRelevantReviews(user, page, count)).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
@@ -113,7 +128,7 @@ namespace MKW.Services.BaseServices
             return OrderMostRelevant(reviews);
         }
 
-        public List<Review> OrderMostRelevant(List<Review> reviews)
+        private List<Review> OrderMostRelevant(List<Review> reviews)
         {
             return reviews
                 .Take(150)
@@ -126,6 +141,21 @@ namespace MKW.Services.BaseServices
                 .ToList();
         }
 
+        private ReviewDetailsDto GetReviewDetails(Review review, string language)
+        {
+            var detailedReview = new ReviewDetailsDto(review);
 
+            var movie = _tmdbService.GetMovie(Int32.Parse(review.Content.ExternalId), language).Result;
+
+            detailedReview.Content = new ReadContentDTO()
+            {
+                Id = review.Id,
+                Name = movie.Title,
+                ImageUrl = movie.PosterPath,
+                PlatformCategory = review.Content.PlatformCategoryId
+            };
+
+            return detailedReview;
+        }
     }
 }

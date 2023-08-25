@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MKW.Domain.Dto.DTO.Base;
+using MKW.Domain.Dto.DTO.TmdbDTO;
 using MKW.Domain.Interface.Services.BaseServices;
 using System.Net.Http.Json;
 
@@ -18,11 +19,11 @@ namespace MKW.Services.BaseServices
             _baseUrl = configuration["API:TMDB:url"]!;
         }
 
-        public async Task<object> GetMovie(int movieId, string language)
+        public async Task<MovieDTO> GetMovie(int movieId, string language)
         {
             try
             {
-                return (await _client.GetFromJsonAsync<object>($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}&language={language}"))!;
+                return (await _client.GetFromJsonAsync<MovieDTO>($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}&language={language}&include_adult=false"))!;
             }
             catch (Exception)
             {
@@ -33,8 +34,8 @@ namespace MKW.Services.BaseServices
 
         public async Task<BaseResponseDTO<object>> GetMovieByName(string name, string language)
         {
-            var objects = (await _client.GetFromJsonAsync<object>($"{_baseUrl}/search/movie?query={name}&language={language}&api_key={_apiKey}"))!;
-            return new BaseResponseDTO<object>().AddContent(objects);
+            var movies = (await _client.GetFromJsonAsync<object>($"{_baseUrl}/search/movie?query={name}&language={language}&api_key={_apiKey}&include_adult=false"))!;
+            return new BaseResponseDTO<object>().AddContent(movies);
         }
     }
 }
