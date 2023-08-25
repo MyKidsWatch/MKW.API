@@ -37,6 +37,10 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
                 .HasColumnName("TEXT");
 
             modelBuilder.Entity<ReviewDetails>()
+                .Property(x => x.Stars)
+                .HasColumnName("STARS");
+
+            modelBuilder.Entity<ReviewDetails>()
                 .Property(x => x.CreateDate)
                 .HasColumnName("CREATE_DATE");
 

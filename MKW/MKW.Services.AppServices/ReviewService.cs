@@ -10,5 +10,10 @@ namespace MKW.Services.AppServices
         public ReviewService(IReviewRepository reviewRepository) : base(reviewRepository)
         {
         }
+
+        public async Task<object> CreateReview()
+        {
+            return null;
+        }
     }
 }
