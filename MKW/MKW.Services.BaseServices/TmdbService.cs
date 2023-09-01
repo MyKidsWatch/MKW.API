@@ -19,7 +19,7 @@ namespace MKW.Services.BaseServices
             _baseUrl = configuration["API:TMDB:url"]!;
         }
 
-        public async Task<MovieDTO> GetMovie(int movieId, string language)
+        public async Task<MovieDTO> GetMovie(int movieId, string language = "pt-br")
         {
             try
             {
@@ -32,7 +32,7 @@ namespace MKW.Services.BaseServices
             }
         }
 
-        public async Task<BaseResponseDTO<object>> GetMovieByName(string name, string language)
+        public async Task<BaseResponseDTO<object>> GetMovieByName(string name, string language = "pt-br")
         {
             var movies = (await _client.GetFromJsonAsync<object>($"{_baseUrl}/search/movie?query={name}&language={language}&api_key={_apiKey}&include_adult=false"))!;
             return new BaseResponseDTO<object>().AddContent(movies);
