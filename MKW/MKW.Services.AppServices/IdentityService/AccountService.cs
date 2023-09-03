@@ -74,7 +74,7 @@ namespace MKW.Services.AppServices.IdentityService
             {
                 var response = new BaseResponseDTO<ReadUserDTO>();
                 var (result, user) = await _repository.GetUserByIdAsync(id);
-                if (result.IsSuccess) return response.AddError("User not found!");
+                if (result.IsFailed) return response.AddError("User not found!");
 
                 var userResponse = _mapper.Map<ReadUserDTO>(user);
                 userResponse.AssociatedWithPerson = await GetAssociatedPerson(user);
