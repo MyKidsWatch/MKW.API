@@ -30,9 +30,9 @@ namespace MKW.API.Controllers
         [HttpGet]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<SearchDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<object>>> GetMovieByName([FromQuery] string name, [FromQuery] string? language = "pt-BR") => Ok(await _tmdbService.GetMovieByName(name, language));
+        public async Task<ActionResult<BaseResponseDTO<SearchDTO>>> GetMovieByName([FromQuery] string name, [FromQuery] string? language = "pt-BR") => Ok(await _tmdbService.GetMovieByName(name, language));
     }
 }
