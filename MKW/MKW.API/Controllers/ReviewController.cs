@@ -20,6 +20,15 @@ namespace MKW.API.Controllers
             _algorithmService = algorithmService;
         }
 
+        [HttpGet("{id:int}")]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReviewDetailsDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<ReviewDetailsDto>>> GetReviews([FromRoute] int id, [FromQuery] string language = "pt-BR")
+            => Ok(await _reviewService.GetReviewById(id, language));
+
         [HttpGet]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
