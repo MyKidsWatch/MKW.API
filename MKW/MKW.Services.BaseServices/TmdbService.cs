@@ -2,6 +2,7 @@
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.TmdbDTO;
 using MKW.Domain.Interface.Services.BaseServices;
+using Newtonsoft.Json;
 using System.Net.Http.Json;
 
 namespace MKW.Services.BaseServices
@@ -27,15 +28,14 @@ namespace MKW.Services.BaseServices
             }
             catch (Exception)
             {
-
                 return null;
             }
         }
 
-        public async Task<BaseResponseDTO<object>> GetMovieByName(string name, string language = "pt-br")
+        public async Task<BaseResponseDTO<SearchDTO>> GetMovieByName(string name, string language = "pt-br")
         {
-            var movies = (await _client.GetFromJsonAsync<object>($"{_baseUrl}/search/movie?query={name}&language={language}&api_key={_apiKey}&include_adult=false"))!;
-            return new BaseResponseDTO<object>().AddContent(movies);
+            var movies = (await _client.GetFromJsonAsync<SearchDTO>($"{_baseUrl}/search/movie?query={name}&language={language}&api_key={_apiKey}&include_adult=false"))!;
+            return new BaseResponseDTO<SearchDTO>().AddContent(movies);
         }
     }
 }

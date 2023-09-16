@@ -1,19 +1,20 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MKW.Domain.Dto.DTO.TmdbDTO
 {
     public class ProductionCompanyDTO
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public int? Id { get; set; }
 
-        [JsonProperty("logo_path")]
+        [JsonPropertyName("logo_path")]
         public string LogoPath { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("origin_country")]
+        [JsonPropertyName("origin_country")]
         public string OriginCountry { get; set; }
     }
 }
