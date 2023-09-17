@@ -6,6 +6,8 @@ namespace MKW.Domain.Dto.DTO.PersonDTO
     {
         public int Id { get; set; }
         public int UserId { get; set; }
+        public string Username { get; set; }
+        public string Name { get; set; }
         public string? ImageURL { get; set; }
         public DateTime BirthDate { get; set; }
         public DateTime CreateDate { get; set; }
@@ -21,6 +23,8 @@ namespace MKW.Domain.Dto.DTO.PersonDTO
         public ReadPersonDTO(Person person) : this()
         {
             Id = person.Id;
+            Username = person.User.UserName;
+            Name = $"{person.User.FirstName} {person.User.LastName}";
             UserId = person.UserId;
             ImageURL = person.ImageURL;
             BirthDate = person.BirthDate;
