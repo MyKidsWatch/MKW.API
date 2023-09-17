@@ -46,5 +46,14 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReviewDetailsDto>>> AddReview([FromBody] CreateReviewDto model)
             => Ok(await _reviewService.CreateReview(model));
+
+        [HttpPut]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReviewDetailsDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<ReviewDetailsDto>>> UpdateReview([FromBody] UpdateReviewDto model)
+            => Ok(await _reviewService.UpdateReview(model));
     }
 }

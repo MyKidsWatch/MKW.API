@@ -1,4 +1,5 @@
 ﻿using MKW.Domain.Entities.Base;
+using MKW.Domain.Utility.Exceptions;
 
 namespace MKW.Domain.Entities.ReviewAggregate
 {

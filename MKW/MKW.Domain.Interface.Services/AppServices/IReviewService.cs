@@ -8,6 +8,7 @@ namespace MKW.Domain.Interface.Services.AppServices
     {
         Task<BaseResponseDTO<ReviewDetailsDto>> GetReviewById(int id, string? language = "pt-br");
         Task<BaseResponseDTO<ReviewDetailsDto>> CreateReview(CreateReviewDto model);
+        Task<BaseResponseDTO<ReviewDetailsDto>> UpdateReview(UpdateReviewDto model);
         Task<ReviewDetailsDto> GetReviewDetails(Review review, string? language = "pt-br");
     }
 }
