@@ -1,11 +1,6 @@
 ﻿using MKW.Domain.Dto.DTO.PersonDTO;
 using MKW.Domain.Dto.DTO.ReviewDTO;
 using MKW.Domain.Entities.ReviewAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.Domain.Dto.DTO.AwardDTO
 {
@@ -18,7 +13,7 @@ namespace MKW.Domain.Dto.DTO.AwardDTO
 
         public GivenAwardDto()
         {
-                
+
         }
 
         public GivenAwardDto(AwardPerson givenAward) : this()
