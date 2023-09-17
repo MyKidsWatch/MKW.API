@@ -12,6 +12,7 @@ namespace MKW.IoC.Modules
         {
             #region AppServices
             builder.AddTransient<IAgeRangeService, AgeRangeService>();
+            builder.AddTransient<IAwardService, AwardService>();
             builder.AddTransient<ICommentService, CommentService>();
             builder.AddTransient<IContentService, ContentService>();
             builder.AddTransient<IChildService, ChildService>();
