@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.ReviewDTO;
+using MKW.Domain.Dto.DTO.TmdbDTO;
 using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Repository.UserAggregate;
+using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Exceptions;
 using MKW.Domain.Utility.Extensions;
@@ -16,22 +18,40 @@ namespace MKW.Services.BaseServices
         private readonly IPersonRepository _personRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ITmdbService _tmdbService;
+        private readonly IReviewService _reviewService;
+        private readonly IPersonService _personService;
 
-        public AlgorithmService(IPersonRepository personRepository, IHttpContextAccessor httpContextAccessor, ITmdbService tmdbService)
+        public AlgorithmService(
+            IPersonRepository personRepository,
+            IHttpContextAccessor httpContextAccessor,
+            ITmdbService tmdbService,
+            IReviewService reviewService,
+            IPersonService personService)
         {
             _personRepository = personRepository;
             _httpContextAccessor = httpContextAccessor;
             _tmdbService = tmdbService;
+            _reviewService = reviewService;
+            _personService = personService;
         }
 
-        public async Task<BaseResponseDTO<object>> GetRelevantMovies(int page, int count, string language)
+        public async Task<BaseResponseDTO<ReviewDetailsDto>> GetRelevantReviews(int page, int count, string language)
         {
-            var responseDTO = new BaseResponseDTO<object>();
-            var email = _httpContextAccessor.HttpContext?.GetUserEmail();
-            var user = await _personRepository.GetByEmail(email);
-            if (user == null) throw new NotFoundException("User not found.");
+            var responseDTO = new BaseResponseDTO<ReviewDetailsDto>();
+            var user = await _personService.GetUser();
+            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<ReviewDetailsDto>());
 
-            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<object>());
+            var reviews = (await GetRelevantReviews(user, page, count)).Select(x => _reviewService.GetReviewDetails(x, language).Result);
+            return reviews == null ? throw new NotFoundException("No reviews were found.") : responseDTO.AddContent(reviews);
+        }
+
+        public async Task<BaseResponseDTO<MovieDTO>> GetRelevantMovies(int page, int count, string language)
+        {
+            var responseDTO = new BaseResponseDTO<MovieDTO>();
+            var user = await _personService.GetUser();
+
+
+            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<MovieDTO>());
 
             var reviews = (await GetRelevantReviews(user, page, count)).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
@@ -43,9 +63,7 @@ namespace MKW.Services.BaseServices
 
         public async Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count)
         {
-            var email = _httpContextAccessor.HttpContext?.GetUserEmail();
-            var user = await _personRepository.GetByEmail(email);
-            if (user == null) throw new NotFoundException("User not found.");
+            var user = await _personService.GetUser();
 
             var reviews = (await GetRelevantReviews(user, page, count)).DistinctBy(x => x.Content.ExternalId).Select(x => new ReviewDto(x));
             if (reviews == null) throw new NotFoundException("No reviews were found.");
@@ -111,7 +129,7 @@ namespace MKW.Services.BaseServices
             return OrderMostRelevant(reviews);
         }
 
-        public List<Review> OrderMostRelevant(List<Review> reviews)
+        private List<Review> OrderMostRelevant(List<Review> reviews)
         {
             return reviews
                 .Take(150)
@@ -123,7 +141,5 @@ namespace MKW.Services.BaseServices
                 .Take(100)
                 .ToList();
         }
-
-
     }
 }
