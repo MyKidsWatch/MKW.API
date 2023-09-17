@@ -1,4 +1,5 @@
-﻿using MKW.Domain.Dto.DTO.ContentDTO;
+﻿using MKW.Domain.Dto.DTO.CommentDTO;
+using MKW.Domain.Dto.DTO.ContentDTO;
 using MKW.Domain.Dto.DTO.PersonDTO;
 using MKW.Domain.Entities.ReviewAggregate;
 
@@ -9,6 +10,7 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
         public int Id { get; set; }
         public ReadPersonDTO Person { get; set; }
         public ReadContentDTO Content { get; set; }
+        public IEnumerable<CommentDetailsDto>? Comments { get; set; }
         public int GoldenAwards { get; set; }
         public int SilverAwards { get; set; }
         public int BronzeAwards { get; set; }
@@ -28,7 +30,8 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
         {
             Id = review.Id;
             Person = new ReadPersonDTO(review.Person);
-            CommentsQuantity = review.Comments?.Count ?? 0;
+            Comments = review.Comments?.Where(x => x.Active).Select(x => new CommentDetailsDto(x));
+            CommentsQuantity = review.Comments?.Where(x => x.Active).Count() ?? 0;
             CreateDate = review.CreateDate;
             Edited = review.ReviewDetails.Count > 1;
 
