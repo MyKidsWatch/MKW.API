@@ -2,7 +2,6 @@
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.TmdbDTO;
 using MKW.Domain.Interface.Services.BaseServices;
-using Newtonsoft.Json;
 using System.Net.Http.Json;
 
 namespace MKW.Services.BaseServices
