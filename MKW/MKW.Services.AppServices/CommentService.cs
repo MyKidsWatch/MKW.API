@@ -7,7 +7,7 @@ using MKW.Domain.Utility.Exceptions;
 
 namespace MKW.Services.AppServices
 {
-    public class CommentService
+    public class CommentService : ICommentService
     {
         private readonly ICommentDetailsRepository _commentDetailsRepository;
         private readonly ICommentRepository _commentRepository;
@@ -47,6 +47,33 @@ namespace MKW.Services.AppServices
             var comment = new Comment()
             {
                 ReviewId = review.Id,
+                PersonId = person.Id
+            };
+
+            comment = await _commentRepository.Add(comment);
+
+            var commentDetails = new CommentDetails()
+            {
+                CommentId = comment.Id,
+                Text = model.Text
+            };
+
+            await _commentDetailsRepository.Add(commentDetails);
+
+            return responseDTO.AddContent(new CommentDetailsDto(comment));
+        }
+
+        public async Task<BaseResponseDTO<CommentDetailsDto>> AnswerComment(AnswerCommentDto model)
+        {
+            var responseDTO = new BaseResponseDTO<CommentDetailsDto>();
+            var parentComment = await _commentRepository.GetById(model.CommentId) ?? throw new NotFoundException("Review not found.");
+            var person = await _personService.GetUser();
+            if (String.IsNullOrEmpty(model.Text)) throw new BadRequestException("Text required");
+            if (!parentComment.IsFirstLevel()) throw new BadRequestException("Answering second-level comments is not allowed");
+
+            var comment = new Comment()
+            {
+                ParentCommentId = parentComment.Id,
                 PersonId = person.Id
             };
 

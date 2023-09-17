@@ -30,8 +30,8 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
         {
             Id = review.Id;
             Person = new ReadPersonDTO(review.Person);
-            Comments = review.Comments?.Select(x => new CommentDetailsDto(x));
-            CommentsQuantity = review.Comments?.Count ?? 0;
+            Comments = review.Comments?.Where(x => x.Active).Select(x => new CommentDetailsDto(x));
+            CommentsQuantity = review.Comments?.Where(x => x.Active).Count() ?? 0;
             CreateDate = review.CreateDate;
             Edited = review.ReviewDetails.Count > 1;
 

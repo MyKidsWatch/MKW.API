@@ -22,8 +22,8 @@ namespace MKW.Domain.Dto.DTO.CommentDTO
         {
             Id = comment.Id;
             Person = new ReadPersonDTO(comment.Person);
-            Answers = comment.Answers?.Select(x => new CommentDetailsDto(x));
-            AnswersQuantity = comment.Answers?.Count ?? 0;
+            Answers = comment.Answers?.Where(x => x.Active).Select(x => new CommentDetailsDto(x));
+            AnswersQuantity = comment.Answers?.Where(x => x.Active).Count() ?? 0;
             CreateDate = comment.CreateDate;
             Edited = comment.CommentDetails.Count > 1;
 
