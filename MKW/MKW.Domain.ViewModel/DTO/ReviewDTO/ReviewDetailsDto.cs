@@ -39,6 +39,10 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
             Title = latestVersion?.Title ?? "";
             Text = latestVersion?.Text ?? "";
             Stars = latestVersion?.Stars ?? 0;
+
+            GoldenAwards = review.Awards?.Where(x => x.Award.Name == "Gold").Count() ?? 0;
+            SilverAwards = review.Awards?.Where(x => x.Award.Name == "Silver").Count() ?? 0;
+            BronzeAwards = review.Awards?.Where(x => x.Award.Name == "Bronze").Count() ?? 0;
         }
     }
 }
