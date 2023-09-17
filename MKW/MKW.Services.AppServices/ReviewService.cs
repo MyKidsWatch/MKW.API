@@ -40,6 +40,8 @@ namespace MKW.Services.AppServices
         {
             var responseDTO = new BaseResponseDTO<ReviewDetailsDto>();
             var review = await _reviewRepository.GetById(id) ?? throw new NotFoundException("Review not found.");
+            if (!review.Active) throw new NotFoundException("Review not found.");
+
             return responseDTO.AddContent(await GetReviewDetails(review, language));
         }
 
@@ -99,6 +101,16 @@ namespace MKW.Services.AppServices
             await _reviewDetailsRepository.Add(reviewDetails);
 
             return responseDTO.AddContent(await GetReviewDetails(review));
+        }
+
+        public async Task DeleteReview(int reviewId)
+        {
+            var review = await _reviewRepository.GetById(reviewId) ?? throw new NotFoundException("Review not found.");
+            var person = await _personService.GetUser();
+
+            if (person.Id != review.PersonId) throw new BadRequestException("User isn't reviewer");
+
+            await _reviewRepository.Delete(review);
         }
 
         public async Task<ReviewDetailsDto> GetReviewDetails(Review review, string? language = "pt-br")

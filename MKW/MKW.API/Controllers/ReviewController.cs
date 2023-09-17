@@ -55,5 +55,17 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReviewDetailsDto>>> UpdateReview([FromBody] UpdateReviewDto model)
             => Ok(await _reviewService.UpdateReview(model));
+
+        [HttpDelete("{id:int}")]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<ReviewDetailsDto>>> UpdateReview([FromRoute] int id)
+        {
+            await _reviewService.DeleteReview(id);
+            return NoContent();
+        }
     }
 }
