@@ -7,8 +7,6 @@ using MKW.Domain.Interface.Repository.ReviewAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Exceptions;
-using static System.Net.Mime.MediaTypeNames;
-using System.Collections.Generic;
 
 namespace MKW.Services.AppServices
 {
