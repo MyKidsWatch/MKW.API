@@ -3,6 +3,7 @@ using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Services.AppServices;
 using MKW.Services.BaseServices;
+using MKW.Services.ProfileService;
 
 namespace MKW.IoC.Modules
 {
@@ -18,6 +19,7 @@ namespace MKW.IoC.Modules
             builder.AddTransient<IReviewService, ReviewService>();
             builder.AddTransient<IGenderService, GenderService>();
             builder.AddTransient<IPersonService, PersonService>();
+            builder.AddTransient<IProfileService, ProfileService>();
             #endregion
             #region BaseServices
             builder.AddTransient<ITmdbService, TmdbService>();
