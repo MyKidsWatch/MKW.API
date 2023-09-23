@@ -29,13 +29,14 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReadProfileDTO>>> GetProfile(string username) => Ok(await _profileService.GetProfileByUsername(username));
         
-        [HttpGet()]
+
+        [HttpGet("search/{username}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<IEnumerable<ReadProfileDTO>>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReadProfileDTO>>> GetAllProfilesByUsername([FromQuery]string username) => 
+        public async Task<ActionResult<BaseResponseDTO<ReadProfileDTO>>> GetAllProfilesByUsername(string username) => 
             Ok(await _profileService.GetAllProfilesByUsername(username));
     }
 }
