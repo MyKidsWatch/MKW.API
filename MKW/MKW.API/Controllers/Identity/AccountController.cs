@@ -135,7 +135,7 @@ namespace MKW.API.Controllers.Identity
             return update.IsSuccess ? NoContent() : BadRequest(update);
         }
 
-        [HttpPost("password/keycode")]
+        [HttpPost("password-keycode")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ResponseGenerateKeycodeDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
@@ -146,7 +146,7 @@ namespace MKW.API.Controllers.Identity
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [HttpPost("email/keycode")]
+        [HttpPost("email-keycode")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
