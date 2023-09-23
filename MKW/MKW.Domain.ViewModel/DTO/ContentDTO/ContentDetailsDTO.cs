@@ -1,5 +1,6 @@
 ﻿using MKW.Domain.Dto.DTO.PlatformDTO;
-using MKW.Domain.Dto.DTO.ReviewDTO;
+using MKW.Domain.Dto.DTO.TmdbDTO;
+using MKW.Domain.Entities.ContentAggregate;
 
 namespace MKW.Domain.Dto.DTO.ContentDTO
 {
@@ -15,5 +16,35 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
         public string? ImageUrl { get; set; }
         public List<string>? Tags { get; set; }
         public int? ReviewCount { get; set; }
+
+        public ContentDetailsDTO()
+        {
+
+        }
+
+        public ContentDetailsDTO(Content? content) : this()
+        {
+            if (content == null) return;
+
+            AddContent(content);
+        }
+
+        public ContentDetailsDTO(MovieDTO movie, Content? content = null) : this(content)
+        {
+            ExternalId = $"{movie.Id}";
+            Name = movie.Title;
+            Description = movie.Overview;
+            ReleaseDate = DateTime.Parse(movie.ReleaseDate);
+            AverageRating = movie.VoteAverage;
+            ImageUrl = movie.PosterPath;
+            Tags = movie.Genres?.Select(x => x.Name).ToList();
+        }
+
+        public ContentDetailsDTO AddContent(Content content)
+        {
+            Id = content.Id;
+            ReviewCount = content.Reviews.Count;
+            return this;
+        }
     }
 }

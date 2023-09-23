@@ -17,8 +17,4 @@
     <ProjectReference Include="..\MKW.Domain.ViewModel\MKW.Domain.Dto.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Plugins\" />
-  </ItemGroup>
-
 </Project>
