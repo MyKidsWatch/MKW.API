@@ -10,7 +10,7 @@ namespace MKW.Domain.Dto.DTO.PersonDTO
         public string? ImageURL { get; set; }
         public string? Name { get; set; }
         public string? Username { get; set; }
-        public ICollection<ChildDto>? Childrens { get; set; }
-        public ICollection<ReadAwardDTO>? Awards { get; set; }
+        public ICollection<ChildDto> Childrens { get; set; }
+        public ICollection<ReadAwardDTO> Awards { get; set; }
     }
 }
