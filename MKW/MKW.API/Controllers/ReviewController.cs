@@ -20,7 +20,7 @@ namespace MKW.API.Controllers
             _algorithmService = algorithmService;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("id/{id:int}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReviewDetailsDto>))]
