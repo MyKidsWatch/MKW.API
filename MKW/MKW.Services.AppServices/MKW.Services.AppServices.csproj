@@ -21,6 +21,7 @@
     <ProjectReference Include="..\MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj" />
     <ProjectReference Include="..\MKW.Domain.Interface.Services\MKW.Domain.Interface.Services.csproj" />
     <ProjectReference Include="..\MKW.Domain.Utility\MKW.Domain.Utility.csproj" />
+    <ProjectReference Include="..\MKW.Services.Plugin\MKW.Services.Plugin.csproj" />
   </ItemGroup>
 
 </Project>

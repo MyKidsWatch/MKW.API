@@ -1,9 +1,7 @@
 using AutoMapper;
 using MKW.Domain.Dto.DTO.AwardDTO;
-using MKW.Domain.Dto.DTO.ChildDTO;
 using MKW.Domain.Dto.DTO.PersonDTO;
 using MKW.Domain.Entities.IdentityAggregate;
-using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
 
 namespace MKW.Domain.Dto.MapperProfile.ProfileProfile
@@ -18,7 +16,8 @@ namespace MKW.Domain.Dto.MapperProfile.ProfileProfile
              .ForMember(dest => dest.Childrens, opt => opt.MapFrom(src => src.Children))
              .ForMember(dest => dest.Awards, opt => opt.MapFrom(src => src.AwardsGiven
                 .GroupBy(x => x.Award.Name)
-                .Select(group => new ReadAwardDTO {
+                .Select(group => new ReadAwardDTO
+                {
                     Name = group.Key.ToString(),
                     Quantity = group.Count()
                 }).ToList()));

@@ -1,6 +1,5 @@
 using MKW.Domain.Dto.DTO.AwardDTO;
 using MKW.Domain.Dto.DTO.ChildDTO;
-using MKW.Domain.Entities.UserAggregate;
 
 namespace MKW.Domain.Dto.DTO.PersonDTO
 {

@@ -115,13 +115,13 @@ namespace MKW.Services.AppServices
         {
             var detailedReview = new ReviewDetailsDto(review);
 
-            var movie = _tmdbService.GetMovie(Int32.Parse(review.Content.ExternalId), language).Result;
+            var content = await _contentService.GetContentDetailsByExternalId(review.Content.ExternalId, review.Content.PlatformCategory.PlatformId);
 
             detailedReview.Content = new ReadContentDTO()
             {
                 Id = review.ContentId,
-                Name = movie.Title,
-                ImageUrl = movie.PosterPath,
+                Name = content.Name,
+                ImageUrl = content.ImageUrl ?? "",
                 PlatformCategory = review.Content.PlatformCategoryId
             };
 
@@ -131,6 +131,6 @@ namespace MKW.Services.AppServices
         private async Task<Content> GetContent(CreateReviewDto model)
             => model.ContentId != null ?
                 await _contentService.GetContentById(model.ContentId ?? 0) :
-                await _contentService.GetContentByExternalId(model.ExternalContentId);
+                await _contentService.GetContentByExternalId(model.ExternalContentId ?? "");
     }
 }
