@@ -17,6 +17,7 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
         public string? ImageUrl { get; set; }
         public List<string>? Tags { get; set; }
         public int? ReviewCount { get; set; }
+        public int? PlatformId { get; set; }
 
         public ContentDetailsDTO()
         {
@@ -54,6 +55,7 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
         {
             Id = content.Id;
             ReviewCount = content.Reviews.Count;
+            PlatformId = content.PlatformCategory.PlatformId;
             return this;
         }
     }

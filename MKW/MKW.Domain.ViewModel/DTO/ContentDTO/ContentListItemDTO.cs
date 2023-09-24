@@ -16,6 +16,7 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
         public double? AverageRating { get; set; }
         public string? ImageUrl { get; set; }
         public List<string>? Tags { get; set; }
+        public int PlatformId { get; set; }
 
         public ContentListItemDTO()
         {
@@ -62,6 +63,7 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
         public void Update(Content content)
         {
             Id = content.Id;
+            PlatformId = content.PlatformCategory.PlatformId;
         }
     }
 }
