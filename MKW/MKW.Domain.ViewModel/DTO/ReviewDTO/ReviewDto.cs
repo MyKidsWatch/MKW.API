@@ -17,7 +17,7 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
         {
             Id = review.UUID;
             Title = review.ReviewDetails?.FirstOrDefault()?.Title;
-            Title = review.ReviewDetails?.FirstOrDefault()?.Text;
+            Text = review.ReviewDetails?.FirstOrDefault()?.Text;
             UserId = review.Person?.UUID;
             ContentId = review.Content?.UUID;
             ExternalContentId = review.Content?.ExternalId;

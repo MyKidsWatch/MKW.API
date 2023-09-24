@@ -1,7 +1,6 @@
 ﻿using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.ContentDTO;
 using MKW.Domain.Entities.ContentAggregate;
-using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Interface.Repository.ContentAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.BaseServices;

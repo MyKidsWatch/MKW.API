@@ -1,11 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MKW.Domain.Dto.DTO.ContentDTO;
-using MKW.Domain.Dto.DTO.TmdbDTO;
 using MKW.Domain.Dto.DTO.YoutubeDTO;
 using MKW.Domain.Interface.Services.Plugins;
 using MKW.Domain.Utility.Exceptions;
 using System.Net.Http.Json;
-using System.Xml.Linq;
 
 namespace MKW.Services.Plugin.ContentSources
 {
