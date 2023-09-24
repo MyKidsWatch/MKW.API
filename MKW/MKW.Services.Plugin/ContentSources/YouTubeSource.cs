@@ -1,18 +1,39 @@
-﻿using MKW.Domain.Dto.DTO.ContentDTO;
+﻿using Microsoft.Extensions.Configuration;
+using MKW.Domain.Dto.DTO.ContentDTO;
+using MKW.Domain.Dto.DTO.TmdbDTO;
+using MKW.Domain.Dto.DTO.YoutubeDTO;
 using MKW.Domain.Interface.Services.Plugins;
+using MKW.Domain.Utility.Exceptions;
+using System.Net.Http.Json;
+using System.Xml.Linq;
 
 namespace MKW.Services.Plugin.ContentSources
 {
     public class YouTubeSource : IExternalSource
     {
+        private readonly HttpClient _client;
+        private readonly string _apiKey;
+        private readonly string _baseUrl;
+
+        public YouTubeSource(HttpClient client, IConfiguration configuration)
+        {
+            _client = client;
+            _apiKey = configuration["API:YouTube:key"]!;
+            _baseUrl = configuration["API:YouTube:url"]!;
+        }
+
         public async Task<ContentDetailsDTO> GetById(string contentId, string language = "pt-br")
         {
-            throw new NotImplementedException();
+            var search = (await _client.GetFromJsonAsync<YoutubeChannelSearchDto>($"{_baseUrl}/channels?key={_apiKey}&id={contentId}&part=snippet"))!;
+
+            return search.Items.Select(x => new ContentDetailsDTO(x)).FirstOrDefault() ?? throw new NotFoundException("Channel not found.");
         }
 
         public async Task<List<ContentListItemDTO>> GetByName(string name, string language = "pt-br")
         {
-            throw new NotImplementedException();
+            var search = (await _client.GetFromJsonAsync<YoutubeSearchDto>($"{_baseUrl}/search?key={_apiKey}&q={name}&part=snippet&type=channel"))!;
+
+            return search.Items.Select(x => new ContentListItemDTO(x)).ToList();
         }
     }
 }

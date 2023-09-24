@@ -1,5 +1,6 @@
 ﻿using MKW.Domain.Dto.DTO.PlatformDTO;
 using MKW.Domain.Dto.DTO.TmdbDTO;
+using MKW.Domain.Dto.DTO.YoutubeDTO;
 using MKW.Domain.Entities.ContentAggregate;
 
 namespace MKW.Domain.Dto.DTO.ContentDTO
@@ -47,6 +48,15 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
             ReleaseDate = DateTime.Parse(movie.ReleaseDate);
             AverageRating = movie.VoteAverage;
             ImageUrl = movie.PosterPath;
+        }
+
+        public ContentListItemDTO(YoutubeItemDto channel, Content? content = null) : this(content)
+        {
+            ExternalId = channel.Id.ChannelId;
+            Name = channel.Snippet.Title;
+            Description = channel.Snippet.Description;
+            ImageUrl = channel.Snippet?.Thumbnails?["high"].Url ?? channel.Snippet?.Thumbnails?["default"].Url;
+            ReleaseDate = channel.Snippet?.PublishTime;
         }
 
         public void Update(Content content)
