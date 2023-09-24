@@ -2,6 +2,7 @@
 using MKW.Domain.Dto.DTO.ContentDTO;
 using MKW.Domain.Dto.DTO.YoutubeDTO;
 using MKW.Domain.Interface.Services.Plugins;
+using MKW.Domain.Utility.Enums;
 using MKW.Domain.Utility.Exceptions;
 using System.Net.Http.Json;
 
@@ -24,14 +25,20 @@ namespace MKW.Services.Plugin.ContentSources
         {
             var search = (await _client.GetFromJsonAsync<YoutubeChannelSearchDto>($"{_baseUrl}/channels?key={_apiKey}&id={contentId}&part=snippet"))!;
 
-            return search.Items.Select(x => new ContentDetailsDTO(x)).FirstOrDefault() ?? throw new NotFoundException("Channel not found.");
+            return search.Items.Select(x => new ContentDetailsDTO(x)
+            {
+                PlatformId = (int)PlatformEnum.Youtube
+            }).FirstOrDefault() ?? throw new NotFoundException("Channel not found.");
         }
 
         public async Task<List<ContentListItemDTO>> GetByName(string name, string language = "pt-br")
         {
             var search = (await _client.GetFromJsonAsync<YoutubeSearchDto>($"{_baseUrl}/search?key={_apiKey}&q={name}&part=snippet&type=channel"))!;
 
-            return search.Items.Select(x => new ContentListItemDTO(x)).ToList();
+            return search.Items.Select(x => new ContentListItemDTO(x)
+            {
+                PlatformId = (int)PlatformEnum.Youtube
+            }).ToList();
         }
     }
 }
