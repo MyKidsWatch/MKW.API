@@ -53,6 +53,44 @@ namespace MKW.Data.Context.Mapping.ContentAggregate
                 .HasMany(x => x.Contents)
                 .WithOne(x => x.PlatformCategory)
                 .HasForeignKey(x => x.PlatformCategoryId);
+
+            var filme = new PlatformCategory()
+            {
+                Id = 1,
+                PlatformId = 1,
+                Name = "Filme",
+                Active = true,
+                UUID = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                AlterDate = null
+            };
+
+            var canal = new PlatformCategory()
+            {
+                Id = 2,
+                PlatformId = 2,
+                Name = "Filme",
+                Active = true,
+                UUID = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                AlterDate = null
+            };
+
+            var perfil = new PlatformCategory()
+            {
+                Id = 3,
+                PlatformId = 3,
+                Name = "Perfil",
+                Active = true,
+                UUID = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                AlterDate = null
+            };
+
+            modelBuilder.Entity<PlatformCategory>().HasData(filme);
+            modelBuilder.Entity<PlatformCategory>().HasData(canal);
+            modelBuilder.Entity<PlatformCategory>().HasData(perfil);
+
         }
     }
 }
