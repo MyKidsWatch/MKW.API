@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.PersonDTO;
 using MKW.Domain.Interface.Services.AppServices;
+using System.Net.Mime;
 
 namespace MKW.API.Controllers
 {
@@ -28,15 +24,14 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReadProfileDTO>>> GetProfile(string username) => Ok(await _profileService.GetProfileByUsername(username));
-        
 
-        [HttpGet("search/{username}")]
+        [HttpGet()]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<IEnumerable<ReadProfileDTO>>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReadProfileDTO>>> GetAllProfilesByUsername(string username) => 
+        public async Task<ActionResult<BaseResponseDTO<ReadProfileDTO>>> GetAllProfilesByUsername([FromQuery] string username) =>
             Ok(await _profileService.GetAllProfilesByUsername(username));
     }
 }
