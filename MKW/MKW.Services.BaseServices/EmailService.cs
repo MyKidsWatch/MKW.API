@@ -15,16 +15,16 @@ namespace MKW.Services.BaseServices
             _emailOptions = emailOptions.Value;
         }
 
-        public void sendConfirmAccountEmail(string[] To, string subject, string keycode)
+        public void SendConfirmAccountEmail(string[] To, string keycode, string language = "pt-BR")
         {
-            var message = new MessageConfirmEmailDTO(To, subject, keycode);
+            var message = new MessageConfirmEmailDTO(To, keycode, language);
             var emailMessage = CreateMessageBody(message);
             SendEmailMessage(emailMessage);
         }
 
-        public void sendRecoveryPasswordEmail(string[] To, string subject, string keycode)
+        public void SendRecoveryPasswordEmail(string[] To, string keycode, string language = "pt-BR")
         {
-            var message = new MessageRecoveryPasswordDTO(To, subject, keycode);
+            var message = new MessageRecoveryPasswordDTO(To, keycode, language);
             var emailMessage = CreateMessageBody(message);
             SendEmailMessage(emailMessage);
         }

@@ -2,7 +2,7 @@
 {
     public interface IEmailService
     {
-        public void sendConfirmAccountEmail(string[] To, string subject, string keycode);
-        public void sendRecoveryPasswordEmail(string[] To, string subject, string keycode);
+        public void SendConfirmAccountEmail(string[] To, string keycode, string language = "pt-BR");
+        public void SendRecoveryPasswordEmail(string[] To, string keycode, string language = "pt-BR");
     }
 }
