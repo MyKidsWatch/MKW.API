@@ -22,6 +22,7 @@ namespace MKW.IoC.Modules
             builder.AddTransient<IGenderService, GenderService>();
             builder.AddTransient<IPersonService, PersonService>();
             builder.AddTransient<IProfileService, ProfileService>();
+            builder.AddTransient<IReportService, ReportService>();
             #endregion
             #region BaseServices
             builder.AddTransient<ITmdbService, TmdbService>();
