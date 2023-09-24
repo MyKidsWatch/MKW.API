@@ -1,6 +1,7 @@
 ﻿using MKW.Domain.Entities.Base;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.PremiumAggregate;
+using MKW.Domain.Entities.ReportAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 
 namespace MKW.Domain.Entities.UserAggregate
@@ -20,5 +21,7 @@ namespace MKW.Domain.Entities.UserAggregate
         public virtual ICollection<PremiumPerson> PremiumPerson { get; set; }
         public virtual ICollection<AwardPerson> AwardsGiven { get; set; }
         public virtual ICollection<Operation> Operations { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
+
     }
 }

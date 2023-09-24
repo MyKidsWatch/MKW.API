@@ -1,4 +1,6 @@
-﻿using MKW.Domain.Entities.ReviewAggregate;
+﻿using MKW.Domain.Dto.DTO.IdentityDTO.Account;
+using MKW.Domain.Dto.DTO.PersonDTO;
+using MKW.Domain.Entities.ReviewAggregate;
 
 namespace MKW.Domain.Dto.DTO.ReviewDTO
 {
@@ -12,6 +14,7 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
         public Guid? UserId { get; set; }
         public Guid? ContentId { get; set; }
         public string ExternalContentId { get; set; }
+        public ReadPersonDTO User { get; set; }
 
         public ReviewDto(Review review)
         {
@@ -21,6 +24,7 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
             UserId = review.Person?.UUID;
             ContentId = review.Content?.UUID;
             ExternalContentId = review.Content?.ExternalId;
+            User = new ReadPersonDTO(review.Person);
         }
     }
 }

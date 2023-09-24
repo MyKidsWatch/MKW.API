@@ -34,6 +34,7 @@ namespace MKW.IoC.Modules
             #region Report Aggregate
             builder.AddTransient<IReportRepository, ReportRepository>();
             builder.AddTransient<IReportReasonRepository, ReportReasonRepository>();
+            builder.AddTransient<IReportStatusRepository, ReportStatusRepository>();
             #endregion
             #region Review Aggregate
             builder.AddTransient<IAwardPersonRepository, AwardPersonRepository>();
