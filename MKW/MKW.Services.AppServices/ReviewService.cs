@@ -131,6 +131,6 @@ namespace MKW.Services.AppServices
         private async Task<Content> GetContent(CreateReviewDto model)
             => model.ContentId != null ?
                 await _contentService.GetContentById(model.ContentId ?? 0) :
-                await _contentService.GetContentByExternalId(model.ExternalContentId ?? "");
+                await _contentService.GetContentByExternalId(model.ExternalContentId ?? "", model.PlatformId ?? 1);
     }
 }
