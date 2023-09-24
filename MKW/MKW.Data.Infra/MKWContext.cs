@@ -44,6 +44,7 @@ namespace MKW.Data.Context
         public DbSet<PremiumPerson> PremiumPerson { get; set; }
         public DbSet<Report> Report { get; set; }
         public DbSet<ReportReason> ReportReason { get; set; }
+        public DbSet<ReportStatus> ReportStatus { get; set; }
         public DbSet<Review> Post { get; set; }
         public DbSet<ReviewDetails> PostDetails { get; set; }
         public DbSet<Tier> Tier { get; set; }
@@ -74,6 +75,7 @@ namespace MKW.Data.Context
             PremiumPersonMap.Map(modelBuilder);
             ReportMap.Map(modelBuilder);
             ReportReasonMap.Map(modelBuilder);
+            ReportStatusMap.Map(modelBuilder);
             ReviewDetailsMap.Map(modelBuilder);
             ReviewMap.Map(modelBuilder);
             TierMap.Map(modelBuilder);

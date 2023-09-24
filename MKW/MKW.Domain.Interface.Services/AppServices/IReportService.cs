@@ -8,5 +8,6 @@ namespace MKW.Domain.Interface.Services.AppServices
         Task<BaseResponseDTO<ReportReasonDto>> GetReasons();
         Task<BaseResponseDTO<ReportReasonDto>> GetReasonById(int id);
         Task<BaseResponseDTO<ReportDto>> GetReports();
+        Task<BaseResponseDTO<ReportDto>> AddReport(CreateReportDto model);
     }
 }
