@@ -17,7 +17,7 @@ namespace MKW.API.Controllers
             _profileService = profileService;
         }
 
-        [HttpGet("{username}")]
+        [HttpGet("username/{username}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadProfileDTO>))]

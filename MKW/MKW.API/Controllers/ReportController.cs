@@ -26,7 +26,7 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetReasons() => Ok(await _reportService.GetReasons());
 
-        [HttpGet("Reason/{reasonId:int}")]
+        [HttpGet("Reason/id/{reasonId:int}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportReasonDto>))]

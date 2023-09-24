@@ -74,7 +74,8 @@ namespace MKW.Services.AppServices
             var comment = new Comment()
             {
                 ParentCommentId = parentComment.Id,
-                PersonId = person.Id
+                PersonId = person.Id,
+                ReviewId = parentComment.ReviewId
             };
 
             comment = await _commentRepository.Add(comment);

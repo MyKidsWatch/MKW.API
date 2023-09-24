@@ -22,7 +22,7 @@ namespace MKW.API.Controllers
             _contentService = contentService;
         }
 
-        [HttpGet("{contentId:int}")]
+        [HttpGet("id/{contentId:int}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ContentDetailsDTO>))]
@@ -31,7 +31,7 @@ namespace MKW.API.Controllers
         public async Task<ActionResult<BaseResponseDTO<ContentDetailsDTO>>> GetContentById([FromRoute] int contentId, [FromQuery] string language = "pt-BR")
             => Ok(await _contentService.GetContentDetailsById(contentId, language));
 
-        [HttpGet("{platformId:int}/{externalContentId}")]
+        [HttpGet("external/{platformId:int}/{externalContentId}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ContentDetailsDTO>))]
@@ -43,7 +43,7 @@ namespace MKW.API.Controllers
         [HttpGet]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<SearchDTO>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ContentListItemDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ContentListItemDTO>>> GetContentByName([Required][FromQuery] string query, [FromQuery] PlatformEnum? platformId, [FromQuery] string language = "pt-BR")
