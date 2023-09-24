@@ -120,9 +120,11 @@ namespace MKW.Services.AppServices
             detailedReview.Content = new ReadContentDTO()
             {
                 Id = review.ContentId,
+                ExternalId = content.ExternalId,
                 Name = content.Name,
                 ImageUrl = content.ImageUrl ?? "",
-                PlatformCategory = review.Content.PlatformCategoryId
+                PlatformCategory = review.Content.PlatformCategoryId,
+                PlatformId = content.PlatformId
             };
 
             return detailedReview;
