@@ -70,8 +70,8 @@ namespace MKW.Data.Context
             OperationTypeMap.Map(modelBuilder);
             PersonChildMap.Map(modelBuilder);
             PersonMap.Map(modelBuilder);
-            PlatformCategoryMap.Map(modelBuilder);
             PlatformMap.Map(modelBuilder);
+            PlatformCategoryMap.Map(modelBuilder);
             PremiumPersonMap.Map(modelBuilder);
             ReportMap.Map(modelBuilder);
             ReportReasonMap.Map(modelBuilder);

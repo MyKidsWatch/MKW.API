@@ -48,6 +48,43 @@ namespace MKW.Data.Context.Mapping.ContentAggregate
                 .HasMany(x => x.PlatformCategories)
                 .WithOne(x => x.Platform)
                 .HasForeignKey(x => x.PlatformId);
+
+            var tmdb = new Platform()
+            {
+                Id = 1,
+                Name = "TMDb",
+                Url = "https://api.themoviedb.org/3",
+                UUID = Guid.NewGuid(),
+                Active = true,
+                CreateDate = DateTime.Now,
+                AlterDate = null
+            };
+
+            var youtube = new Platform()
+            {
+                Id = 2,
+                Name = "YouTube",
+                Url = "https://www.googleapis.com/youtube/v3",
+                UUID = Guid.NewGuid(),
+                Active = true,
+                CreateDate = DateTime.Now,
+                AlterDate = null
+            };
+
+            var tiktok = new Platform()
+            {
+                Id = 3,
+                Name = "TikTok",
+                Url = "",
+                UUID = Guid.NewGuid(),
+                Active = true,
+                CreateDate = DateTime.Now,
+                AlterDate = null
+            };
+
+            modelBuilder.Entity<Platform>().HasData(tmdb);
+            modelBuilder.Entity<Platform>().HasData(youtube);
+            modelBuilder.Entity<Platform>().HasData(tiktok);
         }
     }
 }
