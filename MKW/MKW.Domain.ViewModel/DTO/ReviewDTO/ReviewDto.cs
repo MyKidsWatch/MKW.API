@@ -25,6 +25,7 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
             ContentId = review.Content?.UUID;
             ExternalContentId = review.Content?.ExternalId;
             User = new ReadPersonDTO(review.Person);
+            CommentCount = review.Comments.Where(x => x.Active).Count();
         }
     }
 }
