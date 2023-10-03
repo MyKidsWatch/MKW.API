@@ -22,20 +22,34 @@ namespace MKW.Services.Plugin.ContentSources
 
         public async Task<ContentDetailsDTO> GetById(string movieId, string language = "pt-br")
         {
-            var movie = (await _client.GetFromJsonAsync<MovieDTO>($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}&language={language}&include_adult=false"))!;
-            return new ContentDetailsDTO(movie)
+            try
             {
-                PlatformId = (int)PlatformEnum.TMDb
-            };
+                var movie = (await _client.GetFromJsonAsync<MovieDTO>($"{_baseUrl}/movie/{movieId}?api_key={_apiKey}&language={language}&include_adult=false"))!;
+                return new ContentDetailsDTO(movie)
+                {
+                    PlatformId = (int)PlatformEnum.TMDb
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<List<ContentListItemDTO>> GetByName(string name, string language = "pt-br")
         {
-            var movies = (await _client.GetFromJsonAsync<SearchDTO>($"{_baseUrl}/search/movie?query={name}&language={language}&api_key={_apiKey}&include_adult=false"))!;
-            return movies.Results.Select(x => new ContentListItemDTO(x)
+            try
             {
-                PlatformId = (int)PlatformEnum.TMDb
-            }).ToList();
+                var movies = (await _client.GetFromJsonAsync<SearchDTO>($"{_baseUrl}/search/movie?query={name}&language={language}&api_key={_apiKey}&include_adult=false"))!;
+                return movies.Results.Select(x => new ContentListItemDTO(x)
+                {
+                    PlatformId = (int)PlatformEnum.TMDb
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

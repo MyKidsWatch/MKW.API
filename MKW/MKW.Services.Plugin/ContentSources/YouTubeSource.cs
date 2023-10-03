@@ -23,22 +23,36 @@ namespace MKW.Services.Plugin.ContentSources
 
         public async Task<ContentDetailsDTO> GetById(string contentId, string language = "pt-br")
         {
-            var search = (await _client.GetFromJsonAsync<YoutubeChannelSearchDto>($"{_baseUrl}/channels?key={_apiKey}&id={contentId}&part=snippet"))!;
-
-            return search.Items.Select(x => new ContentDetailsDTO(x)
+            try
             {
-                PlatformId = (int)PlatformEnum.Youtube
-            }).FirstOrDefault() ?? throw new NotFoundException("Channel not found.");
+                var search = (await _client.GetFromJsonAsync<YoutubeChannelSearchDto>($"{_baseUrl}/channels?key={_apiKey}&id={contentId}&part=snippet"))!;
+
+                return search.Items.Select(x => new ContentDetailsDTO(x)
+                {
+                    PlatformId = (int)PlatformEnum.Youtube
+                }).FirstOrDefault() ?? throw new NotFoundException("Channel not found.");
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<List<ContentListItemDTO>> GetByName(string name, string language = "pt-br")
         {
-            var search = (await _client.GetFromJsonAsync<YoutubeSearchDto>($"{_baseUrl}/search?key={_apiKey}&q={name}&part=snippet&type=channel"))!;
-
-            return search.Items.Select(x => new ContentListItemDTO(x)
+            try
             {
-                PlatformId = (int)PlatformEnum.Youtube
-            }).ToList();
+                var search = (await _client.GetFromJsonAsync<YoutubeSearchDto>($"{_baseUrl}/search?key={_apiKey}&q={name}&part=snippet&type=channel"))!;
+
+                return search.Items.Select(x => new ContentListItemDTO(x)
+                {
+                    PlatformId = (int)PlatformEnum.Youtube
+                }).ToList();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
