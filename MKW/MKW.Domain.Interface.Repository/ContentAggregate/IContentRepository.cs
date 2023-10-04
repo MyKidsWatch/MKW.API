@@ -8,5 +8,6 @@ namespace MKW.Domain.Interface.Repository.ContentAggregate
     /// </summary>
     public interface IContentRepository : IBaseRepository<Content>
     {
+        Task<Content?> GetContentByExternalId(string externalId, int? platformId = null);
     }
 }

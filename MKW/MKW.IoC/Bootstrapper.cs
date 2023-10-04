@@ -9,8 +9,10 @@ namespace MKW.IoC
     {
         public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpClient();
             MiddlewareModule.InjectDependencies(services);
             RepositoryModule.InjectDependencies(services);
+            PluginModule.InjectDependencies(services);
             ServiceModule.InjectDependencies(services);
             IdentityModule.AddAuthentication(services, configuration);
             EmailModule.AddEmailConfiguration(services, configuration);

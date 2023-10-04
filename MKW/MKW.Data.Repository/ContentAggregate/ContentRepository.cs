@@ -1,4 +1,5 @@
-﻿using MKW.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using MKW.Data.Context;
 using MKW.Data.Repository.Base;
 using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Interface.Repository.ContentAggregate;
@@ -11,5 +12,8 @@ namespace MKW.Data.Repository.ContentAggregate
     public class ContentRepository : BaseRepository<Content>, IContentRepository
     {
         public ContentRepository(MKWContext context) : base(context) { }
+
+        public async Task<Content?> GetContentByExternalId(string externalId, int? platformId = null)
+            => await _dbSet.FirstOrDefaultAsync(x => x.ExternalId == externalId && (platformId == null || x.PlatformCategory.PlatformId == platformId));
     }
 }

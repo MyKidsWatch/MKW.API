@@ -1,5 +1,6 @@
 ﻿using MKW.Domain.Entities.Base;
 using MKW.Domain.Entities.ContentAggregate;
+using MKW.Domain.Entities.ReportAggregate;
 using MKW.Domain.Entities.UserAggregate;
 
 namespace MKW.Domain.Entities.ReviewAggregate
@@ -13,5 +14,7 @@ namespace MKW.Domain.Entities.ReviewAggregate
         public virtual ICollection<ReviewDetails> ReviewDetails { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<AwardPerson> Awards { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
+
     }
 }

@@ -1,4 +1,6 @@
-﻿using MKW.Domain.Entities.ReviewAggregate;
+﻿using MKW.Domain.Dto.DTO.IdentityDTO.Account;
+using MKW.Domain.Dto.DTO.PersonDTO;
+using MKW.Domain.Entities.ReviewAggregate;
 
 namespace MKW.Domain.Dto.DTO.ReviewDTO
 {
@@ -7,18 +9,23 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
         public Guid? Id { get; set; }
         public string? Title { get; set; }
         public string? Text { get; set; }
+        public double Stars { get; set; }
+        public int CommentCount { get; set; }
         public Guid? UserId { get; set; }
         public Guid? ContentId { get; set; }
         public string ExternalContentId { get; set; }
+        public ReadPersonDTO User { get; set; }
 
         public ReviewDto(Review review)
         {
             Id = review.UUID;
             Title = review.ReviewDetails?.FirstOrDefault()?.Title;
-            Title = review.ReviewDetails?.FirstOrDefault()?.Text;
+            Text = review.ReviewDetails?.FirstOrDefault()?.Text;
             UserId = review.Person?.UUID;
             ContentId = review.Content?.UUID;
             ExternalContentId = review.Content?.ExternalId;
+            User = new ReadPersonDTO(review.Person);
+            CommentCount = review.Comments.Where(x => x.Active).Count();
         }
     }
 }

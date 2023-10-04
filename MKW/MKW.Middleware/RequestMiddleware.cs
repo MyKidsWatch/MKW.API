@@ -18,6 +18,10 @@ namespace MKW.Middleware
             {
                 await HandleNotFoundExceptionAsync(context, ex);
             }
+            catch (BadRequestException ex)
+            {
+                await HandleBadRequestExceptionAsync(context, ex);
+            }
             catch (Exception ex)
             {
                 await HandleExceptionAsync(context, ex);
@@ -25,6 +29,19 @@ namespace MKW.Middleware
         }
 
         private async Task HandleNotFoundExceptionAsync(HttpContext context, NotFoundException exception)
+        {
+            var contentType = "application/json";
+            var statusCode = (int)HttpStatusCode.BadRequest;
+
+            var resposta = new BaseResponseDTO<string>().WithErrors(exception.Errors);
+            var response = JsonConvert.SerializeObject(resposta);
+
+            context.Response.ContentType = contentType;
+            context.Response.StatusCode = statusCode;
+            await context.Response.WriteAsync(response);
+        }
+
+        private async Task HandleBadRequestExceptionAsync(HttpContext context, BadRequestException exception)
         {
             var contentType = "application/json";
             var statusCode = (int)HttpStatusCode.NotFound;

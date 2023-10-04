@@ -1,4 +1,5 @@
-﻿using MKW.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using MKW.Data.Context;
 using MKW.Data.Repository.Base;
 using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Interface.Repository.ContentAggregate;
@@ -13,5 +14,7 @@ namespace MKW.Data.Repository.ContentAggregate
         public PlatformCategoryRepository(MKWContext context) : base(context)
         {
         }
+
+        public async Task<PlatformCategory> GetByPlatformId(int platformId) => await _dbSet.FirstOrDefaultAsync(x => x.PlatformId == platformId);
     }
 }
