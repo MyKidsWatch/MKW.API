@@ -27,7 +27,7 @@ namespace MKW.Services.Plugin.ContentSources
             {
                 var search = (await _client.GetFromJsonAsync<YoutubeChannelSearchDto>($"{_baseUrl}/channels?key={_apiKey}&id={contentId}&part=snippet"))!;
 
-                return search.Items.Select(x => new ContentDetailsDTO(x)
+                return search?.Items?.Select(x => new ContentDetailsDTO(x)
                 {
                     PlatformId = (int)PlatformEnum.Youtube
                 }).FirstOrDefault() ?? throw new NotFoundException("Channel not found.");
@@ -44,10 +44,10 @@ namespace MKW.Services.Plugin.ContentSources
             {
                 var search = (await _client.GetFromJsonAsync<YoutubeSearchDto>($"{_baseUrl}/search?key={_apiKey}&q={name}&part=snippet&type=channel"))!;
 
-                return search.Items.Select(x => new ContentListItemDTO(x)
+                return search?.Items?.Select(x => new ContentListItemDTO(x)
                 {
                     PlatformId = (int)PlatformEnum.Youtube
-                }).ToList();
+                }).ToList() ?? throw new NotFoundException("Channel not found.");
             }
             catch (Exception)
             {

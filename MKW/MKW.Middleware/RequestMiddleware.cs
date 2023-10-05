@@ -2,6 +2,7 @@
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Utility.Exceptions;
 using Newtonsoft.Json;
+using Serilog;
 using System.Net;
 
 namespace MKW.Middleware
@@ -36,6 +37,8 @@ namespace MKW.Middleware
             var resposta = new BaseResponseDTO<string>().WithErrors(exception.Errors);
             var response = JsonConvert.SerializeObject(resposta);
 
+            Log.Error(exception, "[{statusCode}] {exception}{stackTrace}", statusCode, exception.Message, exception.StackTrace);
+
             context.Response.ContentType = contentType;
             context.Response.StatusCode = statusCode;
             await context.Response.WriteAsync(response);
@@ -49,6 +52,8 @@ namespace MKW.Middleware
             var resposta = new BaseResponseDTO<string>().WithErrors(exception.Errors);
             var response = JsonConvert.SerializeObject(resposta);
 
+            Log.Error(exception, "[{statusCode}] {exception}{stackTrace}",statusCode,exception.Message,exception.StackTrace);
+
             context.Response.ContentType = contentType;
             context.Response.StatusCode = statusCode;
             await context.Response.WriteAsync(response);
@@ -61,6 +66,8 @@ namespace MKW.Middleware
 
             var resposta = new BaseResponseDTO<string>().AddError(exception.Message);
             var response = JsonConvert.SerializeObject(resposta);
+
+            Log.Error(exception, "[{statusCode}] {exception}{stackTrace}", statusCode, exception.Message, exception.StackTrace);
 
             context.Response.ContentType = contentType;
             context.Response.StatusCode = statusCode;
