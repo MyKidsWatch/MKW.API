@@ -1,4 +1,5 @@
-﻿using MKW.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using MKW.Data.Context;
 using MKW.Data.Repository.Base;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Interface.Repository.ReviewAggregate;
@@ -13,5 +14,7 @@ namespace MKW.Data.Repository.ReviewAggregate
         public CommentRepository(MKWContext context) : base(context)
         {
         }
+
+        public async Task<IEnumerable<Comment>> GetByReviewId(int reviewId) => await _dbSet.Where(x => x.ReviewId == reviewId).ToListAsync();
     }
 }

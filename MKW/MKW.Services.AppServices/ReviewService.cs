@@ -43,6 +43,15 @@ namespace MKW.Services.AppServices
             return responseDTO.AddContent(await GetReviewDetails(review, language));
         }
 
+        public async Task<BaseResponseDTO<ReviewDetailsDto>> GetReviewByUserId(int userId, string? language = "pt-br")
+        {
+            var responseDTO = new BaseResponseDTO<ReviewDetailsDto>();
+            var review = await _reviewRepository.GetByUserId(userId) ?? throw new NotFoundException("Review not found.");
+            if (!review.Any()) throw new NotFoundException("Review not found.");
+
+            return responseDTO.AddContent(review.Select(x => GetReviewDetails(x, language).Result));
+        }
+
         public async Task<BaseResponseDTO<ReviewDetailsDto>> CreateReview(CreateReviewDto model)
         {
             var responseDTO = new BaseResponseDTO<ReviewDetailsDto>();
