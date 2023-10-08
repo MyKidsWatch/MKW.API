@@ -34,10 +34,10 @@ namespace MKW.API.Controllers
         [HttpGet("external/{platformId:int}/{externalContentId}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ContentDetailsDTO>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ContentDetailsDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ContentDetailsDTO>>> GetExternalContentById([FromRoute] string externalContentId, [FromRoute] PlatformEnum platformId, [FromQuery] string language = "pt-BR")
+        public async Task<ActionResult<ContentDetailsDTO>> GetExternalContentById([FromRoute] string externalContentId, [FromRoute] PlatformEnum platformId, [FromQuery] string language = "pt-BR")
             => Ok(await _contentService.GetContentDetailsByExternalId(externalContentId, (int)platformId, language));
 
         [HttpGet]

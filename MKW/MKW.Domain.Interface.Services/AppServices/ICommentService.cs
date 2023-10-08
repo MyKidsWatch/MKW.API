@@ -10,5 +10,8 @@ namespace MKW.Domain.Interface.Services.AppServices
         Task DeleteComment(int commentId);
         Task<BaseResponseDTO<CommentDetailsDto>> GetCommentById(int id, string? language = "pt-br");
         Task<BaseResponseDTO<CommentDetailsDto>> UpdateComment(UpdateCommentDto model);
+
+        Task<BaseResponseDTO<CommentDetailsDto>> GetCommentByReviewId(int reviewId, string? language = "pt-br");
+
     }
 }
