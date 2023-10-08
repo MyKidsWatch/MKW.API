@@ -34,7 +34,7 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<CommentDetailsDto>>> GetCommentsByReviewId([FromRoute] int reviewId, [FromQuery] string language = "pt-BR")
-            => Ok(await _commentService.GetCommentById(reviewId, language));
+            => Ok(await _commentService.GetCommentByReviewId(reviewId, language));
 
         [HttpPost]
         [Authorize]
