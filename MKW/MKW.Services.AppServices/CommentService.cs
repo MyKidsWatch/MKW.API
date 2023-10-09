@@ -41,7 +41,7 @@ namespace MKW.Services.AppServices
         {
             var responseDTO = new BaseResponseDTO<CommentDetailsDto>();
             var comments = await _commentRepository.GetByReviewId(reviewId) ?? throw new NotFoundException("Comments not found.");
-            if (!comments.Any()) throw new NotFoundException("Comment not found.");
+            if (!comments.Any()) throw new NotFoundException("Comments not found.");
 
             return responseDTO.AddContent(comments.Select(x => new CommentDetailsDto(x)));
         }
