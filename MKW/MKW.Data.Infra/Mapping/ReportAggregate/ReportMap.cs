@@ -34,6 +34,10 @@ namespace MKW.Data.Context.Mapping.ReportAggregate
                 .HasColumnName("PERSON_ID");
 
             modelBuilder.Entity<Report>()
+                .Property(x => x.ReportedPersonId)
+                .HasColumnName("REPORTED_PERSON_ID");
+
+            modelBuilder.Entity<Report>()
                 .Property(x => x.ReviewId)
                 .HasColumnName("REVIEW_ID");
 
@@ -83,6 +87,12 @@ namespace MKW.Data.Context.Mapping.ReportAggregate
                 .HasOne(x => x.Person)
                 .WithMany(x => x.Reports)
                 .HasForeignKey(x => x.PersonId);
+
+            modelBuilder.Entity<Report>()
+                .HasOne(x => x.ReportedPerson)
+                .WithMany(x => x.ReportedIn)
+                .HasForeignKey(x => x.ReportedPersonId)
+                .IsRequired(false);
         }
     }
 }
