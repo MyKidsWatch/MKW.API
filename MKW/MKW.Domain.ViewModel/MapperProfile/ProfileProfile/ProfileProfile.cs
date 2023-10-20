@@ -11,7 +11,7 @@ namespace MKW.Domain.Dto.MapperProfile.ProfileProfile
         public ProfileProfile()
         {
             CreateMap<Person, ReadProfileDTO>()
-             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
+             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
              .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => src.ImageURL))
              .ForMember(dest => dest.Childrens, opt => opt.MapFrom(src => src.Children))
              .ForMember(dest => dest.Awards, opt => opt.MapFrom(src => src.AwardsGiven
