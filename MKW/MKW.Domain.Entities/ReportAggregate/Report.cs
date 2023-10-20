@@ -9,6 +9,7 @@ namespace MKW.Domain.Entities.ReportAggregate
         public int ReasonId { get; set; }
         public int StatusId { get; set; }
         public int PersonId { get; set; }
+        public int? ReportedPersonId { get; set; }
         public int? ReviewId { get; set; }
         public int? CommentId { get; set; }
         public string? Details { get; set; }
@@ -17,5 +18,6 @@ namespace MKW.Domain.Entities.ReportAggregate
         public virtual Comment? Comment { get; set; }
         public virtual ReportStatus Status { get; set; }
         public virtual Person Person { get; set; }
+        public virtual Person? ReportedPerson { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace MKW.Domain.Entities.UserAggregate
         public virtual ICollection<AwardPerson> AwardsGiven { get; set; }
         public virtual ICollection<Operation> Operations { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
+        public virtual ICollection<Report> ReportedIn { get; set; }
 
     }
 }
