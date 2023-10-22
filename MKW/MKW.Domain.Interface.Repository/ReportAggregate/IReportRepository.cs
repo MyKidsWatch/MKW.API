@@ -5,6 +5,6 @@ namespace MKW.Domain.Interface.Repository.ReportAggregate
 {
     public interface IReportRepository : IBaseRepository<Report>
     {
-        Task<bool> AnyReportByUser(int personId, int? reviewId, int? commentId);
+        Task<bool> AnyReportByUser(int personId, int? reviewId, int? commentId, int? reportedPersonId);
     }
 }
