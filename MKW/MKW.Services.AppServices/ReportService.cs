@@ -46,7 +46,7 @@ namespace MKW.Services.AppServices
         public async Task<BaseResponseDTO<ReportDto>> AddReport(CreateReportDto model)
         {
             var user = await _personService.GetUser();
-            if (await _reportRepository.AnyReportByUser(user.Id, model.ReviewId, model.CommentId)) throw new BadRequestException("User has already reported this post.");
+            if (await _reportRepository.AnyReportByUser(user.Id, model.ReviewId, model.CommentId, model.ReportedPersonId)) throw new BadRequestException("User has already reported this post.");
 
             if (user.Id == model.ReportedPersonId) throw new BadRequestException("User cannot report itself.");
 
