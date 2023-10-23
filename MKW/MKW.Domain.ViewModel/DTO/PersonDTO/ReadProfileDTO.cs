@@ -5,6 +5,7 @@ namespace MKW.Domain.Dto.DTO.PersonDTO
 {
     public class ReadProfileDTO
     {
+        public int PersonId { get; set; }
         public int UserId { get; set; }
         public string? ImageURL { get; set; }
         public string? Name { get; set; }
