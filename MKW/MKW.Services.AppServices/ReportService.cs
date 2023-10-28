@@ -43,7 +43,7 @@ namespace MKW.Services.AppServices
 
             if (!reports.Results.Any()) throw new NotFoundException("Reports not found.");
 
-            var reportsDto = new PagedList<ReportDto>().Convert(reports, x => new ReportDto(x));
+            var reportsDto = new PagedList<ReportDto>().ConvertContent(reports, x => new ReportDto(x));
 
             return new BaseResponseDTO<ReportDto>().AddContent(reportsDto);
         }

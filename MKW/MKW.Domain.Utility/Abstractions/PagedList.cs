@@ -20,7 +20,7 @@ namespace MKW.Domain.Utility.Abstractions
 
         }
 
-        public PagedList<Entity> Convert<T>(PagedList<T> pagedList, Func<T, Entity> predicate) where T : class
+        public PagedList<Entity> ConvertContent<T>(PagedList<T> pagedList, Func<T, Entity> predicate) where T : class
         {
             PageCount = pagedList.PageCount;
             PageSize = pagedList.PageSize;
