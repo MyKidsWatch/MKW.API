@@ -3,6 +3,7 @@ using MKW.Domain.Dto.DTO.ReportsDTO;
 using MKW.Domain.Entities.ReportAggregate;
 using MKW.Domain.Interface.Repository.ReportAggregate;
 using MKW.Domain.Interface.Services.AppServices;
+using MKW.Domain.Utility.Abstractions;
 using MKW.Domain.Utility.Exceptions;
 
 namespace MKW.Services.AppServices
@@ -36,11 +37,15 @@ namespace MKW.Services.AppServices
             return new BaseResponseDTO<ReportReasonDto>().AddContent(new ReportReasonDto(reason));
         }
 
-        public async Task<BaseResponseDTO<ReportDto>> GetReports()
+        public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null)
         {
-            var reports = await _reportRepository.GetAll() ?? throw new NotFoundException("Reports not found.");
+            var reports = await _reportRepository.GetPaged(x => reasonId == null || x.ReasonId == reasonId, page, pageSize);
 
-            return new BaseResponseDTO<ReportDto>().AddContent(reports.Select(x => new ReportDto(x)));
+            if (!reports.Results.Any()) throw new NotFoundException("Reports not found.");
+
+            var reportsDto = new PagedList<ReportDto>().Convert(reports, x => new ReportDto(x));
+
+            return new BaseResponseDTO<ReportDto>().AddContent(reportsDto);
         }
 
         public async Task<BaseResponseDTO<ReportDto>> AddReport(CreateReportDto model)
