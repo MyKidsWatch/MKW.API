@@ -40,7 +40,8 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> GetReports() => Ok(await _reportService.GetReports());
+        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> GetReports([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] int? reasonId = null)
+            => Ok(await _reportService.GetReports(page, pageSize, reasonId));
 
         [HttpPost]
         [Authorize]

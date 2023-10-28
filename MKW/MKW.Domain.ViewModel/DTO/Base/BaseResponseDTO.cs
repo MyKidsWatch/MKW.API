@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using MKW.Domain.Utility.Abstractions;
+using System.Text.Json.Serialization;
 
 namespace MKW.Domain.Dto.DTO.Base
 {
@@ -9,6 +10,9 @@ namespace MKW.Domain.Dto.DTO.Base
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<T>? Content { get; private set; } = null;
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public PagedList<T>? PagedContent { get; private set; } = null;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? Errors { get; private set; } = null;
@@ -46,6 +50,14 @@ namespace MKW.Domain.Dto.DTO.Base
         {
             if (Content is null) Content = new List<T>();
             Content.AddRange(content);
+            IsSuccess = isSuccess;
+            return this;
+        }
+
+        public BaseResponseDTO<T> AddContent(PagedList<T> content, bool isSuccess = true)
+        {
+            PagedContent ??= new PagedList<T>();
+            PagedContent = content;
             IsSuccess = isSuccess;
             return this;
         }
