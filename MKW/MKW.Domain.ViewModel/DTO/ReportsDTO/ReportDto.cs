@@ -1,5 +1,4 @@
 ﻿using MKW.Domain.Dto.DTO.CommentDTO;
-using MKW.Domain.Dto.DTO.IdentityDTO.Account;
 using MKW.Domain.Dto.DTO.PersonDTO;
 using MKW.Domain.Dto.DTO.ReviewDTO;
 using MKW.Domain.Entities.ReportAggregate;
@@ -19,7 +18,6 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
         public ReviewDto? Review { get; set; }
         public CommentDetailsDto? Comment { get; set; }
         public ReadPersonDTO Person { get; set; }
-        public ReadPersonDTO ReportedPerson { get; set; }
         public ReportStatusDto Status { get; set; }
 
         public ReportDto()
@@ -40,7 +38,6 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
             Review = report.Review != null ? new ReviewDto(report.Review) : null;
             Comment = report.Comment != null ? new CommentDetailsDto(report.Comment) : null;
             Person = new ReadPersonDTO(report.Person);
-            ReportedPerson = report.ReportedPerson != null ? new ReadPersonDTO(report.ReportedPerson) : new();
             Status = new ReportStatusDto(report.Status);
         }
     }

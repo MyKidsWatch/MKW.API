@@ -399,7 +399,7 @@ namespace MKW.Services.AppServices.IdentityService
 
             var (resultKeycode, keycodeValue) = await _userTokenRepository.AddUserTokenAsync(user.Id, token);
             if (!resultKeycode.IsSuccess) return (false, GetErros(resultKeycode.Reasons));
-            
+
             _emailService.SendConfirmAccountEmail(new[] { user.Email }, keycodeValue.ToString(), language);
 
             return (true, GetErros(result.Reasons));

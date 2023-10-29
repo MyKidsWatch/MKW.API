@@ -1,12 +1,6 @@
-using System.ComponentModel;
-using System.Security.AccessControl;
-using System.Resources;
-using System;
 using System.Globalization;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Reflection;
+using System.Resources;
 
 namespace MKW.Domain.Utility.Language.Email
 {
