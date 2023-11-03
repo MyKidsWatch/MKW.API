@@ -1,60 +1,59 @@
-﻿using MKW.Data.Context;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using MKW.Data.Context;
+using MKW.Domain.Dto.DTO.ReviewDTO;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Repository.Base;
 using MKW.Domain.Utility.Extensions;
+using System.Data;
 
 namespace MKW.Data.Repository.Base
 {
     public class AlgorithmRepository : IAlgorithmRepository
     {
         private readonly MKWContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
 
-        public AlgorithmRepository(MKWContext context)
+        public AlgorithmRepository(MKWContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
+            _connectionString = _configuration["ConnectionStrings:DefaultConnString"];
         }
 
-        public async Task<IEnumerable<Review>> GetRelevantReviews(Person user)
+        public async Task<IEnumerable<Review>> GetRelevantReviews(Person user, int page = 1, int pageSize = 10)
         {
-            var reviews =
-                _context
-                .Person
-                .Where(x => x.Id != user.Id)
-                .ToList()
-                .Where(person => person.Active &&
-                       person.Children.Any(x => x.Active) &&
-                       person.Reviews.Any(x => x.Active))
-                .Select(person => new PersonSimilarity()
-                {
-                    Person = person,
-                    Similarity = GetSimilarities(person,user).Max()
+            var reviews = new List<Review>();
+            var relevant = new List<RelevantReviewDto>();
 
-                })
-                .OrderByDescending(x => x.Similarity)
-                .SelectMany(x => x
-                            .Person
-                            .Reviews
-                            .Where(review => review.Active)
-                            .Select(review => new ReviewRelevance()
-                            {
-                                Review = review,
-                                Relevance = x.Similarity * 10
-                                          + Math.Log10(review.Comments.ToList().Where(Comment => Comment.Active).Count())
-                                          - Math.Log(review.Reports.Count, 5)
-                                          + Math.Log10(review.GoldenAwards) * 3
-                                          + Math.Log10(review.SilverAwards) * 2
-                                          + Math.Log10(review.BronzeAwards)
-                                          - Math.Log10(Math.Abs((DateTime.Now - review.CreateDate).Days))
-                            })
-                            .ToList())
-                .OrderByDescending(x => x.Relevance)
-                .Select(x => x.Review)
-                .ToList();
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-            return OrderMostRelevant(reviews);
+            using (var con = new SqlConnection(_connectionString))
+            {
+                con.Open();
+
+                relevant =
+                    con.Query<RelevantReviewDto>("SP_ALGORITHM", new
+                    {
+                        @PERSON_ID = user.Id,
+                        @PAGE = page,
+                        @PAGE_SIZE = pageSize
+                    }, commandType: CommandType.StoredProcedure).ToList();
+
+                con.Close();
+                con.Dispose();
+            }
+
+            reviews = await _context.Review.Where(x => relevant.Select(y => y.ReviewId).Contains(x.Id)).ToListAsync();
+
+            return reviews.Shuffle();
         }
 
+        #region Deprecated
         private List<Review> OrderMostRelevant(List<Review> reviews)
         {
             return reviews
@@ -92,6 +91,7 @@ namespace MKW.Data.Repository.Base
         private double GetChildrenSimilarity(params double[] parameters)
         {
             return 1 - (1 / (1 + parameters.Sum()));
-        }
+        } 
+        #endregion
     }
 }
