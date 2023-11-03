@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MKW.Domain.Utility.Abstractions
+﻿namespace MKW.Domain.Utility.Abstractions
 {
     public class PagedList<Entity> where Entity : class
     {

@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MKW.Data.Repository.Base;
 using MKW.Data.Repository.ContentAggregate;
 using MKW.Data.Repository.IdentityAggregate;
 using MKW.Data.Repository.PremiumAggregate;
 using MKW.Data.Repository.ReportAggregate;
 using MKW.Data.Repository.ReviewAggregate;
 using MKW.Data.Repository.UserAggregate;
+using MKW.Domain.Interface.Repository.Base;
 using MKW.Domain.Interface.Repository.ContentAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Repository.PremiumAggregate;
@@ -57,7 +59,7 @@ namespace MKW.IoC.Modules
             builder.AddTransient<IUserTokenRepository, UserTokenRepository>();
             builder.AddTransient<IRoleRepository, RoleRepository>();
             #endregion
-
+            builder.AddTransient<IAlgorithmRepository, AlgorithmRepository>();
         }
     }
 }
