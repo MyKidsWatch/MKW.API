@@ -7,6 +7,7 @@ using MKW.Domain.Dto.DTO.ReviewDTO;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Repository.Base;
+using MKW.Domain.Utility.Enums;
 using MKW.Domain.Utility.Extensions;
 using System.Data;
 
@@ -37,7 +38,7 @@ namespace MKW.Data.Repository.Base
                 con.Open();
 
                 relevant =
-                    con.Query<RelevantReviewDto>("SP_ALGORITHM", new
+                    con.Query<RelevantReviewDto>(StoredProcedures.Algorithm, new
                     {
                         @PERSON_ID = user.Id,
                         @PAGE = page,
