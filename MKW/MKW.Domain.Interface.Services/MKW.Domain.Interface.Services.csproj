@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="3.15.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Stripe.net" Version="43.1.0" />
   </ItemGroup>
 
   <ItemGroup>

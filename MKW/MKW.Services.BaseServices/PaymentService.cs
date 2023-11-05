@@ -1,4 +1,6 @@
-﻿using MKW.Domain.Dto.DTO.Base;
+﻿using MKW.Domain.Dto.DTO.AwardDTO;
+using MKW.Domain.Dto.DTO.Base;
+using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Interface.Repository.ReviewAggregate;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Exceptions;
@@ -20,17 +22,11 @@ namespace MKW.Services.BaseServices
             _awardRepository = awardRepository;
         }
 
-        public async Task<BaseResponseDTO<string>> CreatePaymentSession()
+        public async Task<BaseResponseDTO<AwardPurchaseDto>> CreateAwardSession(params SessionLineItemOptions[] items)
         {
-            var awards = await _awardRepository.GetActive() ?? throw new NotFoundException("No awards found");
-
             var options = new SessionCreateOptions
             {
-                LineItems = awards.Select(x => new SessionLineItemOptions()
-                {
-                    Price = x.StripeId,
-                    Quantity = 1
-                }).ToList(),
+                LineItems = items.ToList(),
                 Mode = "payment",
                 SuccessUrl = "https://localhost:4040/a",
                 CancelUrl = "https://localhost:4040/a",
@@ -38,9 +34,15 @@ namespace MKW.Services.BaseServices
             var service = new SessionService();
             Session session = service.Create(options);
 
-            var response = new BaseResponseDTO<string>();
+            var response = new BaseResponseDTO<AwardPurchaseDto>();
 
-            return response.AddContent(session.Url);
+            var award = new AwardPurchaseDto()
+            {
+                Sucessful = false,
+                CheckoutUrl = session.Url
+            };
+
+            return response.AddContent(award);
         }
     }
 }

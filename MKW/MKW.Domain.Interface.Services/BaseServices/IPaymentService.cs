@@ -1,4 +1,6 @@
-﻿using MKW.Domain.Dto.DTO.Base;
+﻿using MKW.Domain.Dto.DTO.AwardDTO;
+using MKW.Domain.Dto.DTO.Base;
+using Stripe.Checkout;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,6 @@ namespace MKW.Domain.Interface.Services.BaseServices
 {
     public interface IPaymentService
     {
-        Task<BaseResponseDTO<string>> CreatePaymentSession();
+        Task<BaseResponseDTO<AwardPurchaseDto>> CreatePaymentSession(params SessionLineItemOptions[] items);
     }
 }
