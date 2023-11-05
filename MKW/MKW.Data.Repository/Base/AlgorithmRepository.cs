@@ -26,10 +26,9 @@ namespace MKW.Data.Repository.Base
             _connectionString = _configuration["ConnectionStrings:DefaultConnString"];
         }
 
-        public async Task<IEnumerable<Review>> GetRelevantReviews(Person user, int page = 1, int pageSize = 10)
+        public async Task<IEnumerable<Review>> GetRelevantReviews(Person user, int page = 1, int pageSize = 10, int? childId = null)
         {
-            var reviews = new List<Review>();
-            var relevant = new List<RelevantReviewDto>();
+            var relevant = new List<FetchReviewDto>();
 
             DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -38,43 +37,75 @@ namespace MKW.Data.Repository.Base
                 con.Open();
 
                 relevant =
-                    con.Query<RelevantReviewDto>(StoredProcedures.Algorithm, new
+                    con.Query<FetchReviewDto>(StoredProcedures.Algorithm, new
                     {
                         @PERSON_ID = user.Id,
+                        @CHILD_ID = childId,
                         @PAGE = page,
-                        @PAGE_SIZE = pageSize
+                        @PAGE_SIZE = pageSize,
                     }, commandType: CommandType.StoredProcedure).ToList();
 
                 con.Close();
                 con.Dispose();
             }
 
-            reviews = await
-                _context.Review
-                .Include(x => x.Content)
-                .ThenInclude(x => x.PlatformCategory)
-                .Include(x => x.Person)
-                .ThenInclude(x => x.User)
-                .Include(x => x.Awards)
-                .Include(x => x.ReviewDetails)
-                .Include(x => x.Comments)
-                .ThenInclude(x => x.CommentDetails)
-                .Include(x => x.Comments)
-                .ThenInclude(x => x.Person)
-                .ThenInclude(x => x.User)
-                .Include(x => x.Comments)
-                .ThenInclude(x => x.Answers)
-                .ThenInclude(x => x.Person)
-                .ThenInclude(x => x.User)
-                .Include(x => x.Comments)
-                .ThenInclude(x => x.Answers)
-                .ThenInclude(x => x.CommentDetails)
-                .Where(x => relevant.Select(y => y.ReviewId).Contains(x.Id))
-                .AsNoTracking()
-                .ToListAsync();
+            return await GetReviews(relevant);
+        }
+
+        public async Task<IEnumerable<Review>> GetTrendingReviews(int page = 1, int pageSize = 10)
+        {
+            var trending = new List<FetchReviewDto>();
+
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+            using (var con = new SqlConnection(_connectionString))
+            {
+                con.Open();
+
+                trending =
+                    con.Query<FetchReviewDto>(StoredProcedures.Trending, new
+                    {
+                        @PAGE = page,
+                        @PAGE_SIZE = pageSize,
+                    }, commandType: CommandType.StoredProcedure).ToList();
+
+                con.Close();
+                con.Dispose();
+            }
+
+            return await GetReviews(trending);
+        }
+
+        public async Task<List<Review>> GetReviews(List<FetchReviewDto> relevant)
+        {
+            var reviews = await
+            _context.Review
+            .Include(x => x.Content)
+            .ThenInclude(x => x.PlatformCategory)
+            .Include(x => x.Person)
+            .ThenInclude(x => x.User)
+            .Include(x => x.Awards)
+            .ThenInclude(x => x.Award)
+            .Include(x => x.ReviewDetails)
+            .Include(x => x.Comments)
+            .ThenInclude(x => x.CommentDetails)
+            .Include(x => x.Comments)
+            .ThenInclude(x => x.Person)
+            .ThenInclude(x => x.User)
+            .Include(x => x.Comments)
+            .ThenInclude(x => x.Answers)
+            .ThenInclude(x => x.Person)
+            .ThenInclude(x => x.User)
+            .Include(x => x.Comments)
+            .ThenInclude(x => x.Answers)
+            .ThenInclude(x => x.CommentDetails)
+            .Where(x => relevant.Select(y => y.ReviewId).Contains(x.Id))
+            .AsNoTracking()
+            .ToListAsync();
 
             return reviews.Shuffle();
         }
+
 
         #region Deprecated
         private List<Review> OrderMostRelevant(List<Review> reviews)
