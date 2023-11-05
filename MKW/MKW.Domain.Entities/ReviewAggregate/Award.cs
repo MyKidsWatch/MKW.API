@@ -7,6 +7,7 @@ namespace MKW.Domain.Entities.ReviewAggregate
         public string Name { get; set; }
         public int Price { get; set; }
         public int Value { get; set; }
+        public string StripeId { get; set; }
         public virtual ICollection<AwardPerson> AwardPerson { get; set; }
     }
 }

@@ -49,7 +49,29 @@ namespace MKW.Data.Repository.Base
                 con.Dispose();
             }
 
-            reviews = await _context.Review.Where(x => relevant.Select(y => y.ReviewId).Contains(x.Id)).ToListAsync();
+            reviews = await
+                _context.Review
+                .Include(x => x.Content)
+                .ThenInclude(x => x.PlatformCategory)
+                .Include(x => x.Person)
+                .ThenInclude(x => x.User)
+                .Include(x => x.Awards)
+                .Include(x => x.ReviewDetails)
+                .Include(x => x.Comments)
+                .ThenInclude(x => x.CommentDetails)
+                .Include(x => x.Comments)
+                .ThenInclude(x => x.Person)
+                .ThenInclude(x => x.User)
+                .Include(x => x.Comments)
+                .ThenInclude(x => x.Answers)
+                .ThenInclude(x => x.Person)
+                .ThenInclude(x => x.User)
+                .Include(x => x.Comments)
+                .ThenInclude(x => x.Answers)
+                .ThenInclude(x => x.CommentDetails)
+                .Where(x => relevant.Select(y => y.ReviewId).Contains(x.Id))
+                .AsNoTracking()
+                .ToListAsync();
 
             return reviews.Shuffle();
         }
@@ -92,7 +114,7 @@ namespace MKW.Data.Repository.Base
         private double GetChildrenSimilarity(params double[] parameters)
         {
             return 1 - (1 / (1 + parameters.Sum()));
-        } 
+        }
         #endregion
     }
 }

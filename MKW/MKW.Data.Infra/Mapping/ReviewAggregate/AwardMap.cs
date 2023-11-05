@@ -30,6 +30,10 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
                 .HasColumnName("VALUE");
 
             modelBuilder.Entity<Award>()
+                .Property(x => x.StripeId)
+                .HasColumnName("STRIPE_ID");
+
+            modelBuilder.Entity<Award>()
                 .Property(x => x.CreateDate)
                 .HasColumnName("CREATE_DATE");
 
@@ -45,6 +49,46 @@ namespace MKW.Data.Context.Mapping.ReviewAggregate
                 .HasMany(x => x.AwardPerson)
                 .WithOne(x => x.Award)
                 .HasForeignKey(x => x.AwardId);
+
+            var golden = new Award()
+            {
+                Id = 1,
+                UUID = Guid.NewGuid(),
+                Name = "Gold",
+                Price = 150,
+                Value = 100,
+                StripeId = "prod_OwcYJeSRGJKd73",
+                CreateDate = DateTime.Now,
+                Active = true,
+            };
+
+            var silver = new Award()
+            {
+                Id = 2,
+                UUID = Guid.NewGuid(),
+                Name = "Silver",
+                Price = 100,
+                Value = 50,
+                StripeId = "prod_OwchFQzaZ0N7Kz",
+                CreateDate = DateTime.Now,
+                Active = true,
+            };
+
+            var bronze = new Award()
+            {
+                Id = 3,
+                UUID = Guid.NewGuid(),
+                Name = "Bronze",
+                Price = 50,
+                Value = 25,
+                StripeId = "prod_Owcj9UpEVnpBgi",
+                CreateDate = DateTime.Now,
+                Active = true,
+            };
+
+            modelBuilder.Entity<Award>().HasData(golden);
+            modelBuilder.Entity<Award>().HasData(silver);
+            modelBuilder.Entity<Award>().HasData(bronze);
         }
     }
 }
