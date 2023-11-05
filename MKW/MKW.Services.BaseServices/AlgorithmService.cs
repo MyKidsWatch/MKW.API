@@ -45,7 +45,10 @@ namespace MKW.Services.BaseServices
             var user = await _personService.GetUser();
             if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<ReviewDetailsDto>());
 
-            var reviews = (await _algorithmRepository.GetRelevantReviews(user, page, count)).Select(x => _reviewService.GetReviewDetails(x, language).Result);
+            var reviews = await _algorithmRepository
+                                .GetRelevantReviews(user, page, count).Result
+                                .SelectAsync(async x => await _reviewService.GetReviewDetails(x, language));
+
             return reviews == null ? throw new NotFoundException("No reviews were found.") : responseDTO.AddContent(reviews);
         }
 
@@ -59,7 +62,7 @@ namespace MKW.Services.BaseServices
 
             var reviews = (await _algorithmRepository.GetRelevantReviews(user, page, count)).Select(x => new ReviewDto(x)) ?? throw new NotFoundException("No reviews were found.");
 
-            var movies = reviews.Select(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language).Result);
+            var movies = await reviews.SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
 
             return responseDTO.AddContent(movies);
         }

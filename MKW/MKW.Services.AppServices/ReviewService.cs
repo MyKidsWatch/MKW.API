@@ -124,16 +124,16 @@ namespace MKW.Services.AppServices
         {
             var detailedReview = new ReviewDetailsDto(review);
 
-            var content = await _contentService.GetContentDetailsByExternalId(review.Content.ExternalId, review.Content.PlatformCategory.PlatformId);
+            var content = await _contentService.GetExternalContent(review.Content.ExternalId, review.Content.PlatformCategory.PlatformId);
 
             detailedReview.Content = new ReadContentDTO()
             {
                 Id = review.ContentId,
-                ExternalId = content.ExternalId,
+                ExternalId = review.Content.ExternalId,
                 Name = content.Name,
                 ImageUrl = content.ImageUrl ?? "",
                 PlatformCategory = review.Content.PlatformCategoryId,
-                PlatformId = content.PlatformId
+                PlatformId = review.Content.PlatformCategory.PlatformId
             };
 
             return detailedReview;

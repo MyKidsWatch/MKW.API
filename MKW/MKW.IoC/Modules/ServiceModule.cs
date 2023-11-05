@@ -27,6 +27,7 @@ namespace MKW.IoC.Modules
             #region BaseServices
             builder.AddTransient<ITmdbService, TmdbService>();
             builder.AddTransient<IAlgorithmService, AlgorithmService>();
+            builder.AddTransient<IPaymentService, PaymentService>();
             #endregion
         }
     }

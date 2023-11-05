@@ -15,7 +15,6 @@ namespace MKW.Services.AppServices
     {
         private readonly IContentRepository _contentRepository;
         private readonly IPlatformCategoryRepository _platformCategoryRepository;
-        private readonly ITmdbService _tmdbService;
         private readonly IDictionary<string, IExternalSource> _sources;
 
         public ContentService(IContentRepository contentService, IDictionary<string, IExternalSource> sources, IPlatformCategoryRepository platformCategoryRepository)
@@ -27,17 +26,23 @@ namespace MKW.Services.AppServices
 
         public async Task<ContentDetailsDTO> GetContentDetailsByExternalId(string externalId, int platformId = 1, string language = "pt-br")
         {
-            var contentDetails = platformId switch
+            var contentDetails = await GetExternalContent(externalId, platformId, language);
+
+            var content = await _contentRepository.GetContentByExternalId(externalId);
+
+            return content == null ? contentDetails : contentDetails.AddContent(content);
+        }
+
+
+        public async Task<ContentDetailsDTO> GetExternalContent(string externalId, int platformId = 1, string language = "pt-br")
+        {
+            return platformId switch
             {
                 (int)PlatformEnum.TMDb => await _sources["TMDb"].GetById(externalId, language),
                 (int)PlatformEnum.Youtube => await _sources["YouTube"].GetById(externalId, language),
                 (int)PlatformEnum.TikTok => await _sources["TikTok"].GetById(externalId, language),
                 _ => null,
             } ?? throw new NotFoundException("Content not found");
-
-            var content = await _contentRepository.GetContentByExternalId(externalId);
-
-            return content == null ? contentDetails : contentDetails.AddContent(content);
         }
 
         public async Task<BaseResponseDTO<ContentListItemDTO>> GetContentByName(string query, int? platformId, string language = "pt-br")
