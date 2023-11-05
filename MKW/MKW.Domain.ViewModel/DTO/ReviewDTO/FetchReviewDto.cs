@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MKW.Domain.Dto.DTO.ReviewDTO
 {
-    public class RelevantReviewDto
+    public class FetchReviewDto
     {
         public int ReviewId { get; set; }
         public int PersonId { get; set; }

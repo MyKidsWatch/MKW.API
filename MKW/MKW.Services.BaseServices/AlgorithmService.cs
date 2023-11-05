@@ -17,7 +17,6 @@ namespace MKW.Services.BaseServices
     public class AlgorithmService : IAlgorithmService
     {
         private readonly IPersonRepository _personRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ITmdbService _tmdbService;
         private readonly IReviewService _reviewService;
         private readonly IPersonService _personService;
@@ -25,34 +24,47 @@ namespace MKW.Services.BaseServices
 
         public AlgorithmService(
             IPersonRepository personRepository,
-            IHttpContextAccessor httpContextAccessor,
             ITmdbService tmdbService,
             IReviewService reviewService,
             IPersonService personService,
             IAlgorithmRepository algorithmRepository)
         {
             _personRepository = personRepository;
-            _httpContextAccessor = httpContextAccessor;
             _tmdbService = tmdbService;
             _reviewService = reviewService;
             _personService = personService;
             _algorithmRepository = algorithmRepository;
         }
 
-        public async Task<BaseResponseDTO<ReviewDetailsDto>> GetRelevantReviews(int page, int count, string language)
+        public async Task<BaseResponseDTO<ReviewDetailsDto>> GetRelevantReviews(int page, int count, string language, int? childId = null)
         {
             var responseDTO = new BaseResponseDTO<ReviewDetailsDto>();
             var user = await _personService.GetUser();
             if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<ReviewDetailsDto>());
 
             var reviews = await _algorithmRepository
-                                .GetRelevantReviews(user, page, count).Result
-                                .SelectAsync(async x => await _reviewService.GetReviewDetails(x, language));
+                                .GetRelevantReviews(user, page, count, childId).Result
+                                .SelectAsync(async x => await _reviewService.GetReviewDetails(x, language))
+                                ?? throw new NotFoundException("No reviews were found.");
 
-            return reviews == null ? throw new NotFoundException("No reviews were found.") : responseDTO.AddContent(reviews);
+            return responseDTO.AddContent(reviews);
         }
 
-        public async Task<BaseResponseDTO<MovieDTO>> GetRelevantMovies(int page, int count, string language)
+        public async Task<BaseResponseDTO<ReviewDetailsDto>> GetTrendingReviews(int page, int count, string language)
+        {
+            var responseDTO = new BaseResponseDTO<ReviewDetailsDto>();
+            var user = await _personService.GetUser();
+            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<ReviewDetailsDto>());
+
+            var reviews = await _algorithmRepository
+                                .GetTrendingReviews(page, count).Result
+                                .SelectAsync(async x => await _reviewService.GetReviewDetails(x, language))
+                                ?? throw new NotFoundException("No reviews were found.");
+
+            return responseDTO.AddContent(reviews);
+        }
+
+        public async Task<BaseResponseDTO<MovieDTO>> GetRelevantMovies(int page, int count, string language, int? childId = null)
         {
             var responseDTO = new BaseResponseDTO<MovieDTO>();
             var user = await _personService.GetUser();
@@ -60,13 +72,14 @@ namespace MKW.Services.BaseServices
 
             if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<MovieDTO>());
 
-            var reviews = (await _algorithmRepository.GetRelevantReviews(user, page, count)).Select(x => new ReviewDto(x)) ?? throw new NotFoundException("No reviews were found.");
+            var reviews = (await _algorithmRepository.GetRelevantReviews(user, page, count, childId)).Select(x => new ReviewDto(x)) ?? throw new NotFoundException("No reviews were found.");
 
             var movies = await reviews.SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
 
             return responseDTO.AddContent(movies);
         }
 
+        #region Deprecated
         public async Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count)
         {
             var user = await _personService.GetUser();
@@ -146,6 +159,7 @@ namespace MKW.Services.BaseServices
                 .SelectMany(x => x.ToList().Shuffle())
                 .Take(100)
                 .ToList();
-        }
+        } 
+        #endregion
     }
 }
