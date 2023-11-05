@@ -158,6 +158,7 @@ namespace MKW.Services.AppServices.IdentityService
                 if (result.IsFailed) return responseDTO.WithErrors(GetErros(result.Reasons));
 
                 var readUser = _mapper.Map<ReadUserDTO>(user);
+                readUser.IsAdminUser = await IsAdminUser(user);
                 readUser.AssociatedWithPerson = await GetAssociatedPerson(user);
 
                 return responseDTO.AddContent(readUser);
@@ -384,6 +385,13 @@ namespace MKW.Services.AppServices.IdentityService
             return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(getUser.user));
         }
 
+        private async Task<bool> IsAdminUser(ApplicationUser user)
+        {
+            var adminUsers = await _repository.GetAllUsersByRoleAsync("admin");
+            var admin = adminUsers.FirstOrDefault(userAdmin => userAdmin.Id == user.Id);
+            return admin != null;
+        }
+
         private async Task<(bool isEmailSent, IEnumerable<string> emailErrors)> SendActiveEmailKeycodeAsync(ApplicationUser user, string language = "pt-BR")
         {
             var (result, token) = await _repository.GenerateEmailConfirmationTokenAsync(user);
@@ -391,7 +399,7 @@ namespace MKW.Services.AppServices.IdentityService
 
             var (resultKeycode, keycodeValue) = await _userTokenRepository.AddUserTokenAsync(user.Id, token);
             if (!resultKeycode.IsSuccess) return (false, GetErros(resultKeycode.Reasons));
-            
+
             _emailService.SendConfirmAccountEmail(new[] { user.Email }, keycodeValue.ToString(), language);
 
             return (true, GetErros(result.Reasons));
@@ -424,7 +432,7 @@ namespace MKW.Services.AppServices.IdentityService
             return _mapper.Map<ReadPersonDTO>(personUpdated);
         }
 
-        private IEnumerable<string> GetErros(IEnumerable<IdentityError> ErrorList)
+        private static IEnumerable<string> GetErros(IEnumerable<IdentityError> ErrorList)
         {
             var errorList = new List<string>();
 
@@ -436,7 +444,7 @@ namespace MKW.Services.AppServices.IdentityService
             return errorList;
         }
 
-        private IEnumerable<string> GetErros(List<IReason> ErrorList)
+        private static IEnumerable<string> GetErros(List<IReason> ErrorList)
         {
             var errorList = new List<string>();
 

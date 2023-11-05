@@ -43,9 +43,11 @@ namespace MKW.Data.Context
         public DbSet<PlatformCategory> PlatformCategory { get; set; }
         public DbSet<PremiumPerson> PremiumPerson { get; set; }
         public DbSet<Report> Report { get; set; }
+        public DbSet<Review> Review { get; set; }
         public DbSet<ReportReason> ReportReason { get; set; }
         public DbSet<ReportStatus> ReportStatus { get; set; }
         public DbSet<Review> Post { get; set; }
+        public DbSet<Person> Person { get; set; }
         public DbSet<ReviewDetails> PostDetails { get; set; }
         public DbSet<Tier> Tier { get; set; }
         public DbSet<TierPlan> TierPlan { get; set; }

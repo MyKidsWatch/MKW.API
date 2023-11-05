@@ -8,5 +8,6 @@ namespace MKW.Domain.Interface.Repository.ReviewAggregate
     /// </summary>
     public interface IReviewRepository : IBaseRepository<Review>
     {
+        Task<IEnumerable<Review>> GetByUserId(int userId);
     }
 }

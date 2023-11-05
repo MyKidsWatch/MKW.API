@@ -3,6 +3,7 @@ using MKW.Domain.Dto.DTO.ReportsDTO;
 using MKW.Domain.Entities.ReportAggregate;
 using MKW.Domain.Interface.Repository.ReportAggregate;
 using MKW.Domain.Interface.Services.AppServices;
+using MKW.Domain.Utility.Abstractions;
 using MKW.Domain.Utility.Exceptions;
 
 namespace MKW.Services.AppServices
@@ -36,19 +37,23 @@ namespace MKW.Services.AppServices
             return new BaseResponseDTO<ReportReasonDto>().AddContent(new ReportReasonDto(reason));
         }
 
-        public async Task<BaseResponseDTO<ReportDto>> GetReports()
+        public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null)
         {
-            var reports = await _reportRepository.GetAll() ?? throw new NotFoundException("Reports not found.");
+            var reports = await _reportRepository.GetPaged(x => reasonId == null || x.ReasonId == reasonId, page, pageSize);
 
-            return new BaseResponseDTO<ReportDto>().AddContent(reports.Select(x => new ReportDto(x)));
+            if (!reports.Results.Any()) throw new NotFoundException("Reports not found.");
+
+            var reportsDto = new PagedList<ReportDto>().Convert(reports, x => new ReportDto(x));
+
+            return new BaseResponseDTO<ReportDto>().AddContent(reportsDto);
         }
 
         public async Task<BaseResponseDTO<ReportDto>> AddReport(CreateReportDto model)
         {
-            if (model.CommentId != null && model.ReviewId != null) throw new BadRequestException("Reports can only relate to a single comment or review.");
-
             var user = await _personService.GetUser();
-            if (await _reportRepository.AnyReportByUser(user.Id, model.ReviewId, model.CommentId)) throw new BadRequestException("User has already reported this post.");
+            if (await _reportRepository.AnyReportByUser(user.Id, model.ReviewId, model.CommentId, model.ReportedPersonId)) throw new BadRequestException("User has already reported this post.");
+
+            if (user.Id == model.ReportedPersonId) throw new BadRequestException("User cannot report itself.");
 
             var reason = await _reportReasonRepository.GetById(model.ReasonId) ?? throw new NotFoundException("Reason not found");
             var reportStatus = await _reportStatusRepository.GetByName("Análise Pendente");
@@ -57,6 +62,7 @@ namespace MKW.Services.AppServices
             {
                 ReasonId = reason.Id,
                 PersonId = user.Id,
+                ReportedPersonId = model.ReportedPersonId,
                 StatusId = reportStatus.Id,
                 CommentId = model.CommentId,
                 ReviewId = model.ReviewId,
@@ -64,6 +70,17 @@ namespace MKW.Services.AppServices
             };
 
             report = await _reportRepository.Add(report);
+
+            return new BaseResponseDTO<ReportDto>().AddContent(new ReportDto(report));
+        }
+
+        public async Task<BaseResponseDTO<ReportDto>> UpdateReportStatus(UpdateReportStatusDto model)
+        {
+            var report = await _reportRepository.GetById(model.ReportId) ?? throw new NotFoundException("Report not found.");
+
+            report.StatusId = model.StatusId;
+
+            await _reportRepository.Update(report);
 
             return new BaseResponseDTO<ReportDto>().AddContent(new ReportDto(report));
         }

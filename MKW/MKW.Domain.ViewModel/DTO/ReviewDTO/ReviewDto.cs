@@ -1,5 +1,4 @@
-﻿using MKW.Domain.Dto.DTO.IdentityDTO.Account;
-using MKW.Domain.Dto.DTO.PersonDTO;
+﻿using MKW.Domain.Dto.DTO.PersonDTO;
 using MKW.Domain.Entities.ReviewAggregate;
 
 namespace MKW.Domain.Dto.DTO.ReviewDTO

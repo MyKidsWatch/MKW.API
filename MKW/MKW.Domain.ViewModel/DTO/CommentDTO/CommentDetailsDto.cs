@@ -22,7 +22,7 @@ namespace MKW.Domain.Dto.DTO.CommentDTO
         {
             Id = comment.Id;
             Person = new ReadPersonDTO(comment.Person);
-            Answers = comment.Answers?.Where(x => x.Active).Select(x => new CommentDetailsDto(x));
+            Answers = comment.Answers?.Where(x => x.Active).Select(x => new CommentDetailsDto(x)) ?? new List<CommentDetailsDto>();
             AnswersQuantity = comment.Answers?.Where(x => x.Active).Count() ?? 0;
             CreateDate = comment.CreateDate;
             Edited = comment.CommentDetails.Count > 1;

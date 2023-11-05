@@ -4,11 +4,6 @@ using MKW.Data.Repository.Base;
 using MKW.Domain.Entities.ReportAggregate;
 using MKW.Domain.Interface.Repository.ReportAggregate;
 using MKW.Domain.Utility.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.Data.Repository.ReportAggregate
 {

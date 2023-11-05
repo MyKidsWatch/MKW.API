@@ -117,7 +117,7 @@ namespace MKW.API.Controllers.Identity
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RegisterAccount([FromBody] CreateUserDTO createUserRequest, [FromQuery] string language = "pt-BR")
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RegisterAccount([FromBody] CreateUserDTO createUserRequest, [FromQuery] string? language = "pt-BR")
         {
             var register = await _service.RegisterAccountAsync(createUserRequest, language);
             return register.IsSuccess ? CreatedAtAction(nameof(GetAccountByUserId), new { Id = register.Content[0].Id }, register) : BadRequest(register);

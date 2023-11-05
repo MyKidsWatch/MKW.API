@@ -52,7 +52,7 @@ namespace MKW.Middleware
             var resposta = new BaseResponseDTO<string>().WithErrors(exception.Errors);
             var response = JsonConvert.SerializeObject(resposta);
 
-            Log.Error(exception, "[{statusCode}] {exception}{stackTrace}",statusCode,exception.Message,exception.StackTrace);
+            Log.Error(exception, "[{statusCode}] {exception}{stackTrace}", statusCode, exception.Message, exception.StackTrace);
 
             context.Response.ContentType = contentType;
             context.Response.StatusCode = statusCode;
