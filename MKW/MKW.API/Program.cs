@@ -5,6 +5,7 @@ using MKW.API.Dependencies;
 using MKW.Data.Context;
 using MKW.Middleware;
 using Serilog;
+using Stripe;
 using System.Reflection;
 #endregion
 
@@ -72,6 +73,9 @@ builder.Services.AddHttpClient();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 #endregion
 
+#region Stripe
+StripeConfiguration.ApiKey = builder.Configuration["API:Stripe:Key"];
+#endregion
 
 #region Serilog
 Log.Logger = new LoggerConfiguration()
