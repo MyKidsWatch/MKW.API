@@ -7,6 +7,7 @@ namespace MKW.Domain.Dto.DTO.AwardDTO
         public int AwardId { get; set; }
         public string Name { get; set; }
         public int Price { get; set; }
+        public string StripeId { get; set; }
 
         public AwardDetailsDto()
         {
@@ -18,6 +19,7 @@ namespace MKW.Domain.Dto.DTO.AwardDTO
             AwardId = award.Id;
             Name = award.Name;
             Price = award.Price;
+            StripeId = award.StripeId;
         }
     }
 }
