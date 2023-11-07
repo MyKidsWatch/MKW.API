@@ -10,6 +10,7 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
         public int ReportId { get; set; }
         public int ReasonId { get; set; }
         public int PersonId { get; set; }
+        public int? ReportedPersonId { get; set; }
         public int? ReviewId { get; set; }
         public int? CommentId { get; set; }
         public int? StatusId { get; set; }
@@ -33,6 +34,7 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
             PersonId = report.PersonId;
             ReasonId = report.ReasonId;
             StatusId = report.StatusId;
+            ReportedPersonId = report.ReportedPersonId;
             Details = report.Details;
             Reason = new ReportReasonDto(report.Reason);
             Review = report.Review != null ? new ReviewDto(report.Review) : null;
