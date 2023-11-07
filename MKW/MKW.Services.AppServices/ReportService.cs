@@ -25,7 +25,7 @@ namespace MKW.Services.AppServices
 
         public async Task<BaseResponseDTO<ReportReasonDto>> GetReasons()
         {
-            var reasons = await _reportReasonRepository.GetActive() ?? throw new NotFoundException("Report Reasons not found.");
+            var reasons = await _reportReasonRepository.GetActive();
 
             return new BaseResponseDTO<ReportReasonDto>().AddContent(reasons.Select(x => new ReportReasonDto(x)));
         }
@@ -40,8 +40,6 @@ namespace MKW.Services.AppServices
         public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null)
         {
             var reports = await _reportRepository.GetPaged(x => reasonId == null || x.ReasonId == reasonId, page, pageSize);
-
-            if (!reports.Results.Any()) throw new NotFoundException("Reports not found.");
 
             var reportsDto = new PagedList<ReportDto>().Convert(reports, x => new ReportDto(x));
 
