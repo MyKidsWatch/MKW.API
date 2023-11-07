@@ -13,6 +13,7 @@ namespace MKW.Middleware
         {
             try
             {
+                ConfigureHeaders(context);
                 await next(context);
             }
             catch (NotFoundException ex)
@@ -27,6 +28,16 @@ namespace MKW.Middleware
             {
                 await HandleExceptionAsync(context, ex);
             }
+        }
+
+        private void ConfigureHeaders(HttpContext context)
+        {
+            context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+            context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'");
+            context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+            context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+            context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
+            context.Response.Headers.Add("Permissions-Policy", "accelerometer=(),autoplay=(),camera=(),display-capture=(),document-domain=(),encrypted-media=(),fullscreen=(),geolocation=(),gyroscope=(),magnetometer=(),microphone=(),midi=(),payment=(),picture-in-picture=(),publickey-credentials-get=(),screen-wake-lock=(),sync-xhr=(self),usb=(),web-share=(),xr-spatial-tracking=()");
         }
 
         private async Task HandleNotFoundExceptionAsync(HttpContext context, NotFoundException exception)
