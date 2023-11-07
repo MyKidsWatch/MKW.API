@@ -22,7 +22,7 @@ namespace MKW.Services.BaseServices
             _awardRepository = awardRepository;
         }
 
-        public async Task<BaseResponseDTO<AwardPurchaseDto>> CreateAwardSession(params SessionLineItemOptions[] items)
+        public async Task<BaseResponseDTO<AwardPurchaseDto>> CreatePaymentSession(params SessionLineItemOptions[] items)
         {
             var options = new SessionCreateOptions
             {
