@@ -48,6 +48,51 @@ namespace MKW.Data.Context.Mapping.UserAggregate
                 .HasMany(x => x.Children)
                 .WithOne(x => x.AgeRange)
                 .HasForeignKey(x => x.AgeRangeId);
+
+            var ageRange1 = new AgeRange()
+            {
+                Id = 1,
+                InitialAge = 0,
+                FinalAge = 2,
+                UUID = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                Active = true
+            };
+
+            var ageRange2 = new AgeRange()
+            {
+                Id = 2,
+                InitialAge = 3,
+                FinalAge = 5,
+                UUID = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                Active = true
+            };
+
+            var ageRange3 = new AgeRange()
+            {
+                Id = 3,
+                InitialAge = 6,
+                FinalAge = 8,
+                UUID = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                Active = true
+            };
+
+            var ageRange4 = new AgeRange()
+            {
+                Id = 4,
+                InitialAge = 9,
+                FinalAge = 11,
+                UUID = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                Active = true
+            };
+
+            modelBuilder.Entity<AgeRange>().HasData(ageRange1);
+            modelBuilder.Entity<AgeRange>().HasData(ageRange2);
+            modelBuilder.Entity<AgeRange>().HasData(ageRange3);
+            modelBuilder.Entity<AgeRange>().HasData(ageRange4);
         }
     }
 }
