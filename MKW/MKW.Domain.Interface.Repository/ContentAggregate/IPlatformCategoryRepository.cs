@@ -8,5 +8,6 @@ namespace MKW.Domain.Interface.Repository.ContentAggregate
     /// </summary>
     public interface IPlatformCategoryRepository : IBaseRepository<PlatformCategory>
     {
+        Task<PlatformCategory> GetByPlatformId(int platformId);
     }
 }

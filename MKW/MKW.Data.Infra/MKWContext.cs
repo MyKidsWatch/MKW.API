@@ -6,11 +6,13 @@ using Microsoft.Extensions.Options;
 using MKW.Data.Context.Mapping.ContentAggregate;
 using MKW.Data.Context.Mapping.IdentityAggregate;
 using MKW.Data.Context.Mapping.PremiumAggregate;
+using MKW.Data.Context.Mapping.ReportAggregate;
 using MKW.Data.Context.Mapping.ReviewAggregate;
 using MKW.Data.Context.Mapping.UserAggregate;
 using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Entities.PremiumAggregate;
+using MKW.Domain.Entities.ReportAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
 
@@ -40,7 +42,12 @@ namespace MKW.Data.Context
         public DbSet<Platform> Platform { get; set; }
         public DbSet<PlatformCategory> PlatformCategory { get; set; }
         public DbSet<PremiumPerson> PremiumPerson { get; set; }
+        public DbSet<Report> Report { get; set; }
+        public DbSet<Review> Review { get; set; }
+        public DbSet<ReportReason> ReportReason { get; set; }
+        public DbSet<ReportStatus> ReportStatus { get; set; }
         public DbSet<Review> Post { get; set; }
+        public DbSet<Person> Person { get; set; }
         public DbSet<ReviewDetails> PostDetails { get; set; }
         public DbSet<Tier> Tier { get; set; }
         public DbSet<TierPlan> TierPlan { get; set; }
@@ -65,9 +72,12 @@ namespace MKW.Data.Context
             OperationTypeMap.Map(modelBuilder);
             PersonChildMap.Map(modelBuilder);
             PersonMap.Map(modelBuilder);
-            PlatformCategoryMap.Map(modelBuilder);
             PlatformMap.Map(modelBuilder);
+            PlatformCategoryMap.Map(modelBuilder);
             PremiumPersonMap.Map(modelBuilder);
+            ReportMap.Map(modelBuilder);
+            ReportReasonMap.Map(modelBuilder);
+            ReportStatusMap.Map(modelBuilder);
             ReviewDetailsMap.Map(modelBuilder);
             ReviewMap.Map(modelBuilder);
             TierMap.Map(modelBuilder);

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.15" />
     <PackageReference Include="FluentResults" Version="3.15.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.16" />
@@ -29,6 +30,7 @@
     <ProjectReference Include="..\MKW.Data.Infra\MKW.Data.Context.csproj" />
     <ProjectReference Include="..\MKW.Domain.Entities\MKW.Domain.Entities.csproj" />
     <ProjectReference Include="..\MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj" />
+    <ProjectReference Include="..\MKW.Domain.ViewModel\MKW.Domain.Dto.csproj" />
   </ItemGroup>
 
 </Project>

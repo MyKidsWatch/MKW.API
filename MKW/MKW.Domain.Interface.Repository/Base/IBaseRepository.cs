@@ -1,4 +1,6 @@
 ﻿using MKW.Domain.Entities.Base;
+using MKW.Domain.Utility.Abstractions;
+using System.Linq.Expressions;
 
 namespace MKW.Domain.Interface.Repository.Base
 {
@@ -19,6 +21,14 @@ namespace MKW.Domain.Interface.Repository.Base
         /// </summary>
         /// <returns>Lista de Entidades</returns>
         Task<IEnumerable<TEntity>?> GetActive();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate">Função de busca de entidades</param>
+        /// <param name="pageSize">Tamanho das páginas</param>
+        /// <param name="page">Página a ser buscada</param>
+        /// <returns></returns>
+        Task<PagedList<TEntity>> GetPaged(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10);
         /// <summary>
         /// Método de Busca de Entidade por Id.
         /// </summary>

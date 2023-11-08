@@ -74,7 +74,7 @@ namespace MKW.Services.AppServices.IdentityService
             {
                 var response = new BaseResponseDTO<ReadUserDTO>();
                 var (result, user) = await _repository.GetUserByIdAsync(id);
-                if (result.IsSuccess) return response.AddError("User not found!");
+                if (result.IsFailed) return response.AddError("User not found!");
 
                 var userResponse = _mapper.Map<ReadUserDTO>(user);
                 userResponse.AssociatedWithPerson = await GetAssociatedPerson(user);
@@ -158,6 +158,7 @@ namespace MKW.Services.AppServices.IdentityService
                 if (result.IsFailed) return responseDTO.WithErrors(GetErros(result.Reasons));
 
                 var readUser = _mapper.Map<ReadUserDTO>(user);
+                readUser.IsAdminUser = await IsAdminUser(user);
                 readUser.AssociatedWithPerson = await GetAssociatedPerson(user);
 
                 return responseDTO.AddContent(readUser);
@@ -168,7 +169,7 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        public async Task<BaseResponseDTO<ReadUserDTO>> RegisterAccountAsync(CreateUserDTO userDTO)
+        public async Task<BaseResponseDTO<ReadUserDTO>> RegisterAccountAsync(CreateUserDTO userDTO, string language = "pt-br")
         {
             try
             {
@@ -181,7 +182,7 @@ namespace MKW.Services.AppServices.IdentityService
                 var role = await _roleService.AddUserToRoleAsync("standard", user.UserName);
                 if (role is null) userResponseDTO.AddError("role not assign to user");
 
-                var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user);
+                var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user, language);
                 if (!isEmailSent) userResponseDTO.WithErrors(emailErrors);
 
                 var userResponse = _mapper.Map<ReadUserDTO>(user);
@@ -196,7 +197,7 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        public async Task<BaseResponseDTO<ReadUserDTO>> UpdateAccountAsync(HttpContext httpContext, UpdateUserDTO userDTO)
+        public async Task<BaseResponseDTO<ReadUserDTO>> UpdateAccountAsync(HttpContext httpContext, UpdateUserDTO userDTO, string language = "pt-BR")
         {
             try
             {
@@ -213,7 +214,7 @@ namespace MKW.Services.AppServices.IdentityService
                 readUser.AssociatedWithPerson = await UpdateAssociatedPerson(userDTO.PersonDetails, user);
                 if (user.EmailConfirmed) return response.AddContent(readUser);
 
-                var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user);
+                var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user, language);
                 if (!isEmailSent) response.WithErrors(emailErrors);
 
                 readUser.isConfirmEmailTokenSent = isEmailSent;
@@ -307,7 +308,7 @@ namespace MKW.Services.AppServices.IdentityService
             }
         }
 
-        public async Task<BaseResponseDTO<ResponseGenerateKeycodeDTO>> RequestEmailKeycodeAsync(RequestKeycodeDTO request)
+        public async Task<BaseResponseDTO<ResponseGenerateKeycodeDTO>> RequestEmailKeycodeAsync(RequestKeycodeDTO request, string language = "pt-BR")
         {
             try
             {
@@ -320,7 +321,7 @@ namespace MKW.Services.AppServices.IdentityService
                     {
                         var generateKeycode = await _userTokenRepository.AddUserTokenAsync(user.Id, token);
                         var keycode = generateKeycode.keycode;
-                        _emailService.sendConfirmAccountEmail(new[] { request.Email }, "Código de Ativacão", keycode.ToString());
+                        _emailService.SendConfirmAccountEmail(new[] { request.Email }, keycode.ToString(), language);
                         return responseDTO.AddContent(new ResponseGenerateKeycodeDTO(true));
                     }
                     return responseDTO.WithErrors(GetErros(result.Reasons));
@@ -334,7 +335,7 @@ namespace MKW.Services.AppServices.IdentityService
 
         }
 
-        public async Task<BaseResponseDTO<ResponseGenerateKeycodeDTO>> RequestPasswordKeycodeAsync(RequestKeycodeDTO request)
+        public async Task<BaseResponseDTO<ResponseGenerateKeycodeDTO>> RequestPasswordKeycodeAsync(RequestKeycodeDTO request, string language = "pt-BR")
         {
             try
             {
@@ -349,7 +350,7 @@ namespace MKW.Services.AppServices.IdentityService
                         if (generateKeycode.result.IsSuccess)
                         {
                             var keycode = generateKeycode.keycode;
-                            _emailService.sendRecoveryPasswordEmail(new[] { request.Email }, "Recuperacao de Senha", keycode.ToString());
+                            _emailService.SendRecoveryPasswordEmail(new[] { request.Email }, keycode.ToString(), language);
                             return responseDTO.AddContent(new ResponseGenerateKeycodeDTO(true));
                         }
                         return responseDTO.WithErrors(GetErros(generateKeycode.result.Reasons));
@@ -384,7 +385,14 @@ namespace MKW.Services.AppServices.IdentityService
             return responseDTO.AddContent(_mapper.Map<ReadUserDTO>(getUser.user));
         }
 
-        private async Task<(bool isEmailSent, IEnumerable<string> emailErrors)> SendActiveEmailKeycodeAsync(ApplicationUser user)
+        private async Task<bool> IsAdminUser(ApplicationUser user)
+        {
+            var adminUsers = await _repository.GetAllUsersByRoleAsync("admin");
+            var admin = adminUsers.FirstOrDefault(userAdmin => userAdmin.Id == user.Id);
+            return admin != null;
+        }
+
+        private async Task<(bool isEmailSent, IEnumerable<string> emailErrors)> SendActiveEmailKeycodeAsync(ApplicationUser user, string language = "pt-BR")
         {
             var (result, token) = await _repository.GenerateEmailConfirmationTokenAsync(user);
             if (!result.IsSuccess) return (false, GetErros(result.Reasons));
@@ -392,7 +400,7 @@ namespace MKW.Services.AppServices.IdentityService
             var (resultKeycode, keycodeValue) = await _userTokenRepository.AddUserTokenAsync(user.Id, token);
             if (!resultKeycode.IsSuccess) return (false, GetErros(resultKeycode.Reasons));
 
-            _emailService.sendConfirmAccountEmail(new[] { user.Email }, "Código de Ativacão", keycodeValue.ToString());
+            _emailService.SendConfirmAccountEmail(new[] { user.Email }, keycodeValue.ToString(), language);
 
             return (true, GetErros(result.Reasons));
         }
@@ -424,7 +432,7 @@ namespace MKW.Services.AppServices.IdentityService
             return _mapper.Map<ReadPersonDTO>(personUpdated);
         }
 
-        private IEnumerable<string> GetErros(IEnumerable<IdentityError> ErrorList)
+        private static IEnumerable<string> GetErros(IEnumerable<IdentityError> ErrorList)
         {
             var errorList = new List<string>();
 
@@ -436,7 +444,7 @@ namespace MKW.Services.AppServices.IdentityService
             return errorList;
         }
 
-        private IEnumerable<string> GetErros(List<IReason> ErrorList)
+        private static IEnumerable<string> GetErros(List<IReason> ErrorList)
         {
             var errorList = new List<string>();
 

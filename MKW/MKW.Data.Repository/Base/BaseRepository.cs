@@ -2,6 +2,8 @@
 using MKW.Data.Context;
 using MKW.Domain.Entities.Base;
 using MKW.Domain.Interface.Repository.Base;
+using MKW.Domain.Utility.Abstractions;
+using System.Linq.Expressions;
 
 namespace MKW.Data.Repository.Base
 {
@@ -22,13 +24,22 @@ namespace MKW.Data.Repository.Base
 
         public virtual async Task<IEnumerable<TEntity>?> GetAll() => await _dbSet.ToListAsync();
         public virtual async Task<IEnumerable<TEntity>?> GetActive() => await _dbSet.Where(x => x.Active).ToListAsync();
+        public virtual async Task<PagedList<TEntity>> GetPaged(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10)
+          => new PagedList<TEntity>()
+          {
+              Results = await _dbSet.Where(predicate ?? (x => true)).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync(),
+              Page = page,
+              PageSize = pageSize,
+              PageCount = (int)Math.Ceiling(_dbSet.Where(predicate ?? (x => true)).Count() / (decimal)pageSize)
+          };
+
         public virtual async Task<TEntity?> GetById(int id) => await _dbSet.FindAsync(id);
         public virtual async Task<TEntity?> GetByUUID(Guid uuid) => await _dbSet.FirstOrDefaultAsync(x => x.UUID == uuid);
 
         public virtual async Task<TEntity> Add(TEntity entity)
         {
             entity.CreateDate = DateTime.Now;
-            entity.AlterDate = DateTime.Now;
+            entity.AlterDate = null;
             var addedEntity = _dbSet.Add(entity).Entity;
             await _context.SaveChangesAsync();
             return addedEntity;

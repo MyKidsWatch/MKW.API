@@ -83,6 +83,11 @@ namespace MKW.Data.Context.Mapping.UserAggregate
                 .HasMany(x => x.AwardsGiven)
                 .WithOne(x => x.Person)
                 .HasForeignKey(x => x.PersonId);
+
+            modelBuilder.Entity<Person>()
+                .HasMany(x => x.Reports)
+                .WithOne(x => x.Person)
+                .HasForeignKey(x => x.PersonId);
         }
     }
 }

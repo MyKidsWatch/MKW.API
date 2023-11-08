@@ -117,9 +117,9 @@ namespace MKW.API.Controllers.Identity
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RegisterAccount([FromBody] CreateUserDTO createUserRequest)
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RegisterAccount([FromBody] CreateUserDTO createUserRequest, [FromQuery] string? language = "pt-BR")
         {
-            var register = await _service.RegisterAccountAsync(createUserRequest);
+            var register = await _service.RegisterAccountAsync(createUserRequest, language);
             return register.IsSuccess ? CreatedAtAction(nameof(GetAccountByUserId), new { Id = register.Content[0].Id }, register) : BadRequest(register);
         }
 
@@ -129,32 +129,32 @@ namespace MKW.API.Controllers.Identity
         [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> UpdateAccount([FromBody] UpdateUserDTO createUserRequest)
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> UpdateAccount([FromBody] UpdateUserDTO createUserRequest, [FromQuery] string language = "pt-BR")
         {
-            var update = await _service.UpdateAccountAsync(HttpContext, createUserRequest);
+            var update = await _service.UpdateAccountAsync(HttpContext, createUserRequest, language);
             return update.IsSuccess ? NoContent() : BadRequest(update);
         }
 
-        [HttpPost("password/keycode")]
+        [HttpPost("password-keycode")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ResponseGenerateKeycodeDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ResponseGenerateKeycodeDTO>>> RequestPasswordKeycode([FromBody] RequestKeycodeDTO keycodeRequest)
+        public async Task<ActionResult<BaseResponseDTO<ResponseGenerateKeycodeDTO>>> RequestPasswordKeycode([FromBody] RequestKeycodeDTO keycodeRequest, [FromQuery] string language = "pt-BR")
         {
-            var result = await _service.RequestPasswordKeycodeAsync(keycodeRequest);
+            var result = await _service.RequestPasswordKeycodeAsync(keycodeRequest, language);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [HttpPost("email/keycode")]
+        [HttpPost("email-keycode")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadUserDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RequestEmailKeycode([FromBody] RequestKeycodeDTO keycodeRequest)
+        public async Task<ActionResult<BaseResponseDTO<ReadUserDTO>>> RequestEmailKeycode([FromBody] RequestKeycodeDTO keycodeRequest, [FromQuery] string language = "pt-BR")
         {
-            var result = await _service.RequestEmailKeycodeAsync(keycodeRequest);
+            var result = await _service.RequestEmailKeycodeAsync(keycodeRequest, language);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
