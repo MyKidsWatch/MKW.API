@@ -1,6 +1,6 @@
 run:
 	dotnet restore MKW/MKW.API
-	dotnet run --project MKW/MKW.API
+	dotnet run --urls http://localhost:7240 --project MKW/MKW.API
 migrate:
 	dotnet ef database update --project MKW/MKW.API
 sql:
@@ -13,6 +13,10 @@ build:
 	cd MKW/MKW.API/
 	dotnet build
 dbup:
-	sudo docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=kZaFL2e#H2eK" -p 1433:1433 -d mssql-custom
+	# sudo docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=kZaFL2e#H2eK" -p 1433:1433 -d mssql-custom
+	docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=kZaFL2e#H2eK" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
 dockerdown:
-	sudo docker stop $(sudo docker ps --quiet)
+	docker stop $(docker ps --quiet)
+client:
+	cd ../MKW.Client/MKW && ionic serve
+all: dbup migrate run client
