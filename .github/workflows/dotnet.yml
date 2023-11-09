@@ -54,8 +54,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
-        ./.sonar/scanner/dotnet-sonarscanner begin /k:"MyKidsWatch_MKW.API" /o:"mykidswatch" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="**/Migrations/**"  
+        ./.sonar/scanner/dotnet-sonarscanner begin /k:"MyKidsWatch_MKW.API" /o:"mykidswatch" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="**/Migrations/**" /d:sonar.cs.opencover.reportsPaths=coverage.xml  
         dotnet build MKW/MKW.API
-        dotnet test MKW/MKW.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=opencover -l trx -f=opencover -o="MKW/MKW.Tests/coverage.opencover.xml"
+        dotnet test MKW/MKW.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=coverage.xml -l trx "
         ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
