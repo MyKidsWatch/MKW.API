@@ -103,7 +103,7 @@ namespace MKW.Data.Repository.Base
             .AsNoTracking()
             .ToListAsync();
 
-            return reviews.Shuffle();
+            return reviews;
         }
 
 
