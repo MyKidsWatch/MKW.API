@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.18.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,6 +21,19 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <ProjectReference Include="..\MKW.Domain.Entities\MKW.Domain.Entities.csproj" />
+    <ProjectReference Include="..\MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj" />
+    <ProjectReference Include="..\MKW.Domain.Interface.Services\MKW.Domain.Interface.Services.csproj" />
+    <ProjectReference Include="..\MKW.Domain.Utility\MKW.Domain.Utility.csproj" />
+    <ProjectReference Include="..\MKW.Domain.Entities\MKW.Domain.Entities.csproj" />
+    <ProjectReference Include="..\MKW.Domain.ViewModel\MKW.Domain.Dto.csproj" />
+    <ProjectReference Include="..\MKW.Services.AppServices\MKW.Services.AppServices.csproj" />
+    <ProjectReference Include="..\MKW.Services.BaseServices\MKW.Services.BaseServices.csproj" />
+        
   </ItemGroup>
 
 </Project>
