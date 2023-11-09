@@ -58,3 +58,4 @@ jobs:
         dotnet build MKW/MKW.API
         dotnet test MKW/MKW.API /p:CollectCoverage=true /p:CoverletOutputFormat=opencover -l trx 
         ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
