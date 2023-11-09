@@ -55,5 +55,5 @@ jobs:
       run: |
         ./.sonar/scanner/dotnet-sonarscanner begin /k:"MyKidsWatch_MKW.API" /o:"mykidswatch" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
         dotnet build MKW/MKW.API
-        dotnet test MKW/MKW.API /p:CollectCoverage=true /p:CoverletOutputFormat=opencover -l trx /p:ExcludeByFile="**/MKW.Data.Infra/Migrations/**"
+        dotnet test MKW/MKW.API /p:CollectCoverage=true /p:CoverletOutputFormat=opencover -l trx /p:ExcludeByFile="**/MKW.Data.Infra/Migrations/**/*.cs"
         ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
