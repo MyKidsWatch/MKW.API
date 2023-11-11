@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MKW.Data.Context;
 using MKW.Domain.Entities.Base;
 using MKW.Domain.Interface.Repository.Base;

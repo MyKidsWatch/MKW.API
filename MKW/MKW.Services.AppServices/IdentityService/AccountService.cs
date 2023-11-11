@@ -115,7 +115,7 @@ namespace MKW.Services.AppServices.IdentityService
                 var role = await _roleService.GetRolesByNameAsync(roleName);
                 if (role.IsSuccess)
                 {
-                    var getUsers = await _repository.GetAllUsersByRoleAsync(roleName);
+                    var getUsers = await _repository.GetUsersByRoleAsync(roleName);
                     var users = _mapper.Map<IEnumerable<ReadUserDTO>>(getUsers);
                     return response.WithSuccesses(users);
                 }
@@ -387,7 +387,7 @@ namespace MKW.Services.AppServices.IdentityService
 
         private async Task<bool> IsAdminUser(ApplicationUser user)
         {
-            var adminUsers = await _repository.GetAllUsersByRoleAsync("admin");
+            var adminUsers = await _repository.GetUsersByRoleAsync("admin");
             var admin = adminUsers.FirstOrDefault(userAdmin => userAdmin.Id == user.Id);
             return admin != null;
         }

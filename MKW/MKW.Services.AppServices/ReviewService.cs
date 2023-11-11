@@ -5,7 +5,6 @@ using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Interface.Repository.ReviewAggregate;
 using MKW.Domain.Interface.Services.AppServices;
-using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Exceptions;
 
 namespace MKW.Services.AppServices
@@ -15,7 +14,6 @@ namespace MKW.Services.AppServices
         private readonly IContentService _contentService;
         private readonly IReviewDetailsRepository _reviewDetailsRepository;
         private readonly IReviewRepository _reviewRepository;
-        private readonly ITmdbService _tmdbService;
         private readonly IPersonService _personService;
 
         public ReviewService
@@ -23,14 +21,12 @@ namespace MKW.Services.AppServices
             IContentService contentService,
             IReviewDetailsRepository reviewDetailsRepository,
             IReviewRepository reviewRepository,
-            ITmdbService tmdbService,
             IPersonService personService
             )
         {
             _contentService = contentService;
             _reviewDetailsRepository = reviewDetailsRepository;
             _reviewRepository = reviewRepository;
-            _tmdbService = tmdbService;
             _personService = personService;
         }
 
