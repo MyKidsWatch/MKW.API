@@ -31,10 +31,10 @@ namespace MKW.API.Controllers
         [HttpPost]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<GivenAwardDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<AwardPurchaseDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<GivenAwardDto>>> AddAward([FromBody] GiveAwardDto model)
+        public async Task<ActionResult<BaseResponseDTO<AwardPurchaseDto>>> AddAward([FromBody] GiveAwardDto model)
             => Ok(await _awardService.AddAward(model));
     }
 }

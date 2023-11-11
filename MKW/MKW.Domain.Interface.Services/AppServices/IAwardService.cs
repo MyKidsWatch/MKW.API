@@ -5,7 +5,7 @@ namespace MKW.Domain.Interface.Services.AppServices
 {
     public interface IAwardService
     {
-        Task<BaseResponseDTO<GivenAwardDto>> AddAward(GiveAwardDto model);
+        Task<BaseResponseDTO<AwardPurchaseDto>> AddAward(GiveAwardDto model);
         Task<BaseResponseDTO<AwardDetailsDto>> GetAwards();
     }
 }

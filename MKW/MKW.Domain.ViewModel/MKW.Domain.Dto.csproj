@@ -14,7 +14,6 @@
     <ProjectReference Include="..\MKW.Domain.Interface.Repository\MKW.Domain.Interface.Repository.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DTO/AwardDTO/" />
     <Folder Include="MapperProfile/ProfileProfile/" />
   </ItemGroup>
 </Project>
