@@ -1,15 +1,8 @@
 ﻿using MKW.Domain.Dto.DTO.AwardDTO;
 using MKW.Domain.Dto.DTO.Base;
-using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Interface.Repository.ReviewAggregate;
 using MKW.Domain.Interface.Services.BaseServices;
-using MKW.Domain.Utility.Exceptions;
 using Stripe.Checkout;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MKW.Services.BaseServices
 {

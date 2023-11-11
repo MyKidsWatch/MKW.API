@@ -3,7 +3,6 @@ using MKW.Domain.Dto.DTO.ContentDTO;
 using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Interface.Repository.ContentAggregate;
 using MKW.Domain.Interface.Services.AppServices;
-using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Interface.Services.Plugins;
 using MKW.Domain.Utility.Enums;
 using MKW.Domain.Utility.Exceptions;

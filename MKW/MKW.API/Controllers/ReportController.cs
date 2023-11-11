@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.ReportsDTO;
 using MKW.Domain.Interface.Services.AppServices;
-using MKW.Domain.Utility.Enums;
 using System.Net.Mime;
 
 namespace MKW.API.Controllers
@@ -51,6 +50,14 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReportDto>>> AddReport([FromBody] CreateReportDto report) => Ok(await _reportService.AddReport(report));
+
+        [HttpPost("Response")]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> RespondReport([FromBody] ReportResponseDto report) => Ok(await _reportService.RespondReport(report));
 
         [HttpPatch]
         [Authorize]
