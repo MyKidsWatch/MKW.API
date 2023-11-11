@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MKW.Data.Context;
 using MKW.Domain.Entities.Base;
 using MKW.Domain.Interface.Repository.Base;
@@ -24,14 +25,29 @@ namespace MKW.Data.Repository.Base
 
         public virtual async Task<IEnumerable<TEntity>?> GetAll() => await _dbSet.ToListAsync();
         public virtual async Task<IEnumerable<TEntity>?> GetActive() => await _dbSet.Where(x => x.Active).ToListAsync();
+        public virtual async Task<PagedList<TEntity>> GetPaged<TKey>(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10, Func<TEntity, TKey> order = null, bool asc = true)
+        {
+            var query = _dbSet.Where(predicate ?? (x => true));
+            query = asc ? query.OrderBy(order).AsQueryable() : query.OrderByDescending(order).AsQueryable();
+            query = query.Skip(pageSize * (page - 1)).Take(pageSize);
+
+            return new PagedList<TEntity>()
+            {
+                Results = query.ToList(),
+                Page = page,
+                PageSize = pageSize,
+                PageCount = (int)Math.Ceiling(await _dbSet.Where(predicate ?? (x => true)).CountAsync() / (decimal)pageSize)
+            };
+        }
+
         public virtual async Task<PagedList<TEntity>> GetPaged(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10)
-          => new PagedList<TEntity>()
-          {
-              Results = await _dbSet.Where(predicate ?? (x => true)).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync(),
-              Page = page,
-              PageSize = pageSize,
-              PageCount = (int)Math.Ceiling(_dbSet.Where(predicate ?? (x => true)).Count() / (decimal)pageSize)
-          };
+              => new PagedList<TEntity>()
+              {
+                  Results = _dbSet.Where(predicate ?? (x => true)).Skip(pageSize * (page - 1)).Take(pageSize).ToList(),
+                  Page = page,
+                  PageSize = pageSize,
+                  PageCount = (int)Math.Ceiling(await _dbSet.Where(predicate ?? (x => true)).CountAsync() / (decimal)pageSize)
+              };
 
         public virtual async Task<TEntity?> GetById(int id) => await _dbSet.FindAsync(id);
         public virtual async Task<TEntity?> GetByUUID(Guid uuid) => await _dbSet.FirstOrDefaultAsync(x => x.UUID == uuid);

@@ -12,8 +12,9 @@ namespace MKW.Domain.Dto.DTO.PersonDTO
         public DateTime BirthDate { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? AlterDate { get; set; }
+        public int Balance { get; set; }
         public bool Active { get; set; }
-        public int GenderId { get; set; }
+        public int? GenderId { get; set; }
 
         public ReadPersonDTO()
         {

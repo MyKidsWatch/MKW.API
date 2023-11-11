@@ -28,6 +28,14 @@ namespace MKW.Domain.Interface.Repository.Base
         /// <param name="pageSize">Tamanho das páginas</param>
         /// <param name="page">Página a ser buscada</param>
         /// <returns></returns>
+        Task<PagedList<TEntity>> GetPaged<TKey>(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10, Func<TEntity, TKey>? order = null, bool asc = true);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate">Função de busca de entidades</param>
+        /// <param name="pageSize">Tamanho das páginas</param>
+        /// <param name="page">Página a ser buscada</param>
+        /// <returns></returns>
         Task<PagedList<TEntity>> GetPaged(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10);
         /// <summary>
         /// Método de Busca de Entidade por Id.

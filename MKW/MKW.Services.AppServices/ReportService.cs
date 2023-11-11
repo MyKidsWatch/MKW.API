@@ -4,7 +4,9 @@ using MKW.Domain.Entities.ReportAggregate;
 using MKW.Domain.Interface.Repository.ReportAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Utility.Abstractions;
+using MKW.Domain.Utility.Enums;
 using MKW.Domain.Utility.Exceptions;
+using Newtonsoft.Json.Linq;
 
 namespace MKW.Services.AppServices
 {
@@ -37,9 +39,12 @@ namespace MKW.Services.AppServices
             return new BaseResponseDTO<ReportReasonDto>().AddContent(new ReportReasonDto(reason));
         }
 
-        public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null)
+        public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null, string orderBy = "CreateDate", bool orderByAscending = true)
         {
-            var reports = await _reportRepository.GetPaged(x => reasonId == null || x.ReasonId == reasonId, page, pageSize);
+            var reports = await _reportRepository.GetPaged(x => reasonId == null || x.ReasonId == reasonId,
+                                             page, pageSize,
+                                                            x => x.GetType().GetProperty(orderBy)?.GetValue(x) ?? x.CreateDate,
+                                                            orderByAscending);
 
             if (!reports.Results.Any()) throw new NotFoundException("Reports not found.");
 
