@@ -57,7 +57,19 @@ namespace MKW.Data.Context.Mapping.UserAggregate
                 AlterDate = null
             };
 
+            var earn = new OperationType()
+            {
+                Id = 2,
+                UUID = Guid.NewGuid(),
+                Type = "Earn",
+                Credit = true,
+                Active = true,
+                CreateDate = DateTime.Now,
+                AlterDate = null
+            };
+
             modelBuilder.Entity<OperationType>().HasData(purchase);
+            modelBuilder.Entity<OperationType>().HasData(earn);
         }
     }
 }

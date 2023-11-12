@@ -4,6 +4,7 @@ using MKW.Domain.Entities.Base;
 using MKW.Domain.Interface.Repository.Base;
 using MKW.Domain.Utility.Abstractions;
 using System.Linq.Expressions;
+using static Dapper.SqlMapper;
 
 namespace MKW.Data.Repository.Base
 {
@@ -61,12 +62,60 @@ namespace MKW.Data.Repository.Base
             return addedEntity;
         }
 
+        public virtual async Task AddRange(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.UUID = Guid.NewGuid();
+                entity.CreateDate = DateTime.Now;
+                entity.AlterDate = null;
+            }
+
+            _dbSet.AddRange(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task AddRange(params TEntity[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.UUID = Guid.NewGuid();
+                entity.CreateDate = DateTime.Now;
+                entity.AlterDate = null;
+            }
+
+            _dbSet.AddRange(entities);
+            await _context.SaveChangesAsync();
+        }
+
         public virtual async Task<TEntity> Update(TEntity entity)
         {
             entity.AlterDate = DateTime.Now;
             var updatedEntity = _dbSet.Update(entity).Entity;
             await _context.SaveChangesAsync();
             return updatedEntity;
+        }
+
+        public virtual async Task UpdateRange(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.AlterDate = DateTime.Now;
+            }
+
+            _dbSet.UpdateRange(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task UpdateRange(params TEntity[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.AlterDate = DateTime.Now;
+            }
+
+            _dbSet.UpdateRange(entities);
+            await _context.SaveChangesAsync();
         }
 
         public virtual async Task Delete(TEntity entity)
