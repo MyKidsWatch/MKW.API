@@ -109,16 +109,17 @@ namespace MKW.Services.AppServices
             if (report.ReviewId != null && model.DeleteReview) await _reviewRepository.DeleteById(report.ReviewId ?? 0);
             if (model.DeletePerson)
             {
-                int userId =
+                var person =
                     report.ReportedPersonId != null
-                    ? report.ReportedPerson!.UserId
+                        ? report.ReportedPerson!
                         : report.ReviewId != null
-                        ? report.Review!.Person.UserId
+                            ? report.Review!.Person
                             : report.CommentId != null
-                            ? report.Comment!.Person.UserId
-                                : 0;
+                                ? report.Comment!.Person
+                                : null;
 
-                await _userRepository.DeleteUserByIdAsync(userId);
+                await _userRepository.DeleteUserByIdAsync(person.UserId);
+                await _personService.Delete(person.Id);
             }
 
             return new BaseResponseDTO<ReportDto>().AddContent(new ReportDto(report));
