@@ -7,6 +7,7 @@ namespace MKW.Domain.Entities.UserAggregate
         public int PersonId { get; set; }
         public int OperationTypeId { get; set; }
         public int Coins { get; set; }
+        public string StripeId { get; set; }
         public virtual Person Person { get; set; }
         public virtual OperationType OperationType { get; set; }
     }

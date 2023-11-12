@@ -7,7 +7,6 @@ using MKW.Domain.Interface.Repository.ReviewAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Exceptions;
-using Stripe.Checkout;
 
 namespace MKW.Services.AppServices
 {
@@ -51,7 +50,7 @@ namespace MKW.Services.AppServices
             if (!award.Active) throw new BadRequestException("Award can not be given");
             if (review.PersonId == person.Id) throw new BadRequestException("User can not award themself");
 
-            if (person.Balance < award.Price) return await GetPurchaseSession(person, award);
+            if (person.Balance < award.Price) return await _paymentService.GetPurchaseSession(person, award);
 
             await ProcessTransaction(person, award, review);
 
@@ -72,27 +71,6 @@ namespace MKW.Services.AppServices
 
             return responseDTO.AddContent(awardDto);
         }
-
-        private async Task<BaseResponseDTO<AwardPurchaseDto>> GetPurchaseSession(Person person, Award award)
-        {
-            var item = new SessionLineItemOptions();
-
-            if (person.Balance == 0)
-            {
-                item.Price = award.StripeId;
-                item.Quantity = 1;
-            }
-            else
-            {
-                var remainingCoins = award.Price - person.Balance;
-
-                item.Price = _configuration["API:Stripe:Coin"];
-                item.Quantity = remainingCoins;
-            }
-
-            return await _paymentService.CreatePaymentSession(item);
-        }
-
 
         private async Task ProcessTransaction(Person person, Award award, Review review)
         {

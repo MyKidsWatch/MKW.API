@@ -45,6 +45,19 @@ namespace MKW.Data.Context.Mapping.UserAggregate
                 .HasMany(x => x.Operations)
                 .WithOne(x => x.OperationType)
                 .HasForeignKey(x => x.OperationTypeId);
+
+            var purchase = new OperationType()
+            {
+                Id = 1,
+                UUID = Guid.NewGuid(),
+                Type = "Purchase",
+                Credit = false,
+                Active = true,
+                CreateDate = DateTime.Now,
+                AlterDate = null
+            };
+
+            modelBuilder.Entity<OperationType>().HasData(purchase);
         }
     }
 }

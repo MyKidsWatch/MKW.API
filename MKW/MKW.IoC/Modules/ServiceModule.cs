@@ -14,20 +14,21 @@ namespace MKW.IoC.Modules
             #region AppServices
             builder.AddTransient<IAgeRangeService, AgeRangeService>();
             builder.AddTransient<IAwardService, AwardService>();
+            builder.AddTransient<IChildService, ChildService>();
             builder.AddTransient<ICommentService, CommentService>();
             builder.AddTransient<IContentService, ContentService>();
-            builder.AddTransient<IChildService, ChildService>();
-            builder.AddTransient<IPlatformService, PlatformService>();
-            builder.AddTransient<IReviewService, ReviewService>();
             builder.AddTransient<IGenderService, GenderService>();
+            builder.AddTransient<IOperationService, OperationService>();
             builder.AddTransient<IPersonService, PersonService>();
+            builder.AddTransient<IPlatformService, PlatformService>();
             builder.AddTransient<IProfileService, ProfileService>();
             builder.AddTransient<IReportService, ReportService>();
+            builder.AddTransient<IReviewService, ReviewService>();
             #endregion
             #region BaseServices
-            builder.AddTransient<ITmdbService, TmdbService>();
             builder.AddTransient<IAlgorithmService, AlgorithmService>();
             builder.AddTransient<IPaymentService, PaymentService>();
+            builder.AddTransient<ITmdbService, TmdbService>();
             #endregion
         }
     }
