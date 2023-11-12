@@ -1,7 +1,9 @@
 ﻿using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.ReportsDTO;
 using MKW.Domain.Entities.ReportAggregate;
+using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Repository.ReportAggregate;
+using MKW.Domain.Interface.Repository.ReviewAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Utility.Abstractions;
 using MKW.Domain.Utility.Exceptions;
@@ -14,13 +16,22 @@ namespace MKW.Services.AppServices
         private readonly IReportReasonRepository _reportReasonRepository;
         private readonly IReportStatusRepository _reportStatusRepository;
         private readonly IPersonService _personService;
+        private readonly IReviewRepository _reviewRepository;
+        private readonly ICommentRepository _commentRepository;
+        private readonly IUserRepository _userRepository;
 
-        public ReportService(IReportRepository reportRepository, IReportReasonRepository reportReasonRepository, IPersonService personService, IReportStatusRepository reportStatusRepository)
+        public ReportService(IReportRepository reportRepository, IReportReasonRepository reportReasonRepository,
+                             IPersonService personService, IReportStatusRepository reportStatusRepository,
+                             IReviewRepository reviewRepository, ICommentRepository commentRepository,
+                             IUserRepository userRepository)
         {
             _reportRepository = reportRepository;
             _reportReasonRepository = reportReasonRepository;
             _personService = personService;
             _reportStatusRepository = reportStatusRepository;
+            _reviewRepository = reviewRepository;
+            _commentRepository = commentRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<BaseResponseDTO<ReportReasonDto>> GetReasons()
@@ -37,9 +48,12 @@ namespace MKW.Services.AppServices
             return new BaseResponseDTO<ReportReasonDto>().AddContent(new ReportReasonDto(reason));
         }
 
-        public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null)
+        public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null, string orderBy = "CreateDate", bool orderByAscending = true)
         {
-            var reports = await _reportRepository.GetPaged(x => reasonId == null || x.ReasonId == reasonId, page, pageSize);
+            var reports = await _reportRepository.GetPaged(x => (reasonId == null || x.ReasonId == reasonId) && x.Active,
+                                                            page, pageSize,
+                                                            x => x.GetType().GetProperty(orderBy)?.GetValue(x) ?? x.CreateDate,
+                                                            orderByAscending);
 
             var reportsDto = new PagedList<ReportDto>().Convert(reports, x => new ReportDto(x));
 
@@ -79,6 +93,33 @@ namespace MKW.Services.AppServices
             report.StatusId = model.StatusId;
 
             await _reportRepository.Update(report);
+
+            return new BaseResponseDTO<ReportDto>().AddContent(new ReportDto(report));
+        }
+
+        public async Task<BaseResponseDTO<ReportDto>> RespondReport(ReportResponseDto model)
+        {
+            var report = await _reportRepository.GetById(model.ReportId) ?? throw new NotFoundException("Report not found.");
+
+            report.StatusId = model.StatusId ?? report.StatusId;
+            if (model.CloseReport) report.Active = false;
+            await _reportRepository.Update(report);
+
+            if (report.CommentId != null && model.DeleteComment) await _commentRepository.DeleteById(report.CommentId ?? 0);
+            if (report.ReviewId != null && model.DeleteReview) await _reviewRepository.DeleteById(report.ReviewId ?? 0);
+            if (model.DeletePerson)
+            {
+                int userId =
+                    report.ReportedPersonId != null
+                    ? report.ReportedPerson!.UserId
+                        : report.ReviewId != null
+                        ? report.Review!.Person.UserId
+                            : report.CommentId != null
+                            ? report.Comment!.Person.UserId
+                                : 0;
+
+                await _userRepository.DeleteUserByIdAsync(userId);
+            }
 
             return new BaseResponseDTO<ReportDto>().AddContent(new ReportDto(report));
         }

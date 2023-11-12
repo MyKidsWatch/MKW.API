@@ -40,7 +40,7 @@ namespace MKW.Data.Repository.IdentityAggregate
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersByUsernameAsync(string username) => await _dbSet.Where(user => user.UserName.Contains(username)).ToListAsync();
         public async Task<IEnumerable<ApplicationUser>?> GetAllUsersAsync() => await _dbSet.ToListAsync();
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersByClaimAsync(Claim claim) => await _userManager.GetUsersForClaimAsync(claim);
-        public async Task<IEnumerable<ApplicationUser>> GetAllUsersByRoleAsync(string roleName) => await _userManager.GetUsersInRoleAsync(roleName);
+        public async Task<IEnumerable<ApplicationUser>> GetUsersByRoleAsync(string roleName) => await _userManager.GetUsersInRoleAsync(roleName);
 
         public async Task<(IdentityResult, ApplicationUser)> AddUserAsync(ApplicationUser user, string password)
         {

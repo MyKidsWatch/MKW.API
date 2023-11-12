@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MKW.API.Controllers.Base;
+using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Interface.Services.BaseServices;
 
 namespace MKW.API.Controllers
@@ -15,5 +15,8 @@ namespace MKW.API.Controllers
         {
             _paymentService = paymentService;
         }
+
+        [HttpGet]
+        public async Task<ActionResult<BaseResponseDTO<string>>> GetPaymentSession() => Ok(await _paymentService.CreatePaymentSession());
     }
 }

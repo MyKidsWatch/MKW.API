@@ -13,7 +13,7 @@ namespace MKW.Domain.Interface.Repository.IdentityAggregate
         Task<IEnumerable<TIdentity>> GetActiveUsersAsync();
         Task<IEnumerable<TIdentity>> GetAllUsersAsync();
         Task<IEnumerable<TIdentity>> GetAllUsersByClaimAsync(Claim claim);
-        Task<IEnumerable<TIdentity>> GetAllUsersByRoleAsync(string roleName);
+        Task<IEnumerable<TIdentity>> GetUsersByRoleAsync(string roleName);
         Task<IEnumerable<TIdentity>> GetAllUsersByUsernameAsync(string username);
         Task<(IdentityResult result, TIdentity user)> AddUserAsync(TIdentity user, string password);
         Task<(IdentityResult result, TIdentity user)> UpdateUserAsync(int id, TIdentity user);

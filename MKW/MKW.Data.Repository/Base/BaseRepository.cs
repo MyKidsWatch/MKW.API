@@ -4,6 +4,7 @@ using MKW.Domain.Entities.Base;
 using MKW.Domain.Interface.Repository.Base;
 using MKW.Domain.Utility.Abstractions;
 using System.Linq.Expressions;
+using static Dapper.SqlMapper;
 
 namespace MKW.Data.Repository.Base
 {
@@ -24,25 +25,67 @@ namespace MKW.Data.Repository.Base
 
         public virtual async Task<IEnumerable<TEntity>?> GetAll() => await _dbSet.ToListAsync();
         public virtual async Task<IEnumerable<TEntity>?> GetActive() => await _dbSet.Where(x => x.Active).ToListAsync();
+        public virtual async Task<PagedList<TEntity>> GetPaged<TKey>(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10, Func<TEntity, TKey> order = null, bool asc = true)
+        {
+            var query = _dbSet.Where(predicate ?? (x => true));
+            query = asc ? query.OrderBy(order).AsQueryable() : query.OrderByDescending(order).AsQueryable();
+            query = query.Skip(pageSize * (page - 1)).Take(pageSize);
+
+            return new PagedList<TEntity>()
+            {
+                Results = query.ToList(),
+                Page = page,
+                PageSize = pageSize,
+                PageCount = (int)Math.Ceiling(await _dbSet.Where(predicate ?? (x => true)).CountAsync() / (decimal)pageSize)
+            };
+        }
+
         public virtual async Task<PagedList<TEntity>> GetPaged(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10)
-          => new PagedList<TEntity>()
-          {
-              Results = await _dbSet.Where(predicate ?? (x => true)).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync(),
-              Page = page,
-              PageSize = pageSize,
-              PageCount = (int)Math.Ceiling(_dbSet.Where(predicate ?? (x => true)).Count() / (decimal)pageSize)
-          };
+              => new PagedList<TEntity>()
+              {
+                  Results = _dbSet.Where(predicate ?? (x => true)).Skip(pageSize * (page - 1)).Take(pageSize).ToList(),
+                  Page = page,
+                  PageSize = pageSize,
+                  PageCount = (int)Math.Ceiling(await _dbSet.Where(predicate ?? (x => true)).CountAsync() / (decimal)pageSize)
+              };
 
         public virtual async Task<TEntity?> GetById(int id) => await _dbSet.FindAsync(id);
         public virtual async Task<TEntity?> GetByUUID(Guid uuid) => await _dbSet.FirstOrDefaultAsync(x => x.UUID == uuid);
 
         public virtual async Task<TEntity> Add(TEntity entity)
         {
+            entity.UUID = Guid.NewGuid();
             entity.CreateDate = DateTime.Now;
             entity.AlterDate = null;
             var addedEntity = _dbSet.Add(entity).Entity;
             await _context.SaveChangesAsync();
             return addedEntity;
+        }
+
+        public virtual async Task AddRange(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.UUID = Guid.NewGuid();
+                entity.CreateDate = DateTime.Now;
+                entity.AlterDate = null;
+            }
+
+            _dbSet.AddRange(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task AddRange(params TEntity[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.UUID = Guid.NewGuid();
+                entity.CreateDate = DateTime.Now;
+                entity.AlterDate = null;
+            }
+
+            _dbSet.AddRange(entities);
+            await _context.SaveChangesAsync();
         }
 
         public virtual async Task<TEntity> Update(TEntity entity)
@@ -51,6 +94,28 @@ namespace MKW.Data.Repository.Base
             var updatedEntity = _dbSet.Update(entity).Entity;
             await _context.SaveChangesAsync();
             return updatedEntity;
+        }
+
+        public virtual async Task UpdateRange(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.AlterDate = DateTime.Now;
+            }
+
+            _dbSet.UpdateRange(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task UpdateRange(params TEntity[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.AlterDate = DateTime.Now;
+            }
+
+            _dbSet.UpdateRange(entities);
+            await _context.SaveChangesAsync();
         }
 
         public virtual async Task Delete(TEntity entity)

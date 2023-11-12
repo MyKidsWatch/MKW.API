@@ -16,6 +16,7 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
         public int? StatusId { get; set; }
         public string? Details { get; set; }
         public string? ReportType { get; set; }
+        public DateTime CreateDate { get; set; }
         public ReportReasonDto Reason { get; set; }
         public ReviewDto? Review { get; set; }
         public CommentDetailsDto? Comment { get; set; }
@@ -44,6 +45,7 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
             Person = new ReadPersonDTO(report.Person);
             ReportedPerson = report.ReportedPerson != null ? new ReadPersonDTO(report.ReportedPerson) : null;
             Status = new ReportStatusDto(report.Status);
+            CreateDate = report.CreateDate;
 
             if (report.CommentId != null) ReportType = "Comment";
             else if (report.ReviewId != null) ReportType = "Review";

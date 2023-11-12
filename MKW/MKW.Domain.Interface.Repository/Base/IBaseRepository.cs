@@ -28,6 +28,14 @@ namespace MKW.Domain.Interface.Repository.Base
         /// <param name="pageSize">Tamanho das páginas</param>
         /// <param name="page">Página a ser buscada</param>
         /// <returns></returns>
+        Task<PagedList<TEntity>> GetPaged<TKey>(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10, Func<TEntity, TKey>? order = null, bool asc = true);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate">Função de busca de entidades</param>
+        /// <param name="pageSize">Tamanho das páginas</param>
+        /// <param name="page">Página a ser buscada</param>
+        /// <returns></returns>
         Task<PagedList<TEntity>> GetPaged(Expression<Func<TEntity, bool>>? predicate = null, int page = 1, int pageSize = 10);
         /// <summary>
         /// Método de Busca de Entidade por Id.
@@ -47,6 +55,26 @@ namespace MKW.Domain.Interface.Repository.Base
         /// <param name="entity">Entidade a ser Inserida na Base.</param>
         /// <returns>A própria Entidade, após inserida.</returns>
         Task<TEntity> Add(TEntity entity);
+        /// <summary>
+        /// Método que Adiciona as Entidades na Base de Dados.
+        /// </summary>
+        /// <param name="entities">Entidadse a serem Inseridas na Base.</param>
+        Task AddRange(IEnumerable<TEntity> entities);
+        /// <summary>
+        /// Método que Adiciona as Entidades na Base de Dados.
+        /// </summary>
+        /// <param name="entities">Entidades a serem Inseridas na Base.</param>
+        Task AddRange(params TEntity[] entities);
+        /// <summary>
+        /// Método que Atualiza as Entidades na Base de Dados, com base em suas Chaves Primárias ou Tracking.
+        /// </summary>
+        /// <param name="entities">Entidades a serem Atualizadas na Base.</param>
+        Task UpdateRange(IEnumerable<TEntity> entities);
+        /// <summary>
+        /// Método que Atualiza as Entidades na Base de Dados, com base em suas Chaves Primárias ou Tracking.
+        /// </summary>
+        /// <param name="entities">Entidadse a serem Atualizadas na Base.</param>
+        Task UpdateRange(params TEntity[] entities);
         /// <summary>
         /// Método que Atualiza a Entidade na Base de Dados, com base em suas Chaves Primárias ou Tracking.
         /// </summary>

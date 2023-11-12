@@ -13,8 +13,8 @@ namespace MKW.Data.Repository.ReportAggregate
         }
 
         public async Task<bool> AnyReportByUser(int personId, int? reviewId, int? commentId, int? reportedPersonId)
-            => await _dbSet.AnyAsync(x => x.PersonId == personId 
-                && (reviewId == null || x.ReviewId == reviewId) 
+            => await _dbSet.AnyAsync(x => x.PersonId == personId
+                && (reviewId == null || x.ReviewId == reviewId)
                 && (commentId == null || x.CommentId == commentId)
                 && (reportedPersonId == null || x.ReportedPersonId == reportedPersonId)
             );

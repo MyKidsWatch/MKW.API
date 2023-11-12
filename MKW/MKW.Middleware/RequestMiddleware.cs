@@ -43,7 +43,7 @@ namespace MKW.Middleware
         private async Task HandleNotFoundExceptionAsync(HttpContext context, NotFoundException exception)
         {
             var contentType = "application/json";
-            var statusCode = (int)HttpStatusCode.BadRequest;
+            var statusCode = (int)HttpStatusCode.NotFound;
 
             var resposta = new BaseResponseDTO<string>().WithErrors(exception.Errors);
             var response = JsonConvert.SerializeObject(resposta);
@@ -58,7 +58,7 @@ namespace MKW.Middleware
         private async Task HandleBadRequestExceptionAsync(HttpContext context, BadRequestException exception)
         {
             var contentType = "application/json";
-            var statusCode = (int)HttpStatusCode.NotFound;
+            var statusCode = (int)HttpStatusCode.BadRequest;
 
             var resposta = new BaseResponseDTO<string>().WithErrors(exception.Errors);
             var response = JsonConvert.SerializeObject(resposta);
