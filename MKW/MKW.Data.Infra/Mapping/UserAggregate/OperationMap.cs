@@ -34,6 +34,10 @@ namespace MKW.Data.Context.Mapping.UserAggregate
                 .HasColumnName("COINS");
 
             modelBuilder.Entity<Operation>()
+                .Property(x => x.StripeId)
+                .HasColumnName("STRIPE_ID");
+
+            modelBuilder.Entity<Operation>()
                 .Property(x => x.CreateDate)
                 .HasColumnName("CREATE_DATE");
 

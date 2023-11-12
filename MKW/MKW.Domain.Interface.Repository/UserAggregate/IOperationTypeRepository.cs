@@ -5,5 +5,6 @@ namespace MKW.Domain.Interface.Repository.UserAggregate
 {
     public interface IOperationTypeRepository : IBaseRepository<OperationType>
     {
+        Task<OperationType> GetOperationByType(string operationType);
     }
 }

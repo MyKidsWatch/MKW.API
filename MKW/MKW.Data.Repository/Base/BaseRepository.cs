@@ -53,6 +53,7 @@ namespace MKW.Data.Repository.Base
 
         public virtual async Task<TEntity> Add(TEntity entity)
         {
+            entity.UUID = Guid.NewGuid();
             entity.CreateDate = DateTime.Now;
             entity.AlterDate = null;
             var addedEntity = _dbSet.Add(entity).Entity;
