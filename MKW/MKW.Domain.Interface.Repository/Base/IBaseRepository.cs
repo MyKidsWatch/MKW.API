@@ -56,6 +56,26 @@ namespace MKW.Domain.Interface.Repository.Base
         /// <returns>A própria Entidade, após inserida.</returns>
         Task<TEntity> Add(TEntity entity);
         /// <summary>
+        /// Método que Adiciona as Entidades na Base de Dados.
+        /// </summary>
+        /// <param name="entities">Entidadse a serem Inseridas na Base.</param>
+        Task AddRange(IEnumerable<TEntity> entities);
+        /// <summary>
+        /// Método que Adiciona as Entidades na Base de Dados.
+        /// </summary>
+        /// <param name="entities">Entidades a serem Inseridas na Base.</param>
+        Task AddRange(params TEntity[] entities);
+        /// <summary>
+        /// Método que Atualiza as Entidades na Base de Dados, com base em suas Chaves Primárias ou Tracking.
+        /// </summary>
+        /// <param name="entities">Entidades a serem Atualizadas na Base.</param>
+        Task UpdateRange(IEnumerable<TEntity> entities);
+        /// <summary>
+        /// Método que Atualiza as Entidades na Base de Dados, com base em suas Chaves Primárias ou Tracking.
+        /// </summary>
+        /// <param name="entities">Entidadse a serem Atualizadas na Base.</param>
+        Task UpdateRange(params TEntity[] entities);
+        /// <summary>
         /// Método que Atualiza a Entidade na Base de Dados, com base em suas Chaves Primárias ou Tracking.
         /// </summary>
         /// <param name="entity">Entidade a ser Atualizada na Base.</param>
