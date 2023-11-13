@@ -317,6 +317,61 @@ namespace MKW.Tests
             Assert.NotNull(response.Content);
         }
 
+        [Fact]
+        async void Should_Return_Accounts_Enumerable(){
+
+            // Arrange
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+            var personServiceMock = new Mock<IPersonService>();
+            var emailServiceMock = new Mock<IEmailService>();
+            var roleServiceMock = new Mock<IRoleService>();
+            var mapperMock = new Mock<IMapper>();
+            var accountService = new AccountService(
+               userRepositoryMock.Object,
+               userTokenRepositoryMock.Object,
+               personServiceMock.Object,
+               emailServiceMock.Object,
+               roleServiceMock.Object,
+               mapperMock.Object
+               );
+            // criando um usuario pra ser retornado pelo repositorio
+            var user = new ApplicationUser();
+            user.Id = 1;
+            user.UserName = "not-batman";
+            user.FirstName = "Bruce";
+            user.LastName = "Wayne";
+
+            IEnumerable<ApplicationUser> users = new ApplicationUser[] { user };
+
+            // definindo que o mock do repositorio vai retornar o user acima
+            userRepositoryMock
+                .Setup(x => x.GetAllUsersAsync())
+                .ReturnsAsync(users);
+
+            // criando o DTO a ser retornado pelo Mapper
+            var readUserDTO = new ReadUserDTO();
+            readUserDTO.Id = 1;
+            readUserDTO.FirstName = user.FirstName;
+            readUserDTO.LastName = user.LastName;
+            readUserDTO.userName = user.UserName;
+
+            IEnumerable<ReadUserDTO> readUserDTOs = new ReadUserDTO[] { readUserDTO};
+            // definindo que o mock do Mapper vai retornar o DTO acima
+            mapperMock
+                .Setup(x => x.Map<IEnumerable<ReadUserDTO>>(It.IsAny<IEnumerable<ApplicationUser>>()))
+                .Returns(readUserDTOs);
+
+            // act
+            var response = await accountService.GetAllAccountsAsync();
+
+            // assert
+            Assert.True(response.IsSuccess);
+            Assert.NotNull(response.Content);
+            Assert.Equal(response.Content.FirstOrDefault(), readUserDTO);
+
+        }
+
         // [Fact]
         // async void TestRequestEmailKeycodeAsync(){
         //     // Arrange

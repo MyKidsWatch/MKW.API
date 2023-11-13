@@ -25,6 +25,7 @@ namespace Tests
             _mockAgeRangeRepository = new Mock<IAgeRangeRepository>();
             _ars = new AgeRangeService(_mockAgeRangeRepository.Object);
         }
+        
         [Fact]
         public async void Should_Return_Age_Range_Enumerable()
         {
@@ -35,8 +36,6 @@ namespace Tests
                 InitialAge = 2,
                 FinalAge = 4
             };
-
-            var ageRangeDTO = new AgeRangeDto(ageRangeAgg);
 
             IEnumerable<AgeRange> xyz = new AgeRange[] {ageRangeAgg};
             
