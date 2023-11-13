@@ -35,7 +35,7 @@ namespace MKW.API.Controllers
         public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetReasons([FromRoute] int reasonId) => Ok(await _reportService.GetReasonById(reasonId));
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
@@ -52,7 +52,7 @@ namespace MKW.API.Controllers
         public async Task<ActionResult<BaseResponseDTO<ReportDto>>> AddReport([FromBody] CreateReportDto report) => Ok(await _reportService.AddReport(report));
 
         [HttpPost("Response")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
@@ -60,7 +60,7 @@ namespace MKW.API.Controllers
         public async Task<ActionResult<BaseResponseDTO<ReportDto>>> RespondReport([FromBody] ReportResponseDto report) => Ok(await _reportService.RespondReport(report));
 
         [HttpPatch]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
