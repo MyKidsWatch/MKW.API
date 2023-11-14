@@ -19,14 +19,15 @@ namespace MKW.Services.BaseServices
             _sessionService = new SessionService();
         }
 
-        public async Task<Session> CreatePaymentSession(params SessionLineItemOptions[] items)
+        public async Task<Session> CreatePaymentSession(string email, params SessionLineItemOptions[] items)
         {
             var options = new SessionCreateOptions
             {
                 LineItems = items.ToList(),
                 Mode = "payment",
-                SuccessUrl = "https://localhost:4040/a",
-                CancelUrl = "https://localhost:4040/a",
+                UiMode = "embedded",
+                RedirectOnCompletion = "never",
+                CustomerEmail = email
             };
 
             return _sessionService.Create(options);
@@ -37,9 +38,9 @@ namespace MKW.Services.BaseServices
             return _sessionService.Get(sessionId);
         }
 
-        public async Task<BaseResponseDTO<AwardPurchaseDto>> GetAwardPurchaseSession(params SessionLineItemOptions[] items)
+        public async Task<BaseResponseDTO<AwardPurchaseDto>> GetAwardPurchaseSession(string email, params SessionLineItemOptions[] items)
         {
-            var session = await CreatePaymentSession(items);
+            var session = await CreatePaymentSession(email, items);
 
             var response = new BaseResponseDTO<AwardPurchaseDto>();
 
@@ -69,7 +70,7 @@ namespace MKW.Services.BaseServices
                 item.Quantity = remainingCoins;
             }
 
-            return await GetAwardPurchaseSession(item);
+            return await GetAwardPurchaseSession(person.User.Email, item);
         }
     }
 }
