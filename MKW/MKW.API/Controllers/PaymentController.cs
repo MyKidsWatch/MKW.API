@@ -16,7 +16,7 @@ namespace MKW.API.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<BaseResponseDTO<string>>> GetPaymentSession() => Ok(await _paymentService.CreatePaymentSession());
+        //[HttpGet]
+        //public async Task<ActionResult<BaseResponseDTO<string>>> GetPaymentSession() => Ok(await _paymentService.CreatePaymentSession());
     }
 }

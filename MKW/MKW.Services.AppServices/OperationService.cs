@@ -41,7 +41,7 @@ namespace MKW.Services.AppServices
             if (session.PaymentStatus.ToLower() != "paid")
                 return response.AddContent(new OperationDto(operation)
                 {
-                    CheckoutUrl = session.Url,
+                    CheckoutUrl = session.ClientSecret,
                     PaymentStatus = session.PaymentStatus,
                     Finished = false
                 });
@@ -73,7 +73,7 @@ namespace MKW.Services.AppServices
                 Quantity = model.Coins
             };
 
-            var session = await _paymentService.CreatePaymentSession(sessionItem);
+            var session = await _paymentService.CreatePaymentSession(user.User.Email, sessionItem);
 
             var operation = new Operation()
             {
@@ -88,7 +88,7 @@ namespace MKW.Services.AppServices
 
             return new BaseResponseDTO<OperationDto>().AddContent(new OperationDto(operation)
             {
-                CheckoutUrl = session.Url,
+                CheckoutUrl = session.ClientSecret,
                 PaymentStatus = session.PaymentStatus,
                 Finished = false
             });
