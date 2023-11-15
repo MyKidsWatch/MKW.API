@@ -26,6 +26,14 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetReasons() => Ok(await _reportService.GetReasons());
 
+        [HttpGet("Status")]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportReasonDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetStatus() => Ok(await _reportService.GetStatus());
+
         [HttpGet("Reason/id/{reasonId:int}")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
@@ -40,8 +48,8 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> GetReports([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] int? reasonId = null, [FromQuery] string orderBy = "CreateDate", [FromQuery] bool orderByAscending = true)
-            => Ok(await _reportService.GetReports(page, pageSize, reasonId, orderBy, orderByAscending));
+        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> GetReports([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] int? reasonId = null, [FromQuery] int? statusId = null, [FromQuery] string orderBy = "CreateDate", [FromQuery] bool orderByAscending = true)
+            => Ok(await _reportService.GetReports(page, pageSize, reasonId, statusId, orderBy, orderByAscending));
 
         [HttpPost]
         [Authorize]

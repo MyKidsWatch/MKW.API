@@ -41,6 +41,14 @@ namespace MKW.Services.AppServices
             return new BaseResponseDTO<ReportReasonDto>().AddContent(reasons.Select(x => new ReportReasonDto(x)));
         }
 
+
+        public async Task<BaseResponseDTO<ReportStatusDto>> GetStatus()
+        {
+            var status = await _reportStatusRepository.GetActive();
+
+            return new BaseResponseDTO<ReportStatusDto>().AddContent(status.Select(x => new ReportStatusDto(x)));
+        }
+
         public async Task<BaseResponseDTO<ReportReasonDto>> GetReasonById(int id)
         {
             var reason = await _reportReasonRepository.GetById(id) ?? throw new NotFoundException("Report Reason not found.");
@@ -48,9 +56,13 @@ namespace MKW.Services.AppServices
             return new BaseResponseDTO<ReportReasonDto>().AddContent(new ReportReasonDto(reason));
         }
 
-        public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null, string orderBy = "CreateDate", bool orderByAscending = true)
+        public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null, int? statusId = null,
+                                                                 string orderBy = "CreateDate", bool orderByAscending = true)
         {
-            var reports = await _reportRepository.GetPaged(x => (reasonId == null || x.ReasonId == reasonId) && x.Active,
+            var reports = await _reportRepository.GetPaged(x =>
+                                                            (reasonId == null || x.ReasonId == reasonId)
+                                                            && (statusId == null || x.StatusId == statusId)
+                                                            && x.Active,
                                                             page, pageSize,
                                                             x => x.GetType().GetProperty(orderBy)?.GetValue(x) ?? x.CreateDate,
                                                             orderByAscending);
