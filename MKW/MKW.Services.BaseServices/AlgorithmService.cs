@@ -78,6 +78,21 @@ namespace MKW.Services.BaseServices
             return responseDTO.AddContent(movies);
         }
 
+        public async Task<BaseResponseDTO<MovieDTO>> GetTrendingMovies(int page, int count, string language)
+        {
+            var responseDTO = new BaseResponseDTO<MovieDTO>();
+            var user = await _personService.GetUser();
+
+
+            if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<MovieDTO>());
+
+            var reviews = (await _algorithmRepository.GetTrendingReviews(page, count)).Select(x => new ReviewDto(x)) ?? throw new NotFoundException("No reviews were found.");
+
+            var movies = await reviews.SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
+
+            return responseDTO.AddContent(movies);
+        }
+
         #region Deprecated
         public async Task<BaseResponseDTO<ReviewDto>> GetRecommended(int page, int count)
         {
