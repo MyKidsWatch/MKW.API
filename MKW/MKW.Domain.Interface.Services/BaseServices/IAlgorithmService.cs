@@ -15,5 +15,6 @@ namespace MKW.Domain.Interface.Services.BaseServices
         Task<BaseResponseDTO<ReviewDetailsDto>> GetTrendingReviews(int page, int count, string language);
         Task<List<Content>?> GetRecomendations(List<Review> reviews);
         Task<BaseResponseDTO<MovieDTO>> GetRelevantMovies(int page, int count, string language, int? childId = null);
+        Task<BaseResponseDTO<MovieDTO>> GetTrendingMovies(int page, int count, string language);
     }
 }
