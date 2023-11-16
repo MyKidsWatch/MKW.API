@@ -99,6 +99,9 @@ namespace MKW.Data.Repository.Base
             .Include(x => x.Comments)
             .ThenInclude(x => x.Answers)
             .ThenInclude(x => x.CommentDetails)
+            .Include(x => x.Comments)
+            .ThenInclude(x => x.Answers)
+            .ThenInclude(x => x.Answers)
             .Where(x => relevant.Select(y => y.ReviewId).Contains(x.Id))
             .AsNoTracking()
             .ToListAsync();
