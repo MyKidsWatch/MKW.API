@@ -504,15 +504,22 @@ namespace MKW.Tests
         [Fact]
         async void Should_Return_Accounts_ReadUserDTO_Enumerable_RegisterAccountAsync(){
             var createUserDto = A.Fake<CreateUserDTO>();
-
-            userRepositoryMock
-                .Setup(x => x.GetUserByIdAsync(user.Id))
-                .Returns(Task.FromResult((Result.Ok(), user)));
-
+            var role = A.Fake<BaseResponseDTO<ReadRoleDTO>>();
+            
             mapperMock
                 .Setup(x => x.Map<CreateUserDTO>(It.IsAny<ApplicationUser>()))
                 .Returns(createUserDto);
 
+            var applicationUser = A.Fake<ApplicationUser>();
+
+            userRepositoryMock
+                .Setup(x => x.AddUserAsync(applicationUser, createUserDto.Password))
+                .Returns(Task.FromResult((A.Fake<IdentityResult>(), applicationUser)));
+
+            roleServiceMock
+                .Setup(x => x.AddUserToRoleAsync("standard", applicationUser.UserName))
+                .Returns(Task.FromResult(role));
+            
             var result = await accountService.RegisterAccountAsync(createUserDto);
         }
 
