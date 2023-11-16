@@ -1,13 +1,21 @@
+using System.Security.Claims;
 using AutoMapper;
+using FakeItEasy;
 using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using MKW.API.Controllers.Identity;
+using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.IdentityDTO.Account;
+using MKW.Domain.Dto.DTO.IdentityDTO.Authorization;
+using MKW.Domain.Dto.DTO.PersonDTO;
 using MKW.Domain.Entities.IdentityAggregate;
 using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.AppServices.IdentityService;
 using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Services.AppServices.IdentityService;
+using MKW.Services.BaseServices;
 using Moq;
 
 namespace MKW.Tests
@@ -23,22 +31,25 @@ namespace MKW.Tests
         private Mock<IMapper> mapperMock;
         private IAccountService accountService;
 
-        public void AccountService()
+        private IEmailService emailService;
+
+        public AccountServiceTest()
         {
-            // this.userRepositoryMock = new Mock<IUserRepository>();
-            // this.userTokenRepositoryMock = new Mock<IUserTokenRepository>();
-            // this.personServiceMock = new Mock<IPersonService>();
-            // this.emailServiceMock = new Mock<IEmailService>();
-            // this.roleServiceMock = new Mock<IRoleService>();
-            // this.mapperMock = new Mock<IMapper>();
-            // this.accountService = new AccountService(
-            //    userRepositoryMock.Object,
-            //    userTokenRepositoryMock.Object,
-            //    personServiceMock.Object,
-            //    emailServiceMock.Object,
-            //    roleServiceMock.Object,
-            //    mapperMock.Object
-            //    );
+            userRepositoryMock = new Mock<IUserRepository>();
+            userTokenRepositoryMock = new Mock<IUserTokenRepository>();
+            personServiceMock = new Mock<IPersonService>();
+            emailServiceMock = new Mock<IEmailService>();
+            roleServiceMock = new Mock<IRoleService>();
+            mapperMock = new Mock<IMapper>();
+            accountService = new AccountService(
+               userRepositoryMock.Object,
+               userTokenRepositoryMock.Object,
+               personServiceMock.Object,
+               emailServiceMock.Object,
+               roleServiceMock.Object,
+               mapperMock.Object
+               );
+
         }
 
         [Fact]
@@ -370,6 +381,139 @@ namespace MKW.Tests
             Assert.NotNull(response.Content);
             Assert.Equal(response.Content.FirstOrDefault(), readUserDTO);
 
+            userRepositoryMock
+                .Setup(x => x.GetAllUsersAsync())
+                .Throws(new Exception());
+
+            Assert.ThrowsAsync<Exception>(() => accountService.GetAllAccountsAsync());
+
+        }
+
+        [Fact]
+        async void Should_Return_Accounts_ReadUserDTO_Enumerable_GetActiveAccountsAsync()
+        {
+            var readUserDTO = A.Fake<ReadUserDTO>();
+            IEnumerable<ReadUserDTO> readUserDTOs = new ReadUserDTO[] { readUserDTO };
+            var user = A.Fake<ApplicationUser>();
+
+            IEnumerable<ApplicationUser> users = new ApplicationUser[] { user };
+
+            userRepositoryMock
+                .Setup(x => x.GetActiveUsersAsync())
+                .Returns(Task.FromResult(users));
+            
+            mapperMock
+                .Setup(x => x.Map<IEnumerable<ReadUserDTO>>(It.IsAny<IEnumerable<ApplicationUser>>()))
+                .Returns(readUserDTOs);
+
+            var result = await accountService.GetActiveAccountsAsync();
+
+            Assert.Equal(result.Content[0].FirstName, user.FirstName);
+        }
+
+        [Fact]
+        async void Should_Return_Accounts_ReadUserDTO_Enumerable_GetAllAccountsByRoleAsync()
+        {
+
+            var role = A.Fake<BaseResponseDTO<ReadRoleDTO>>();
+            role.AddContent(A.Fake<ReadRoleDTO>());
+            var firstRole = role.Content.First();
+            var user = A.Fake<ApplicationUser>();
+            var readUserDTO = A.Fake<ReadUserDTO>();
+            IEnumerable<ReadUserDTO> readUserDTOs = new ReadUserDTO[] { readUserDTO };
+            IEnumerable<ApplicationUser> users = new ApplicationUser[] { user };
+
+            // IEnumerable<ReadRoleDTO> roles = new ReadRoleDTO[] { role };
+
+            roleServiceMock
+                .Setup(x => x.GetRolesByNameAsync(firstRole.RoleName))
+                .Returns(Task.FromResult<BaseResponseDTO<ReadRoleDTO>>(role));
+
+            userRepositoryMock
+                .Setup(x => x.GetAllUsersByRoleAsync(firstRole.RoleName))
+                .Returns(Task.FromResult(users));
+
+            mapperMock
+                .Setup(x => x.Map<IEnumerable<ReadUserDTO>>(It.IsAny<IEnumerable<ApplicationUser>>()))
+                .Returns(readUserDTOs);
+
+            var result = await accountService.GetAllAccountsByRoleAsync(firstRole.RoleName);
+
+            Assert.Equal(result.Content.First(), readUserDTO);
+        }
+
+        [Fact]
+        async void Should_Return_Accounts_ReadUserDTO_Enumerable_GetAllAccountsByClaimAsync()
+        {
+
+            var role = A.Fake<BaseResponseDTO<ReadRoleDTO>>();
+            role.AddContent(A.Fake<ReadRoleDTO>());
+            var firstRole = role.Content.First();
+            var user = A.Fake<ApplicationUser>();
+            var readUserDTO = A.Fake<ReadUserDTO>();
+            IEnumerable<ReadUserDTO> readUserDTOs = new ReadUserDTO[] { readUserDTO };
+            IEnumerable<ApplicationUser> users = new ApplicationUser[] { user };
+            var claim = A.Fake<Claim>();
+
+            userRepositoryMock
+                .Setup(x => x.GetAllUsersByClaimAsync(claim))
+                .Returns(Task.FromResult(users));
+
+            mapperMock
+                .Setup(x => x.Map<IEnumerable<ReadUserDTO>>(It.IsAny<IEnumerable<ApplicationUser>>()))
+                .Returns(readUserDTOs);
+
+            var result = await accountService.GetAllAccountsByClaimAsync(claim);
+
+            Assert.Equal(result.Content.First(), readUserDTO);
+        }
+
+        [Fact]
+        async void Should_Return_Accounts_ReadUserDTO_Enumerable_GetAccountByTokenAsync()
+        {
+
+            var role = A.Fake<BaseResponseDTO<ReadRoleDTO>>();
+            role.AddContent(A.Fake<ReadRoleDTO>());
+            var firstRole = role.Content.First();
+            var user = A.Fake<ApplicationUser>();
+            var readUserDTO = A.Fake<ReadUserDTO>();
+            readUserDTO.AssociatedWithPerson = A.Fake<ReadPersonDTO>();
+            IEnumerable<ReadUserDTO> readUserDTOs = new ReadUserDTO[] { readUserDTO };
+            IEnumerable<ApplicationUser> users = new ApplicationUser[] { user };
+
+            var context = new DefaultHttpContext();
+            context.User = new ClaimsPrincipal();
+            var claim = new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",user.Id.ToString());
+            
+            context.User.AddIdentity(new ClaimsIdentity(new Claim[] { claim }));
+
+
+            userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(user.Id))
+                .Returns(Task.FromResult((Result.Ok(), user)));
+
+            mapperMock
+                .Setup(x => x.Map<ReadUserDTO>(It.IsAny<ApplicationUser>()))
+                .Returns(readUserDTO);
+
+            var result = await accountService.GetAccountByTokenAsync(context);
+
+            Assert.Equal(result.Content.First(), readUserDTO);
+        }
+
+        [Fact]
+        async void Should_Return_Accounts_ReadUserDTO_Enumerable_RegisterAccountAsync(){
+            var createUserDto = A.Fake<CreateUserDTO>();
+
+            userRepositoryMock
+                .Setup(x => x.GetUserByIdAsync(user.Id))
+                .Returns(Task.FromResult((Result.Ok(), user)));
+
+            mapperMock
+                .Setup(x => x.Map<CreateUserDTO>(It.IsAny<ApplicationUser>()))
+                .Returns(createUserDto);
+
+            var result = await accountService.RegisterAccountAsync(createUserDto);
         }
 
         // [Fact]

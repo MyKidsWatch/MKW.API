@@ -22,8 +22,10 @@ client:
 all: dbup migrate run client
 
 analyze:
-	dotnet sonarscanner begin /k:"MKW" /d:sonar.host.url="http://localhost:9000" /d:sonar.scm.provider="git" /d:sonar.token="sqp_7e26a388d42517d1cf47ee2b95e2f32f2bae6fae" /d:sonar.cs.opencover.reportsPaths=coverage.xml
-	dotnet build MKW/MKW.API --no-incremental
+	dotnet sonarscanner begin /k:"MKW" /d:sonar.host.url="http://localhost:9000" /d:sonar.scm.provider="git" /d:sonar.token="sqp_c1251854624f6be2aa105b6f9eadca0d26521ad5" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+	# dotnet build MKW/MKW.API --no-incremental
+	dotnet build MKW/MKW.API
 	# dotnet test MKW/MKW.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=coverage.xml -l trx --no-build 
-	coverlet ./MKW/MKW.Tests/bin/Debug/net6.0/MKW.Tests.dll --target "dotnet" --targetargs "test MKW/MKW.Tests --no-build" -f=opencover -o="coverage.xml"
-	dotnet sonarscanner end /d:sonar.token="sqp_7e26a388d42517d1cf47ee2b95e2f32f2bae6fae"
+	coverlet ./MKW/MKW.Tests/bin/Debug/net6.0/MKW.Tests.dll --target "dotnet" --targetargs "test MKW/MKW.Tests --no-build" -f=opencover -o="coverage.xml" --exclude-by-attribute "ExcludeFromCodeCoverage"
+	# coverlet ./MKW/MKW.Tests/bin/Debug/net6.0/MKW.Tests.dll --target "dotnet" --targetargs "test MKW/MKW.Tests" -f=opencover -o="coverage.xml"
+	dotnet sonarscanner end /d:sonar.token="sqp_c1251854624f6be2aa105b6f9eadca0d26521ad5"
