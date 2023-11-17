@@ -5,6 +5,7 @@ using MKW.Domain.Interface.Services.Plugins;
 using MKW.Domain.Utility.Enums;
 using MKW.Domain.Utility.Exceptions;
 using System.Net.Http.Json;
+using System.Xml.Linq;
 
 namespace MKW.Services.Plugin.ContentSources
 {
@@ -25,16 +26,19 @@ namespace MKW.Services.Plugin.ContentSources
         {
             try
             {
-                var search = (await _client.GetFromJsonAsync<YoutubeChannelSearchDto>($"{_baseUrl}/channels?key={_apiKey}&id={contentId}&part=snippet"))!;
+                var get = await _client.GetAsync($"{_baseUrl}/channels?key={_apiKey}&id={contentId}&part=snippet");
+                if (!get.IsSuccessStatusCode) return new ContentDetailsDTO();
+
+                var search = await get.Content.ReadFromJsonAsync<YoutubeChannelSearchDto>();
 
                 return search?.Items?.Select(x => new ContentDetailsDTO(x)
                 {
                     PlatformId = (int)PlatformEnum.Youtube
                 }).FirstOrDefault() ?? throw new NotFoundException("Channel not found.");
             }
-            catch (Exception)
+            catch
             {
-                return null;
+                return new ContentDetailsDTO();
             }
         }
 
@@ -42,16 +46,19 @@ namespace MKW.Services.Plugin.ContentSources
         {
             try
             {
-                var search = (await _client.GetFromJsonAsync<YoutubeSearchDto>($"{_baseUrl}/search?key={_apiKey}&q={name}&part=snippet&type=channel"))!;
+                var get = await _client.GetAsync($"{_baseUrl}/search?key={_apiKey}&q={name}&part=snippet&type=channel");
+                if (!get.IsSuccessStatusCode) return new List<ContentListItemDTO>();
+
+                var search = await get.Content.ReadFromJsonAsync<YoutubeSearchDto>();
 
                 return search?.Items?.Select(x => new ContentListItemDTO(x)
                 {
                     PlatformId = (int)PlatformEnum.Youtube
                 }).ToList() ?? throw new NotFoundException("Channel not found.");
             }
-            catch (Exception)
+            catch
             {
-                return null;
+                return new List<ContentListItemDTO>();
             }
         }
     }

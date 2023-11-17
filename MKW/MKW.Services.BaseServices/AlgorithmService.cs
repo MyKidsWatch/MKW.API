@@ -46,6 +46,8 @@ namespace MKW.Services.BaseServices
                                 .SelectAsync(async x => await _reviewService.GetReviewDetails(x, language))
                                 ?? throw new NotFoundException("No reviews were found.");
 
+            reviews = reviews.Where(x => x.Content != null);
+
             return responseDTO.AddContent(reviews);
         }
 
@@ -59,6 +61,8 @@ namespace MKW.Services.BaseServices
                                 .GetTrendingReviews(page, count).Result
                                 .SelectAsync(async x => await _reviewService.GetReviewDetails(x, language))
                                 ?? throw new NotFoundException("No reviews were found.");
+
+            reviews = reviews.Where(x => x.Content != null);
 
             return responseDTO.AddContent(reviews);
         }
