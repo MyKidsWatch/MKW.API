@@ -270,7 +270,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void Should_Return_Single_CommentDetailDto_DeleteComment()
+        public async void Test_DeleteComment()
         {
             var model = A.Fake<UpdateCommentDto>();
             model.Text = "Something";

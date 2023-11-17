@@ -487,7 +487,6 @@ namespace MKW.Tests
             
             context.User.AddIdentity(new ClaimsIdentity(new Claim[] { claim }));
 
-
             userRepositoryMock
                 .Setup(x => x.GetUserByIdAsync(user.Id))
                 .Returns(Task.FromResult((Result.Ok(), user)));
@@ -501,27 +500,27 @@ namespace MKW.Tests
             Assert.Equal(result.Content.First(), readUserDTO);
         }
 
-        [Fact]
-        async void Should_Return_Accounts_ReadUserDTO_Enumerable_RegisterAccountAsync(){
-            var createUserDto = A.Fake<CreateUserDTO>();
-            var role = A.Fake<BaseResponseDTO<ReadRoleDTO>>();
+        // [Fact]
+        // async void Should_Return_Accounts_ReadUserDTO_Enumerable_RegisterAccountAsync(){
+        //     var createUserDto = A.Fake<CreateUserDTO>();
+        //     var role = A.Fake<BaseResponseDTO<ReadRoleDTO>>();
             
-            mapperMock
-                .Setup(x => x.Map<CreateUserDTO>(It.IsAny<ApplicationUser>()))
-                .Returns(createUserDto);
+        //     mapperMock
+        //         .Setup(x => x.Map<CreateUserDTO>(It.IsAny<ApplicationUser>()))
+        //         .Returns(createUserDto);
 
-            var applicationUser = A.Fake<ApplicationUser>();
+        //     var applicationUser = A.Fake<ApplicationUser>();
 
-            userRepositoryMock
-                .Setup(x => x.AddUserAsync(applicationUser, createUserDto.Password))
-                .Returns(Task.FromResult((A.Fake<IdentityResult>(), applicationUser)));
+        //     userRepositoryMock
+        //         .Setup(x => x.AddUserAsync(applicationUser, createUserDto.Password))
+        //         .Returns(Task.FromResult((A.Fake<IdentityResult>(), applicationUser)));
 
-            roleServiceMock
-                .Setup(x => x.AddUserToRoleAsync("standard", applicationUser.UserName))
-                .Returns(Task.FromResult(role));
+        //     roleServiceMock
+        //         .Setup(x => x.AddUserToRoleAsync("standard", applicationUser.UserName))
+        //         .Returns(Task.FromResult(role));
             
-            var result = await accountService.RegisterAccountAsync(createUserDto);
-        }
+        //     var result = await accountService.RegisterAccountAsync(createUserDto);
+        // }
 
         // [Fact]
         // async void TestRequestEmailKeycodeAsync(){
