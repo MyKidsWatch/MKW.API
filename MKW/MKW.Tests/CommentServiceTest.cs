@@ -16,7 +16,7 @@ using MKW.Services.AppServices;
 using Moq;
 using Xunit;
 
-namespace Tests
+namespace MKW.Tests
 {
     public class CommentServiceTest
     {

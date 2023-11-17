@@ -34,6 +34,8 @@ namespace MKW.Tests
 
         private readonly Person _user;
         private readonly Review _review;
+
+        private readonly AwardDetailsDto _awardDetailDto;
         public AwardServiceTest()
         {
             _mockAwardRepository = new Mock<IAwardRepository>();
@@ -49,6 +51,7 @@ namespace MKW.Tests
             _review = A.Fake<Review>();
             _review.PersonId = 2;
             _awardPerson = A.Fake<AwardPerson>();
+            _awardDetailDto = A.Fake<AwardDetailsDto>();
 
             _mockAwardRepository
               .Setup(x => x.GetById(It.IsAny<int>()))
@@ -74,11 +77,17 @@ namespace MKW.Tests
         [Fact]
         async void Should_Return_GivenAwardDto_Enumerable()
         {
-            
             var result = await _as.AddAward(_giveAward);
 
             Assert.Equivalent(result.Content.First().Award, new GivenAwardDto(_awardPerson).Award);
-            
+        }
+
+        [Fact]
+        async void Should_Return_AwardDetailDto_GetAwards()
+        {
+            var result = await _as.GetAwards();
+
+            Assert.Equivalent(result.Content.First(), _awardDetailDto);
 
         }
     }

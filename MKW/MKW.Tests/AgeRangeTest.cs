@@ -13,7 +13,7 @@ using AutoFixture;
 using FluentResults;
 using MKW.Domain.Entities.UserAggregate;
 
-namespace Tests
+namespace MKW.Tests
 {
     public class AgeRangeTest
     {
