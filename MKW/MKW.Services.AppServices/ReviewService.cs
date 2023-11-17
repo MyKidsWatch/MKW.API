@@ -36,7 +36,11 @@ namespace MKW.Services.AppServices
             var review = await _reviewRepository.GetById(id) ?? throw new NotFoundException("Review not found.");
             if (!review.Active) throw new NotFoundException("Review not found.");
 
-            return responseDTO.AddContent(await GetReviewDetails(review, language));
+            var details = await GetReviewDetails(review, language);
+
+            if (details.Content == null) throw new NotFoundException("Review not found.");
+
+            return responseDTO.AddContent(details);
         }
 
         public async Task<BaseResponseDTO<ReviewDetailsDto>> GetReviewByUserId(int userId, string? language = "pt-br")
@@ -45,7 +49,9 @@ namespace MKW.Services.AppServices
             var review = await _reviewRepository.GetByUserId(userId) ?? throw new NotFoundException("Review not found.");
             if (!review.Any()) throw new NotFoundException("Review not found.");
 
-            return responseDTO.AddContent(review.Select(x => GetReviewDetails(x, language).Result));
+            var reviewDetails = review.Select(x => GetReviewDetails(x, language).Result).Where(x => x.Content != null);
+
+            return responseDTO.AddContent(reviewDetails);
         }
 
         public async Task<BaseResponseDTO<ReviewDetailsDto>> CreateReview(CreateReviewDto model)
@@ -121,6 +127,8 @@ namespace MKW.Services.AppServices
             var detailedReview = new ReviewDetailsDto(review);
 
             var content = await _contentService.GetExternalContent(review.Content.ExternalId, review.Content.PlatformCategory.PlatformId);
+
+            if (String.IsNullOrWhiteSpace(content.ExternalId)) return detailedReview;
 
             detailedReview.Content = new ReadContentDTO()
             {

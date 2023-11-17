@@ -40,8 +40,8 @@ namespace MKW.Services.AppServices
         public async Task<BaseResponseDTO<CommentDetailsDto>> GetCommentByReviewId(int reviewId, string? language = "pt-br")
         {
             var responseDTO = new BaseResponseDTO<CommentDetailsDto>();
-            var comments = await _commentRepository.GetByReviewId(reviewId) ?? throw new NotFoundException("Comments not found.");
-            if (!comments.Any()) throw new NotFoundException("Comments not found.");
+            var comments = await _commentRepository.GetByReviewId(reviewId);
+            if (!comments.Any()) return responseDTO;
 
             return responseDTO.AddContent(comments.Select(x => new CommentDetailsDto(x)));
         }
