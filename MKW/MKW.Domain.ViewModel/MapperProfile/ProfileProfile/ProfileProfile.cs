@@ -14,7 +14,7 @@ namespace MKW.Domain.Dto.MapperProfile.ProfileProfile
              .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
              .ForMember(dest => dest.PersonId, opt => opt.MapFrom(src => src.Id))
              .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => src.ImageURL))
-             .ForMember(dest => dest.Childrens, opt => opt.MapFrom(src => src.Children))
+             .ForMember(dest => dest.Childrens, opt => opt.MapFrom(src => src.Children.Where(x => x.Active)))
              .ForMember(dest => dest.Awards, opt => opt.MapFrom(src => src.Reviews.SelectMany(x => x.Awards)
                 .GroupBy(x => x.Award.Name)
                 .Select(group => new ReadAwardDTO
