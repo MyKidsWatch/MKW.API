@@ -32,7 +32,7 @@ namespace MKW.API.Controllers
         [HttpPost("Funds")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<AwardPurchaseDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<OperationDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<OperationDto>>> AddFunds([FromBody] AddFundDto coins)

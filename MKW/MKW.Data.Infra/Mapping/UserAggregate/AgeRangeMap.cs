@@ -89,10 +89,32 @@ namespace MKW.Data.Context.Mapping.UserAggregate
                 Active = true
             };
 
+            var ageRange5 = new AgeRange()
+            {
+                Id = 5,
+                InitialAge = 12,
+                FinalAge = 14,
+                UUID = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                Active = true
+            };
+
+            var ageRange6 = new AgeRange()
+            {
+                Id = 6,
+                InitialAge = 15,
+                FinalAge = 17,
+                UUID = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                Active = true
+            };
+
             modelBuilder.Entity<AgeRange>().HasData(ageRange1);
             modelBuilder.Entity<AgeRange>().HasData(ageRange2);
             modelBuilder.Entity<AgeRange>().HasData(ageRange3);
             modelBuilder.Entity<AgeRange>().HasData(ageRange4);
+            modelBuilder.Entity<AgeRange>().HasData(ageRange5);
+            modelBuilder.Entity<AgeRange>().HasData(ageRange6);
         }
     }
 }
