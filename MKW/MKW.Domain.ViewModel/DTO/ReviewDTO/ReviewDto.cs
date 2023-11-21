@@ -13,6 +13,7 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
         public int? UserId { get; set; }
         public int? ContentId { get; set; }
         public string ExternalContentId { get; set; }
+        public int PlatformId { get; set; }
         public ReadPersonDTO User { get; set; }
 
         public ReviewDto(Review review)
@@ -22,8 +23,9 @@ namespace MKW.Domain.Dto.DTO.ReviewDTO
             Text = review.ReviewDetails?.FirstOrDefault()?.Text;
             UserId = review.Person?.Id;
             ContentId = review.Content?.Id;
-            ExternalContentId = review.Content?.ExternalId;
-            User = new ReadPersonDTO(review.Person);
+            ExternalContentId = review.Content?.ExternalId ?? "";
+            PlatformId = review.Content?.PlatformCategory.PlatformId ?? 0;
+            User = new ReadPersonDTO(review.Person!);
             CommentCount = review.Comments.Where(x => x.Active).Count();
         }
     }
