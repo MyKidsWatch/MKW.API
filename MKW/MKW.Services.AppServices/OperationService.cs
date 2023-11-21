@@ -72,7 +72,7 @@ namespace MKW.Services.AppServices
             {
                 sessionItem = new SessionLineItemOptions()
                 {
-                    Price = _configuration[$"API:Stripe:{language}:{model.Coins}"],
+                    Price = _configuration[$"API:Stripe:{language.Replace("-", "")}:{model.Coins}"],
                     Quantity = 1
                 };
             }
