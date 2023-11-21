@@ -12,6 +12,7 @@ using MKW.Domain.Interface.Services.BaseServices;
 using MKW.Domain.Utility.Enums;
 using MKW.Domain.Utility.Exceptions;
 using MKW.Domain.Utility.Extensions;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace MKW.Services.BaseServices
 {
@@ -84,12 +85,13 @@ namespace MKW.Services.BaseServices
 
             var movies = await reviews.Where(x => x.PlatformId == (int)PlatformEnum.TMDb).SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
 
-            foreach (var movie in movies)
-            {
-                var content = await _contentRepository.GetContentByExternalId(movie.Id.ToString());
+            var contents = await _contentRepository.GetContentsByExternalId(movies.Select(x => $"{x.Id}"));
 
+            await movies.ToList().ForEachAsync(async movie =>
+            {
+                var content = contents.FirstOrDefault(x => x.ExternalId == movie.Id.ToString());
                 if (content is not null) movie.VoteAverage = Content.GetAverageRating(movie.VoteAverage, content);
-            }
+            });
 
             return responseDTO.AddContent(movies);
         }
@@ -105,12 +107,13 @@ namespace MKW.Services.BaseServices
 
             var movies = await reviews.Where(x => x.PlatformId == (int)PlatformEnum.TMDb).SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
 
-            foreach (var movie in movies)
-            {
-                var content = await _contentRepository.GetContentByExternalId(movie.Id.ToString());
+            var contents = await _contentRepository.GetContentsByExternalId(movies.Select(x => $"{x.Id}"));
 
+            await movies.ToList().ForEachAsync(async movie =>
+            {
+                var content = contents.FirstOrDefault(x => x.ExternalId == movie.Id.ToString());
                 if (content is not null) movie.VoteAverage = Content.GetAverageRating(movie.VoteAverage, content);
-            }
+            });
 
             return responseDTO.AddContent(movies);
         }

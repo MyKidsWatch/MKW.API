@@ -14,6 +14,19 @@ namespace MKW.Data.Repository.ContentAggregate
         public ContentRepository(MKWContext context) : base(context) { }
 
         public async Task<Content?> GetContentByExternalId(string externalId, int? platformId = null)
-            => await _dbSet.FirstOrDefaultAsync(x => x.ExternalId == externalId && (platformId == null || x.PlatformCategory.PlatformId == platformId));
+            => await _dbSet
+            .Include(x => x.Reviews)
+            .Include(x => x.Reviews)
+            .ThenInclude(x => x.ReviewDetails)
+            .FirstOrDefaultAsync(x => x.ExternalId == externalId && (platformId == null || x.PlatformCategory.PlatformId == platformId));
+
+        public async Task<IEnumerable<Content?>> GetContentsByExternalId(IEnumerable<string> externalIds, int? platformId = null)
+            => await _dbSet
+            .AsNoTracking()
+            .Include(x => x.Reviews)
+            .Include(x => x.Reviews)
+            .ThenInclude(x => x.ReviewDetails)
+            .Where(x => externalIds.Contains(x.ExternalId) && (platformId == null || x.PlatformCategory.PlatformId == platformId))
+            .ToListAsync();
     }
 }

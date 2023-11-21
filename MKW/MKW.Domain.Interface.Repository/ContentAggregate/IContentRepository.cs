@@ -9,5 +9,6 @@ namespace MKW.Domain.Interface.Repository.ContentAggregate
     public interface IContentRepository : IBaseRepository<Content>
     {
         Task<Content?> GetContentByExternalId(string externalId, int? platformId = null);
+        Task<IEnumerable<Content?>> GetContentsByExternalId(IEnumerable<string> externalIds, int? platformId = null);
     }
 }
