@@ -7,5 +7,6 @@ namespace MKW.Domain.Interface.Services.AppServices
     {
         Task<BaseResponseDTO<ReadProfileDTO>> GetProfileByUsername(string username);
         Task<BaseResponseDTO<IEnumerable<ReadProfileDTO>>> GetAllProfilesByUsername(string username);
+        Task<BaseResponseDTO<ReadProfileDTO>> UpdateProfilePicture(UpdateProfilePictureDto model);
     }
 }

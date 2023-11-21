@@ -34,5 +34,14 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<ReadProfileDTO>>> GetAllProfilesByUsername(string username) =>
             Ok(await _profileService.GetAllProfilesByUsername(username));
+
+        [HttpPatch]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadProfileDTO>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
+        public async Task<ActionResult<BaseResponseDTO<ReadProfileDTO>>> UpdateProfilePicture(UpdateProfilePictureDto model) =>
+             Ok(await _profileService.UpdateProfilePicture(model));
     }
 }
