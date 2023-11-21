@@ -1,4 +1,5 @@
 ﻿using MKW.Domain.Entities.ReportAggregate;
+using MKW.Domain.Utility.Language.Report;
 
 namespace MKW.Domain.Dto.DTO.ReportsDTO
 {
@@ -13,11 +14,11 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
 
         }
 
-        public ReportReasonDto(ReportReason reason)
+        public ReportReasonDto(ReportReason reason, string language = "pt-BR")
         {
             ReasonId = reason.Id;
-            Title = reason.Title;
-            Description = reason.Description;
+            Title = ReportLangHelper.GetReason(reason.Title, language);
+            Description = ReportLangHelper.GetReason(reason.Description, language);
         }
     }
 }
