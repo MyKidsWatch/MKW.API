@@ -5,6 +5,7 @@ using MKW.Domain.Entities.ContentAggregate;
 using MKW.Domain.Entities.ReviewAggregate;
 using MKW.Domain.Entities.UserAggregate;
 using MKW.Domain.Interface.Repository.Base;
+using MKW.Domain.Interface.Repository.ContentAggregate;
 using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.BaseServices;
@@ -21,19 +22,22 @@ namespace MKW.Services.BaseServices
         private readonly IReviewService _reviewService;
         private readonly IPersonService _personService;
         private readonly IAlgorithmRepository _algorithmRepository;
+        private readonly IContentRepository _contentRepository;
 
         public AlgorithmService(
             IPersonRepository personRepository,
             ITmdbService tmdbService,
             IReviewService reviewService,
             IPersonService personService,
-            IAlgorithmRepository algorithmRepository)
+            IAlgorithmRepository algorithmRepository,
+            IContentRepository contentRepository)
         {
             _personRepository = personRepository;
             _tmdbService = tmdbService;
             _reviewService = reviewService;
             _personService = personService;
             _algorithmRepository = algorithmRepository;
+            _contentRepository = contentRepository;
         }
 
         public async Task<BaseResponseDTO<ReviewDetailsDto>> GetRelevantReviews(int page, int count, string language, int? childId = null)
@@ -80,6 +84,13 @@ namespace MKW.Services.BaseServices
 
             var movies = await reviews.Where(x => x.PlatformId == (int)PlatformEnum.TMDb).SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
 
+            foreach (var movie in movies)
+            {
+                var content = await _contentRepository.GetContentByExternalId(movie.Id.ToString());
+
+                if (content is not null) movie.VoteAverage = Content.GetAverageRating(movie.VoteAverage, content);
+            }
+
             return responseDTO.AddContent(movies);
         }
 
@@ -88,12 +99,18 @@ namespace MKW.Services.BaseServices
             var responseDTO = new BaseResponseDTO<MovieDTO>();
             var user = await _personService.GetUser();
 
-
             if (!user.Children.Where(child => child.Active).Any()) return responseDTO.AddContent(new List<MovieDTO>());
 
             var reviews = (await _algorithmRepository.GetTrendingReviews(page, count)).Select(x => new ReviewDto(x)) ?? throw new NotFoundException("No reviews were found.");
 
             var movies = await reviews.Where(x => x.PlatformId == (int)PlatformEnum.TMDb).SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
+
+            foreach (var movie in movies)
+            {
+                var content = await _contentRepository.GetContentByExternalId(movie.Id.ToString());
+
+                if (content is not null) movie.VoteAverage = Content.GetAverageRating(movie.VoteAverage, content);
+            }
 
             return responseDTO.AddContent(movies);
         }

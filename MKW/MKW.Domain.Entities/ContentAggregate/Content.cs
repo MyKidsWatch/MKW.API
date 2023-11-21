@@ -24,7 +24,7 @@ namespace MKW.Domain.Entities.ContentAggregate
 
             var reviewsAverage = reviews.Sum(x => x.Stars * 2);
 
-            return (reviewsAverage + rating) / (reviews.Count() + 1);
+            return (reviewsAverage + rating) / (rating is 0.0 ? reviews.Count() : reviews.Count() + 1);
         }
     }
 }
