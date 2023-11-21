@@ -4,7 +4,6 @@ using MKW.Domain.Dto.DTO.AwardDTO;
 using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Dto.DTO.OperationDTO;
 using MKW.Domain.Interface.Services.AppServices;
-using MKW.Services.AppServices;
 using System.Net.Mime;
 
 namespace MKW.API.Controllers
@@ -36,6 +35,6 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<OperationDto>>> AddFunds([FromBody] AddFundDto coins)
-            => Ok(await _operationService.AddFunds(coins, coins.Language));
+            => Ok(await _operationService.AddFunds(coins));
     }
 }

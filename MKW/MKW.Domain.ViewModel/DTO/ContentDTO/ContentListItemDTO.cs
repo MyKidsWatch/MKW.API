@@ -25,9 +25,7 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
 
         public ContentListItemDTO(Content? content) : this()
         {
-            if (content == null) return;
-
-            Update(content);
+            if (content is not null) AddContent(content);
         }
 
         public ContentListItemDTO(MovieDTO movie, Content? content = null) : this(content)
@@ -58,12 +56,14 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
             Description = channel.Snippet.Description;
             ImageUrl = channel.Snippet?.Thumbnails?["high"].Url ?? channel.Snippet?.Thumbnails?["default"].Url;
             ReleaseDate = channel.Snippet?.PublishTime;
+            AverageRating = 0;
         }
 
-        public void Update(Content content)
+        public void AddContent(Content content)
         {
             Id = content.Id;
             PlatformId = content.PlatformCategory.PlatformId;
+            AverageRating = Content.GetAverageRating(AverageRating, content);
         }
     }
 }
