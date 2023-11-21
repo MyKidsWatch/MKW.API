@@ -66,12 +66,24 @@ namespace MKW.Services.AppServices
         {
             var user = await _personService.GetUser();
             var operationType = await _operationTypeRepository.GetOperationByType("Purchase");
+            SessionLineItemOptions sessionItem;
 
-            var sessionItem = new SessionLineItemOptions()
+            if (model.Coins == 20 || model.Coins == 50 || model.Coins == 100)
             {
-                Price = _configuration["API:Stripe:Coin"],
-                Quantity = model.Coins
-            };
+                sessionItem = new SessionLineItemOptions()
+                {
+                    Price = _configuration[$"API:Stripe:{model.Coins}"],
+                    Quantity = 1
+                };
+            }
+            else
+            {
+                sessionItem = new SessionLineItemOptions()
+                {
+                    Price = _configuration["API:Stripe:Coin"],
+                    Quantity = model.Coins
+                };
+            }
 
             var session = await _paymentService.CreatePaymentSession(user.User.Email, sessionItem);
 
