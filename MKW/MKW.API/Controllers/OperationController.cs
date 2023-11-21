@@ -36,6 +36,6 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
         public async Task<ActionResult<BaseResponseDTO<OperationDto>>> AddFunds([FromBody] AddFundDto coins)
-            => Ok(await _operationService.AddFunds(coins));
+            => Ok(await _operationService.AddFunds(coins, coins.Language));
     }
 }

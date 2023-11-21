@@ -62,17 +62,17 @@ namespace MKW.Services.AppServices
             });
         }
 
-        public async Task<BaseResponseDTO<OperationDto>> AddFunds(AddFundDto model)
+        public async Task<BaseResponseDTO<OperationDto>> AddFunds(AddFundDto model, string language = "pt-BR")
         {
             var user = await _personService.GetUser();
             var operationType = await _operationTypeRepository.GetOperationByType("Purchase");
             SessionLineItemOptions sessionItem;
 
-            if (model.Coins == 20 || model.Coins == 50 || model.Coins == 100)
+            if (model.Coins is 20 or 50 or 100)
             {
                 sessionItem = new SessionLineItemOptions()
                 {
-                    Price = _configuration[$"API:Stripe:{model.Coins}"],
+                    Price = _configuration[$"API:Stripe:{language}:{model.Coins}"],
                     Quantity = 1
                 };
             }
