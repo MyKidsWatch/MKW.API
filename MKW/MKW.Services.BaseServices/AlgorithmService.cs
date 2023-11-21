@@ -8,6 +8,7 @@ using MKW.Domain.Interface.Repository.Base;
 using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Interface.Services.BaseServices;
+using MKW.Domain.Utility.Enums;
 using MKW.Domain.Utility.Exceptions;
 using MKW.Domain.Utility.Extensions;
 
@@ -77,7 +78,7 @@ namespace MKW.Services.BaseServices
 
             var reviews = (await _algorithmRepository.GetRelevantReviews(user, page, count, childId)).Select(x => new ReviewDto(x)) ?? throw new NotFoundException("No reviews were found.");
 
-            var movies = await reviews.SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
+            var movies = await reviews.Where(x => x.PlatformId == (int)PlatformEnum.TMDb).SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
 
             return responseDTO.AddContent(movies);
         }
@@ -92,7 +93,7 @@ namespace MKW.Services.BaseServices
 
             var reviews = (await _algorithmRepository.GetTrendingReviews(page, count)).Select(x => new ReviewDto(x)) ?? throw new NotFoundException("No reviews were found.");
 
-            var movies = await reviews.SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
+            var movies = await reviews.Where(x => x.PlatformId == (int)PlatformEnum.TMDb).SelectAsync(x => _tmdbService.GetMovie(Int32.Parse(x.ExternalContentId), language));
 
             return responseDTO.AddContent(movies);
         }
