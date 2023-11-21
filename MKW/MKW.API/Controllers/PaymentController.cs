@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MKW.API.Controllers.Base;
-using MKW.Domain.Dto.DTO.Base;
 using MKW.Domain.Interface.Services.BaseServices;
 
 namespace MKW.API.Controllers

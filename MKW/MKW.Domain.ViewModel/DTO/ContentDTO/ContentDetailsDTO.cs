@@ -2,7 +2,6 @@
 using MKW.Domain.Dto.DTO.TmdbDTO;
 using MKW.Domain.Dto.DTO.YoutubeDTO;
 using MKW.Domain.Entities.ContentAggregate;
-using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace MKW.Domain.Dto.DTO.ContentDTO
 {

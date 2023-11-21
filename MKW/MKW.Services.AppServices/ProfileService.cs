@@ -5,7 +5,6 @@ using MKW.Domain.Interface.Repository.IdentityAggregate;
 using MKW.Domain.Interface.Repository.UserAggregate;
 using MKW.Domain.Interface.Services.AppServices;
 using MKW.Domain.Utility.Exceptions;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace MKW.Services.ProfileService
 {

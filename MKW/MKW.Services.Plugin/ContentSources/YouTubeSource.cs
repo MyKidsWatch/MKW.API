@@ -5,7 +5,6 @@ using MKW.Domain.Interface.Services.Plugins;
 using MKW.Domain.Utility.Enums;
 using MKW.Domain.Utility.Exceptions;
 using System.Net.Http.Json;
-using System.Xml.Linq;
 
 namespace MKW.Services.Plugin.ContentSources
 {

@@ -4,7 +4,6 @@ using MKW.Domain.Entities.Base;
 using MKW.Domain.Interface.Repository.Base;
 using MKW.Domain.Utility.Abstractions;
 using System.Linq.Expressions;
-using static Dapper.SqlMapper;
 
 namespace MKW.Data.Repository.Base
 {
