@@ -29,7 +29,7 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
 
         }
 
-        public ReportDto(Report report) : this()
+        public ReportDto(Report report, string language = "pt-BR") : this()
         {
             ReportId = report.Id;
             ReviewId = report.ReviewId;
@@ -39,12 +39,12 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
             StatusId = report.StatusId;
             ReportedPersonId = report.ReportedPersonId;
             Details = report.Details;
-            Reason = new ReportReasonDto(report.Reason);
+            Reason = new ReportReasonDto(report.Reason, language);
             Review = report.Review != null ? new ReviewDto(report.Review) : null;
             Comment = report.Comment != null ? new CommentDetailsDto(report.Comment) : null;
             Person = new ReadPersonDTO(report.Person);
             ReportedPerson = report.ReportedPerson != null ? new ReadPersonDTO(report.ReportedPerson) : null;
-            Status = new ReportStatusDto(report.Status);
+            Status = new ReportStatusDto(report.Status, language);
             CreateDate = report.CreateDate;
 
             if (report.CommentId != null) ReportType = "Comment";

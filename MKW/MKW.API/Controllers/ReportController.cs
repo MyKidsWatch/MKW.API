@@ -24,7 +24,8 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportReasonDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetReasons() => Ok(await _reportService.GetReasons());
+        public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetReasons([FromQuery] string language = "pt-BR")
+            => Ok(await _reportService.GetReasons(language));
 
         [HttpGet("Status")]
         [Authorize]
@@ -32,7 +33,8 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportReasonDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetStatus() => Ok(await _reportService.GetStatus());
+        public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetStatus([FromQuery] string language = "pt-BR")
+            => Ok(await _reportService.GetStatus(language));
 
         [HttpGet("Reason/id/{reasonId:int}")]
         [Authorize]
@@ -40,7 +42,8 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportReasonDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetReasons([FromRoute] int reasonId) => Ok(await _reportService.GetReasonById(reasonId));
+        public async Task<ActionResult<BaseResponseDTO<ReportReasonDto>>> GetReasons([FromRoute] int reasonId, [FromQuery] string language = "pt-BR")
+            => Ok(await _reportService.GetReasonById(reasonId, language));
 
         [HttpGet]
         [Authorize(Roles = "admin")]
@@ -48,8 +51,14 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> GetReports([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] int? reasonId = null, [FromQuery] int? statusId = null, [FromQuery] string orderBy = "CreateDate", [FromQuery] bool orderByAscending = true)
-            => Ok(await _reportService.GetReports(page, pageSize, reasonId, statusId, orderBy, orderByAscending));
+        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> GetReports
+            (
+            [FromQuery] int page = 1, [FromQuery] int pageSize = 10,
+            [FromQuery] int? reasonId = null, [FromQuery] int? statusId = null,
+            [FromQuery] string orderBy = "CreateDate", [FromQuery] bool orderByAscending = true,
+            [FromQuery] string language = "pt-BR"
+            )
+            => Ok(await _reportService.GetReports(page, pageSize, reasonId, statusId, orderBy, orderByAscending, language));
 
         [HttpPost]
         [Authorize]
@@ -57,7 +66,8 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> AddReport([FromBody] CreateReportDto report) => Ok(await _reportService.AddReport(report));
+        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> AddReport([FromBody] CreateReportDto report)
+            => Ok(await _reportService.AddReport(report));
 
         [HttpPost("Response")]
         [Authorize(Roles = "admin")]
@@ -65,7 +75,8 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> RespondReport([FromBody] ReportResponseDto report) => Ok(await _reportService.RespondReport(report));
+        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> RespondReport([FromBody] ReportResponseDto report)
+            => Ok(await _reportService.RespondReport(report));
 
         [HttpPatch]
         [Authorize(Roles = "admin")]
@@ -73,6 +84,7 @@ namespace MKW.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReportDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDTO<object>))]
-        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> UpdateReportStatus([FromBody] UpdateReportStatusDto report) => Ok(await _reportService.UpdateReportStatus(report));
+        public async Task<ActionResult<BaseResponseDTO<ReportDto>>> UpdateReportStatus([FromBody] UpdateReportStatusDto report)
+            => Ok(await _reportService.UpdateReportStatus(report));
     }
 }
