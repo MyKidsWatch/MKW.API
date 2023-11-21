@@ -1,4 +1,5 @@
 ﻿using MKW.Domain.Entities.ReportAggregate;
+using MKW.Domain.Utility.Language.Report;
 
 namespace MKW.Domain.Dto.DTO.ReportsDTO
 {
@@ -12,10 +13,10 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
 
         }
 
-        public ReportStatusDto(ReportStatus status) : this()
+        public ReportStatusDto(ReportStatus status, string language = "pt-BR") : this()
         {
             StatusId = status.Id;
-            Name = status.Name;
+            Name = ReportLangHelper.GetStatus(status.Name, language);
         }
     }
 }

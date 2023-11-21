@@ -34,30 +34,30 @@ namespace MKW.Services.AppServices
             _userRepository = userRepository;
         }
 
-        public async Task<BaseResponseDTO<ReportReasonDto>> GetReasons()
+        public async Task<BaseResponseDTO<ReportReasonDto>> GetReasons(string language = "pt-BR")
         {
             var reasons = await _reportReasonRepository.GetActive();
 
-            return new BaseResponseDTO<ReportReasonDto>().AddContent(reasons.Select(x => new ReportReasonDto(x)));
+            return new BaseResponseDTO<ReportReasonDto>().AddContent(reasons.Select(x => new ReportReasonDto(x, language)));
         }
 
 
-        public async Task<BaseResponseDTO<ReportStatusDto>> GetStatus()
+        public async Task<BaseResponseDTO<ReportStatusDto>> GetStatus(string language = "pt-BR")
         {
             var status = await _reportStatusRepository.GetActive();
 
-            return new BaseResponseDTO<ReportStatusDto>().AddContent(status.Select(x => new ReportStatusDto(x)));
+            return new BaseResponseDTO<ReportStatusDto>().AddContent(status.Select(x => new ReportStatusDto(x, language)));
         }
 
-        public async Task<BaseResponseDTO<ReportReasonDto>> GetReasonById(int id)
+        public async Task<BaseResponseDTO<ReportReasonDto>> GetReasonById(int id, string language = "pt-BR")
         {
             var reason = await _reportReasonRepository.GetById(id) ?? throw new NotFoundException("Report Reason not found.");
 
-            return new BaseResponseDTO<ReportReasonDto>().AddContent(new ReportReasonDto(reason));
+            return new BaseResponseDTO<ReportReasonDto>().AddContent(new ReportReasonDto(reason, language));
         }
 
         public async Task<BaseResponseDTO<ReportDto>> GetReports(int page = 1, int pageSize = 10, int? reasonId = null, int? statusId = null,
-                                                                 string orderBy = "CreateDate", bool orderByAscending = true)
+                                                                 string orderBy = "CreateDate", bool orderByAscending = true, string language = "pt-BR")
         {
             var reports = await _reportRepository.GetPaged(x =>
                                                             (reasonId == null || x.ReasonId == reasonId)
@@ -67,7 +67,7 @@ namespace MKW.Services.AppServices
                                                             x => x.GetType().GetProperty(orderBy)?.GetValue(x) ?? x.CreateDate,
                                                             orderByAscending);
 
-            var reportsDto = new PagedList<ReportDto>().Convert(reports, x => new ReportDto(x));
+            var reportsDto = new PagedList<ReportDto>().Convert(reports, x => new ReportDto(x, language));
 
             return new BaseResponseDTO<ReportDto>().AddContent(reportsDto);
         }
