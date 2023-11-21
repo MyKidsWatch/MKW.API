@@ -2,6 +2,7 @@
 using MKW.Domain.Dto.DTO.TmdbDTO;
 using MKW.Domain.Dto.DTO.YoutubeDTO;
 using MKW.Domain.Entities.ContentAggregate;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace MKW.Domain.Dto.DTO.ContentDTO
 {
@@ -37,9 +38,9 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
             Name = movie.Title;
             Description = movie.Overview;
             ReleaseDate = !String.IsNullOrWhiteSpace(movie.ReleaseDate) ? DateTime.Parse(movie.ReleaseDate) : null;
-            AverageRating = movie.VoteAverage;
             ImageUrl = movie.PosterPath;
             Tags = movie.Genres?.Select(x => x.Name).ToList();
+            AverageRating = movie.VoteAverage;
         }
 
         public ContentDetailsDTO(YoutubeChannelListItemDto channel, Content? content = null) : this(content)
@@ -49,6 +50,7 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
             Description = channel.Snippet.Description;
             ImageUrl = channel.Snippet?.Thumbnails?["high"].Url ?? channel.Snippet?.Thumbnails?["default"].Url;
             ReleaseDate = channel.Snippet?.PublishTime;
+            AverageRating = 0;
         }
 
         public ContentDetailsDTO AddContent(Content content)
@@ -56,6 +58,7 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
             Id = content.Id;
             ReviewCount = content.Reviews.Count;
             PlatformId = content.PlatformCategory.PlatformId;
+            AverageRating = Content.GetAverageRating(AverageRating, content);
             return this;
         }
     }
