@@ -47,7 +47,12 @@ namespace MKW.Services.AppServices
         {
             var responseDTO = new BaseResponseDTO<ReviewDetailsDto>();
             var review = await _reviewRepository.GetByUserId(userId) ?? throw new NotFoundException("Review not found.");
-            if (!review.Any()) throw new NotFoundException("Review not found.");
+            
+            if (!review.Any())
+            {
+                var reviews = Enumerable.Empty<ReviewDetailsDto>();
+                return responseDTO.AddContent(reviews);
+            }
 
             var reviewDetails = review.Select(x => GetReviewDetails(x, language).Result).Where(x => x.Content != null);
 
