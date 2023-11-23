@@ -14,7 +14,7 @@ namespace MKW.Domain.Dto.DTO.TmdbDTO
         public object BelongsToCollection { get; set; }
 
         [JsonPropertyName("budget")]
-        public int? Budget { get; set; }
+        public long? Budget { get; set; }
 
         [JsonPropertyName("genres")]
         public List<GenreDTO> Genres { get; set; }
@@ -53,7 +53,7 @@ namespace MKW.Domain.Dto.DTO.TmdbDTO
         public string ReleaseDate { get; set; }
 
         [JsonPropertyName("revenue")]
-        public int? Revenue { get; set; }
+        public long? Revenue { get; set; }
 
         [JsonPropertyName("runtime")]
         public int? Runtime { get; set; }
