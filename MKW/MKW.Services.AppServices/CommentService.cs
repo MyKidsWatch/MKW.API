@@ -43,7 +43,7 @@ namespace MKW.Services.AppServices
             var comments = await _commentRepository.GetByReviewId(reviewId);
             if (!comments.Any()) return responseDTO;
 
-            return responseDTO.AddContent(comments.Select(x => new CommentDetailsDto(x)));
+            return responseDTO.AddContent(comments.Where(x => x.IsFirstLevel()).Select(x => new CommentDetailsDto(x)));
         }
 
         public async Task<BaseResponseDTO<CommentDetailsDto>> CreateComment(CreateCommentDto model)
