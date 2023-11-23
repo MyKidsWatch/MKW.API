@@ -171,30 +171,32 @@ namespace MKW.Services.AppServices.IdentityService
 
         public async Task<BaseResponseDTO<ReadUserDTO>> RegisterAccountAsync(CreateUserDTO userDTO, string language = "pt-br")
         {
+            var userResponseDTO = new BaseResponseDTO<ReadUserDTO>();
+            var applicationUser = _mapper.Map<ApplicationUser>(userDTO);
+
+            var (result, user) = await _repository.AddUserAsync(applicationUser, userDTO.Password);
+            if (!result.Succeeded) return userResponseDTO.WithErrors(GetErros(result.Errors));
+
+            var role = await _roleService.AddUserToRoleAsync("standard", user.UserName);
+            if (role is null) userResponseDTO.AddError("role not assign to user");
+            
+            bool isEmailSent;
             try
             {
-                var userResponseDTO = new BaseResponseDTO<ReadUserDTO>();
-                var applicationUser = _mapper.Map<ApplicationUser>(userDTO);
-
-                var (result, user) = await _repository.AddUserAsync(applicationUser, userDTO.Password);
-                if (!result.Succeeded) return userResponseDTO.WithErrors(GetErros(result.Errors));
-
-                var role = await _roleService.AddUserToRoleAsync("standard", user.UserName);
-                if (role is null) userResponseDTO.AddError("role not assign to user");
-
-                var (isEmailSent, emailErrors) = await SendActiveEmailKeycodeAsync(user, language);
-                if (!isEmailSent) userResponseDTO.WithErrors(emailErrors);
-
-                var userResponse = _mapper.Map<ReadUserDTO>(user);
-                userResponse.isConfirmEmailTokenSent = isEmailSent;
-                userResponse.AssociatedWithPerson = await CreateAssociatedPerson(userDTO.PersonDetails, user);
-
-                return userResponseDTO.AddContent(userResponse);
+                var (isEmailSented, emailErrors) = await SendActiveEmailKeycodeAsync(user, language);
+                if (!isEmailSented) userResponseDTO.WithErrors(emailErrors);
+                isEmailSent = isEmailSented;
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                isEmailSent = false;
             }
+
+            var userResponse = _mapper.Map<ReadUserDTO>(user);
+            userResponse.isConfirmEmailTokenSent = isEmailSent;
+            userResponse.AssociatedWithPerson = await CreateAssociatedPerson(userDTO.PersonDetails, user);
+
+            return userResponseDTO.AddContent(userResponse);
         }
 
         public async Task<BaseResponseDTO<ReadUserDTO>> UpdateAccountAsync(HttpContext httpContext, UpdateUserDTO userDTO, string language = "pt-BR")
