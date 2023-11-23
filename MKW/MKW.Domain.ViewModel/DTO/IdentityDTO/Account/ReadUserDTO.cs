@@ -20,7 +20,6 @@ namespace MKW.Domain.Dto.DTO.IdentityDTO.Account
         public DateTime CreateDate { get; set; }
         public DateTime? AlterDate { get; set; }
         public bool Active { get; set; }
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool isConfirmEmailTokenSent { get; set; }
         public ReadPersonDTO AssociatedWithPerson { get; set; }
     }
