@@ -47,9 +47,9 @@ namespace MKW.Domain.Dto.DTO.ReportsDTO
             Status = new ReportStatusDto(report.Status, language);
             CreateDate = report.CreateDate;
 
-            if (report.CommentId != null) ReportType = "Comment";
-            else if (report.ReviewId != null) ReportType = "Review";
-            else if (report.ReportedPersonId != null) ReportType = "Person";
+            if (report.CommentId != null) ReportType = language == "pt-BR" ? "Comentário" : "Comment";
+            else if (report.ReviewId != null) ReportType = language == "pt-BR" ? "Análise" : "Review";
+            else if (report.ReportedPersonId != null) ReportType = language == "pt-BR" ? "Perfil" : "Person";
             else ReportType = null;
         }
     }
