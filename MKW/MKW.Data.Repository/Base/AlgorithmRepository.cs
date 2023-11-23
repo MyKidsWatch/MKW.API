@@ -78,6 +78,8 @@ namespace MKW.Data.Repository.Base
 
         public async Task<List<Review>> GetReviews(List<FetchReviewDto> relevant)
         {
+            var reviewListId = relevant.Select(y => y.ReviewId).ToList();
+
             var reviews = await
             _context.Review
             .Include(x => x.Content)
@@ -106,7 +108,7 @@ namespace MKW.Data.Repository.Base
             .AsNoTracking()
             .ToListAsync();
 
-            return reviews;
+            return reviews.OrderBy(x => reviewListId.IndexOf(x.Id)).ToList();
         }
 
 
