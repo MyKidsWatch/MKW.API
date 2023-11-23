@@ -14,17 +14,24 @@ namespace MKW.Domain.Entities.ContentAggregate
 
         public static double? GetAverageRating(double? rating, Content? content = null)
         {
-            if (content is null) return rating;
+            try
+            {
+                if (content is null) return rating;
 
-            var reviews =
-                content
-                .Reviews
-                .Where(x => x.ReviewDetails.Any())
-                .Select(x => x.ReviewDetails.OrderByDescending(x => x.CreateDate).First());
+                var reviews =
+                    content
+                    .Reviews
+                    .Where(x => x.ReviewDetails.Any())
+                    .Select(x => x.ReviewDetails.OrderByDescending(x => x.CreateDate).First());
 
-            var reviewsAverage = reviews.Sum(x => x.Stars * 2);
+                var reviewsAverage = reviews.Sum(x => x.Stars * 2);
 
-            return (reviewsAverage + rating) / (rating is 0.0 ? reviews.Count() : reviews.Count() + 1);
+                return (reviewsAverage + rating) / (rating is 0.0 ? reviews.Count() : reviews.Count() + 1);
+            }
+            catch
+            {
+                return rating;
+            }
         }
     }
 }
