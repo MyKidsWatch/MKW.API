@@ -36,7 +36,7 @@ namespace MKW.Domain.Dto.DTO.ContentDTO
             ExternalId = $"{movie.Id}";
             Name = movie.Title;
             Description = movie.Overview;
-            ReleaseDate = !String.IsNullOrWhiteSpace(movie.ReleaseDate) ? DateTime.Parse(movie.ReleaseDate) : null;
+            ReleaseDate = DateTime.TryParse(movie.ReleaseDate, out var dataLancamento) ? dataLancamento : null;
             ImageUrl = movie.PosterPath;
             Tags = movie.Genres?.Select(x => x.Name).ToList();
             AverageRating = movie.VoteAverage;
