@@ -35,7 +35,7 @@ namespace MKW.API.Controllers
         public async Task<ActionResult<BaseResponseDTO<ReadProfileDTO>>> GetAllProfilesByUsername(string username) =>
             Ok(await _profileService.GetAllProfilesByUsername(username));
 
-        [HttpPatch]
+        [HttpPatch("picture")]
         [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDTO<ReadProfileDTO>))]
